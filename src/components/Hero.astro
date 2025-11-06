@@ -3,20 +3,23 @@
 ---
 
 <section
-  class="bg-brand-dark relative overflow-hidden flex-1 flex flex-col items-center justify-center px-6 py-4 md:py-8"
+  class="bg-brand-dark relative overflow-hidden flex-1 flex flex-col items-center justify-center py-4 md:py-8"
 >
   <!-- Decorative arcs in bottom-right corner -->
   <div class="absolute bottom-0 right-0 w-96 h-96 opacity-20">
     <div
-      class="absolute bottom-0 right-0 w-64 h-64 border-2 border-blue-400 rounded-full"
+      class="absolute bottom-0 right-0 w-64 h-64 border-2 rounded-full"
+      style="border-color: #251893;"
     >
     </div>
     <div
-      class="absolute bottom-0 right-0 w-80 h-80 border-2 border-blue-400 rounded-full -translate-x-8 -translate-y-8"
+      class="absolute bottom-0 right-0 w-80 h-80 border-2 rounded-full -translate-x-8 -translate-y-8"
+      style="border-color: #251893;"
     >
     </div>
     <div
-      class="absolute bottom-0 right-0 w-96 h-96 border-2 border-blue-400 rounded-full -translate-x-16 -translate-y-16"
+      class="absolute bottom-0 right-0 w-96 h-96 border-2 rounded-full -translate-x-16 -translate-y-16"
+      style="border-color: #251893;"
     >
     </div>
   </div>
@@ -41,39 +44,43 @@
   </div>
 
   <!-- Content Grid -->
-  <div
-    class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 max-w-6xl w-full z-10"
-  >
-    <!-- Left Content Block -->
-    <div class="flex flex-col justify-center space-y-3 md:space-y-4">
-      <p class="text-white text-base md:text-lg leading-relaxed">
-        Experienced senior dev who always wants to learn and build stuffs. Got a
-        project in mind? Send me a message!
-      </p>
-      <button
-        class="bg-brand-lime text-brand-dark px-6 py-3 rounded-full font-medium text-base md:text-lg hover:opacity-90 transition-opacity w-fit"
-      >
-        Let's Talk
-      </button>
-    </div>
+  <div class="container z-10">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
+      <!-- Left Content Block -->
+      <div class="flex flex-col justify-center space-y-3 md:space-y-4">
+        <p class="text-white text-base md:text-lg leading-relaxed">
+          Experienced senior dev who always wants to learn and build stuffs. Got
+          a project in mind? Send me a message!
+        </p>
+        <button
+          class="bg-brand-lime text-brand-dark px-6 py-3 rounded-full font-medium text-base md:text-lg hover:opacity-90 transition-opacity w-fit"
+        >
+          Let's Talk
+        </button>
+      </div>
 
-    <!-- Right Content Block - Statistics -->
-    <div class="flex flex-col justify-center items-end space-y-3 md:space-y-4">
-      <div class="text-right">
-        <div class="text-white text-4xl md:text-5xl font-bold">10+</div>
-        <div class="text-white text-sm md:text-base mt-1">
-          years of experience
+      <!-- Right Content Block - Statistics -->
+      <div
+        class="flex flex-col justify-center items-end space-y-3 md:space-y-4"
+      >
+        <div class="text-right">
+          <div class="text-white text-4xl md:text-5xl font-bold">10+</div>
+          <div class="text-white text-sm md:text-base mt-1">
+            years of experience
+          </div>
         </div>
-      </div>
-      <div class="text-right">
-        <div class="text-white text-4xl md:text-5xl font-bold">20+</div>
-        <div class="text-white text-sm md:text-base mt-1">
-          projects completed
+        <div class="text-right">
+          <div class="text-white text-4xl md:text-5xl font-bold">20+</div>
+          <div class="text-white text-sm md:text-base mt-1">
+            projects completed
+          </div>
         </div>
-      </div>
-      <div class="text-right">
-        <div class="text-white text-4xl md:text-5xl font-bold">9999+</div>
-        <div class="text-white text-sm md:text-base mt-1">errors debugged</div>
+        <div class="text-right">
+          <div class="text-white text-4xl md:text-5xl font-bold">9999+</div>
+          <div class="text-white text-sm md:text-base mt-1">
+            errors debugged
+          </div>
+        </div>
       </div>
     </div>
   </div>

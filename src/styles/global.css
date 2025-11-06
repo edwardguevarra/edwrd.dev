@@ -1,6 +1,22 @@
 @import "tailwindcss";
 
 @theme {
-  --color-brand-dark: #2A2A80;
+  --color-brand-dark: #251893;
   --color-brand-lime: #DFFF00;
+}
+
+.container {
+  max-width: 1280px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 1.5rem;
+  padding-right: 1.5rem;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .container {
+    padding-left: 2rem;
+    padding-right: 2rem;
+  }
 }
