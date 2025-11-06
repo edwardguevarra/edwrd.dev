@@ -3,6 +3,7 @@
 @theme {
   --color-brand-dark: #251893;
   --color-brand-lime: #DFFF00;
+  --font-family-sans: 'Inter', ui-sans-serif, system-ui, sans-serif;
 }
 
 .container {
