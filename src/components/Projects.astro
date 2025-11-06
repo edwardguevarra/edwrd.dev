@@ -1,0 +1,26 @@
+---
+import Button from "./Button.astro";
+---
+
+<section id="projects" class="bg-brand-accent py-6">
+  <div class="container mx-auto px-4">
+    <div class="flex flex-col md:flex-row justify-between items-center">
+      <!-- Left column for Skill/Tools button and additional content -->
+      <div class="w-full md:w-1/2 mb-4 md:mb-0">
+        <Button text="Skill / Tools" />
+        <div class="mt-8">
+          <img src="/images/tools.png" alt="Tools" class="w-full max-w-md" />
+        </div>
+      </div>
+
+      <!-- Right column for title -->
+      <div class="w-full md:w-1/2 text-center md:text-right">
+        <h2
+          class="font-inter font-black text-brand-dark text-4xl md:text-5xl lg:text-6xl leading-tight md:leading-snug lg:leading-[72px] tracking-normal"
+        >
+          My Projects/<br />Works
+        </h2>
+      </div>
+    </div>
+  </div>
+</section>
