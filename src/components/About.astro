@@ -2,7 +2,26 @@
 
 ---
 
-<section id="about" class="bg-brand-accent py-12 md:py-16 lg:py-20">
+<section id="about" class="bg-brand-accent py-6">
+  <!-- Marquee Text -->
+  <div class="marquee-container overflow-hidden mb-8">
+    <div class="marquee-content flex gap-8">
+      <span class="marquee-text text-brand-dark whitespace-nowrap">
+        print("Hello World") | console.log("Hello World"); | echo "Hello World";
+        | System.out.println("Hello World"); | printf("Hello World\n"); | cout
+        &lt;&lt; "Hello World" &lt;&lt; endl;
+      </span>
+      <span
+        class="marquee-text text-brand-dark whitespace-nowrap"
+        aria-hidden="true"
+      >
+        print("Hello World") | console.log("Hello World"); | echo "Hello World";
+        | System.out.println("Hello World"); | printf("Hello World\n"); | cout
+        &lt;&lt; "Hello World" &lt;&lt; endl;
+      </span>
+    </div>
+  </div>
+
   <div class="container">
     <!-- Section Title -->
     <h2
@@ -138,3 +157,36 @@
     </div>
   </div>
 </section>
+
+<style>
+  .marquee-container {
+    width: 100%;
+  }
+
+  .marquee-content {
+    animation: marquee 30s linear infinite;
+    width: fit-content;
+  }
+
+  .marquee-text {
+    font-family: "Fira Code", monospace;
+    font-weight: 600;
+    font-size: 14px;
+    line-height: 22px;
+    letter-spacing: 0%;
+    text-align: right;
+  }
+
+  @keyframes marquee {
+    0% {
+      transform: translateX(0);
+    }
+    100% {
+      transform: translateX(-50%);
+    }
+  }
+
+  .marquee-content:hover {
+    animation-play-state: paused;
+  }
+</style>
