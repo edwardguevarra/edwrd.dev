@@ -12,6 +12,9 @@ import { AstroFont } from "astro-font";
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
+    <!-- Preconnect to Google Fonts domains for faster font loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <AstroFont
       config={[
         {
@@ -23,6 +26,7 @@ import { AstroFont } from "astro-font";
           display: "swap",
           selector: "body",
           fallback: "sans-serif",
+          fetch: true,
         },
         {
           src: [],
@@ -32,6 +36,7 @@ import { AstroFont } from "astro-font";
           preload: true,
           display: "swap",
           fallback: "monospace",
+          fetch: true,
         },
       ]}
     />
