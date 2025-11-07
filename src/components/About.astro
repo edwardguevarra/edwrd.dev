@@ -1,4 +1,7 @@
 ---
+import { Image } from "astro:assets";
+import aboutImage1 from "../assets/about-1.png";
+import aboutImage2 from "../assets/about-2.png";
 import Button from "./Button.astro";
 ---
 
@@ -51,16 +54,22 @@ import Button from "./Button.astro";
           <div>Me</div>
         </h2>
         <div class="overflow-hidden">
-          <img
-            src="/images/about-1.png"
+          <Image
+            src={aboutImage1}
             alt="Edward Guevarra"
+            width={237}
+            height={414}
+            loading="lazy"
             class="w-[237px] h-[414px] object-cover ml-auto"
           />
         </div>
         <div class="overflow-hidden -mt-50">
-          <img
-            src="/images/about-2.png"
+          <Image
+            src={aboutImage2}
             alt="Edward Guevarra"
+            width={237}
+            height={414}
+            loading="lazy"
             class="w-[237px] h-[414px] object-cover"
           />
         </div>

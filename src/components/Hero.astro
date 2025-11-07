@@ -1,5 +1,6 @@
 ---
-
+import { Image } from "astro:assets";
+import heroImage from "../assets/hero.png";
 ---
 
 <section
@@ -105,6 +106,13 @@
 
   <!-- Image -->
   <div class="absolute w-[200px] h-[350px] -bottom-20 z-50">
-    <img src="/images/hero.png" alt="Hero" class="w-full h-full object-cover" />
+    <Image
+      src={heroImage}
+      alt="Hero"
+      width={200}
+      height={350}
+      priority
+      class="w-full h-full object-cover"
+    />
   </div>
 </section>
