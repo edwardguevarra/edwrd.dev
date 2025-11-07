@@ -5,6 +5,8 @@ import Hero from "../components/Hero.astro";
 import About from "../components/About.astro";
 import Projects from "../components/Projects.astro";
 import { AstroFont } from "astro-font";
+// Add dynamic import for hero image
+import heroImage from "../assets/hero.png";
 ---
 
 <html lang="en">
@@ -13,10 +15,15 @@ import { AstroFont } from "astro-font";
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
-    <!-- Preload critical CSS -->
-    <link rel="preload" href="/_astro/index.BuVX9PP6.css" as="style" />
-    <!-- Preload hero image for LCP -->
-    <link rel="preload" href="/_astro/hero.BCLkc9La_ZRd57H.webp" as="image" />
+    <!-- Preload hero image for LCP with responsive attributes -->
+    <link
+      rel="preload"
+      href={heroImage.src}
+      as="image"
+      imagesrcset={`${heroImage.src} 200w`}
+      imagesizes="200px"
+      fetchpriority="high"
+    />
     <!-- Preconnect to Google Fonts domains for faster font loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />

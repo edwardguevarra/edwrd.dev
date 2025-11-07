@@ -6,6 +6,21 @@ import heroImage from "../assets/hero.png";
 <section
   class="bg-brand-dark relative flex-1 flex flex-col items-center justify-center py-4 md:py-8"
 >
+  <!-- Hero Image - Immediately discoverable for LCP optimization -->
+  <div class="absolute w-[200px] h-[350px] -bottom-20 z-50 contain-layout">
+    <Image
+      src={heroImage}
+      alt="Hero"
+      width={200}
+      height={350}
+      priority
+      fetchpriority="high"
+      loading="eager"
+      decoding="sync"
+      class="w-full h-full object-cover aspect-200/350"
+    />
+  </div>
+
   <!-- Decorative arcs in bottom-right corner -->
   <div class="absolute bottom-0 right-0 w-96 h-96 opacity-20">
     <div
@@ -102,18 +117,5 @@ import heroImage from "../assets/hero.png";
         </div>
       </div>
     </div>
-  </div>
-
-  <!-- Image -->
-  <div class="absolute w-[200px] h-[350px] -bottom-20 z-50">
-    <Image
-      src={heroImage}
-      alt="Hero"
-      width={200}
-      height={350}
-      priority
-      fetchpriority="high"
-      class="w-full h-full object-cover"
-    />
   </div>
 </section>
