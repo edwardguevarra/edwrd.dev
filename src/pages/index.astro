@@ -16,14 +16,7 @@ import heroImage from "../assets/hero.png";
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <!-- Preload hero image for LCP with responsive attributes -->
-    <link
-      rel="preload"
-      href={heroImage.src}
-      as="image"
-      imagesrcset={`${heroImage.src} 200w`}
-      imagesizes="200px"
-      fetchpriority="high"
-    />
+    <link rel="preload" href={heroImage.src} as="image" fetchpriority="high" />
     <!-- Preconnect to Google Fonts domains for faster font loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
