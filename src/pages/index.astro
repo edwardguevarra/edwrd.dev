@@ -13,6 +13,10 @@ import { AstroFont } from "astro-font";
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
+    <!-- Preload critical CSS -->
+    <link rel="preload" href="/_astro/index.BuVX9PP6.css" as="style" />
+    <!-- Preload hero image for LCP -->
+    <link rel="preload" href="/_astro/hero.BCLkc9La_ZRd57H.webp" as="image" />
     <!-- Preconnect to Google Fonts domains for faster font loading -->
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
@@ -33,11 +37,11 @@ import { AstroFont } from "astro-font";
           src: [],
           name: "Fira Code",
           googleFontsURL:
-            "https://fonts.googleapis.com/css2?family=Fira+Code:wght@600&display=swap",
-          preload: true,
-          display: "swap",
+            "https://fonts.googleapis.com/css2?family=Fira+Code:wght@600&display=optional",
+          preload: false,
+          display: "optional",
           fallback: "monospace",
-          fetch: true,
+          fetch: false,
         },
       ]}
     />
