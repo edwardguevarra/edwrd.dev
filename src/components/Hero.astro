@@ -2,6 +2,7 @@
 import { Image } from "astro:assets";
 import heroImage from "../assets/hero.png";
 import bgCircle from "../assets/bg-circle.png";
+import Button from "./Button.astro";
 ---
 
 <section
@@ -77,11 +78,7 @@ import bgCircle from "../assets/bg-circle.png";
           Experienced senior dev who always wants to learn and build stuffs. Got
           a project in mind? Send me a message!
         </p>
-        <button
-          class="bg-brand-lime text-brand-dark w-44 h-10 px-14 py-2.5 rounded-full font-semibold text-sm leading-5 tracking-normal text-center whitespace-nowrap hover:opacity-90 transition-opacity"
-        >
-          Let's Talk
-        </button>
+        <Button text="Let's Talk" variant="lime" filled={true} />
       </div>
 
       <!-- Right Content Block - Statistics -->
