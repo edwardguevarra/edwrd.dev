@@ -1,9 +1,11 @@
 ---
 import Button from "./Button.astro";
+import { Image } from "astro:assets";
+import contactIcon from "../assets/contact.png";
 ---
 
 <section id="contact" class="pt-16 pb-18 bg-brand-dark">
-  <div class="container pt-20">
+  <div class="container pt-20 relative">
     <div class="flex justify-between items-start flex-wrap">
       <div class="font-black text-6xl text-brand-accent">
         <div>Contact Me,</div>
@@ -47,5 +49,12 @@ import Button from "./Button.astro";
         </div>
       </div>
     </div>
+    <Image
+      class="absolute -bottom-55 left-0"
+      src={contactIcon}
+      alt="Contact"
+      width={437}
+      height={445}
+    />
   </div>
 </section>
