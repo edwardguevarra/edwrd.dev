@@ -4,6 +4,36 @@ import aboutImage1 from "../assets/about-1.png";
 import aboutImage2 from "../assets/about-2.png";
 import Button from "./Button.astro";
 import Marquee from "./Marquee.astro";
+
+const hobbies = [
+  "I play games",
+  "Motorcycle rides",
+  "I learn piano",
+  "Watching anime",
+];
+
+const experiences = [
+  {
+    period: "2023 - present",
+    title: "Full-stack Developer",
+    company: "Bapplware Technologies, Inc",
+  },
+  {
+    period: "2021 - 2023",
+    title: "Full-stack Developer",
+    company: "GEER IT Solutions",
+  },
+  {
+    period: "2020 - 2021",
+    title: "Web Developer",
+    company: "My Solid Technologies & Devices Corp.",
+  },
+  {
+    period: "2016 - 2020",
+    title: "Web Developer",
+    company: "Digima Web Solutions",
+  },
+];
 ---
 
 <section id="about" class="bg-brand-accent py-6">
@@ -12,40 +42,42 @@ import Marquee from "./Marquee.astro";
 
   <div class="container">
     <!-- Two Column Grid -->
-    <div class="flex gap-8 md:gap-12 items-start">
+    <div class="flex flex-col lg:flex-row gap-8 md:gap-12 items-start">
       <!-- Left Column - Images -->
-      <div class="flex flex-col gap-6 relative shrink-0 w-[425px]">
+      <div class="flex flex-col gap-6 relative shrink-0 w-full lg:w-[425px]">
         <!-- Section Title -->
         <h2
-          class="text-brand-dark font-black text-4xl md:text-5xl lg:text-6xl mb-8 md:mb-12 text-right"
+          class="text-brand-dark font-black text-4xl md:text-5xl lg:text-6xl mb-8 md:mb-12 text-center lg:text-right"
         >
           <div>About</div>
           <div>Me</div>
         </h2>
-        <div class="overflow-hidden">
-          <Image
-            src={aboutImage1}
-            alt="Edward Guevarra"
-            width={237}
-            height={414}
-            loading="lazy"
-            class="w-[237px] h-[414px] object-cover ml-auto"
-          />
-        </div>
-        <div class="overflow-hidden -mt-50">
-          <Image
-            src={aboutImage2}
-            alt="Edward Guevarra"
-            width={237}
-            height={414}
-            loading="lazy"
-            class="w-[237px] h-[414px] object-cover"
-          />
+        <div class="flex justify-center lg:block">
+          <div class="overflow-hidden">
+            <Image
+              src={aboutImage1}
+              alt="Edward Guevarra"
+              width={237}
+              height={414}
+              loading="lazy"
+              class="w-[237px] h-[414px] object-cover ml-auto"
+            />
+          </div>
+          <div class="overflow-hidden mt-0 lg:-mt-50">
+            <Image
+              src={aboutImage2}
+              alt="Edward Guevarra"
+              width={237}
+              height={414}
+              loading="lazy"
+              class="w-[237px] h-[414px] object-cover"
+            />
+          </div>
         </div>
       </div>
 
       <!-- Combined Column - Biography, Experience Timeline, Hobbies, and Job Roles -->
-      <div class="flex flex-col gap-16 pt-47">
+      <div class="flex flex-col gap-16 pt-0 lg:pt-47">
         <!-- Two Column Grid for Biography and Hobbies -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <!-- Biography Column -->
@@ -65,75 +97,32 @@ import Marquee from "./Marquee.astro";
           <!-- Hobbies Column -->
           <div>
             <div class="flex flex-col gap-6">
-              <Button text="I play games" position="right" />
-              <Button text="Motorcycle rides" position="right" />
-              <Button text="I learn piano" position="right" />
-              <Button text="Watching anime" position="right" />
+              {
+                hobbies.map((hobby) => (
+                  <Button text={hobby} class="md:ml-auto" />
+                ))
+              }
             </div>
           </div>
         </div>
 
         <!-- Experience Timeline and Job Roles Paired -->
-        <div class="space-y-4">
-          <!-- 2023 - present -->
-          <div
-            class="flex flex-col md:flex-row gap-4 items-center justify-between"
-          >
-            <Button text="2023 - present" />
-            <div class="space-y-1 text-right">
-              <div class="text-brand-dark font-bold text-sm md:text-base">
-                Full-stack Developer
+        <div class="flex flex-wrap justify-center gap-4 md:space-y-4 md:block">
+          {
+            experiences.map((experience) => (
+              <div class="flex flex-col md:flex-row gap-4 items-center justify-between max-w-[225px] md:max-w-full">
+                <Button text={experience.period} />
+                <div class="space-y-1 text-center md:text-right">
+                  <div class="text-brand-dark font-bold text-sm md:text-base">
+                    {experience.title}
+                  </div>
+                  <div class="text-brand-dark text-sm md:text-base">
+                    {experience.company}
+                  </div>
+                </div>
               </div>
-              <div class="text-brand-dark text-sm md:text-base">
-                Bapplware Technologies, Inc
-              </div>
-            </div>
-          </div>
-
-          <!-- 2021 - 2023 -->
-          <div
-            class="flex flex-col md:flex-row gap-4 items-center justify-between"
-          >
-            <Button text="2021 - 2023" />
-            <div class="space-y-1 text-right">
-              <div class="text-brand-dark font-bold text-sm md:text-base">
-                Full-stack Developer
-              </div>
-              <div class="text-brand-dark text-sm md:text-base">
-                GEER IT Solutions
-              </div>
-            </div>
-          </div>
-
-          <!-- 2020 - 2021 -->
-          <div
-            class="flex flex-col md:flex-row gap-4 items-center justify-between"
-          >
-            <Button text="2020 - 2021" />
-            <div class="space-y-1 text-right">
-              <div class="text-brand-dark font-bold text-sm md:text-base">
-                Web Developer
-              </div>
-              <div class="text-brand-dark text-sm md:text-base">
-                My Solid Technologies & Devices Corp.
-              </div>
-            </div>
-          </div>
-
-          <!-- 2016 - 2020 -->
-          <div
-            class="flex flex-col md:flex-row gap-4 items-center justify-between"
-          >
-            <Button text="2016 - 2020" />
-            <div class="space-y-1 text-right">
-              <div class="text-brand-dark font-bold text-sm md:text-base">
-                Web Developer
-              </div>
-              <div class="text-brand-dark text-sm md:text-base">
-                Digima Web Solutions
-              </div>
-            </div>
-          </div>
+            ))
+          }
         </div>
       </div>
     </div>
