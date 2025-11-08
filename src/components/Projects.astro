@@ -1,5 +1,6 @@
 ---
 import { Image } from "astro:assets";
+import toolsImage from "../../public/images/tools.png";
 import Button from "./Button.astro";
 import { getCollection, type CollectionEntry } from "astro:content";
 
@@ -14,7 +15,13 @@ type ProjectEntry = CollectionEntry<"projects">;
       <div class="w-full md:w-1/2 mb-4 md:mb-0">
         <Button text="Skill / Tools" />
         <div class="mt-8">
-          <img src="/images/tools.png" alt="Tools" class="w-full max-w-md" />
+          <Image
+            src={toolsImage}
+            alt="Tools"
+            width={500}
+            height={500}
+            class="w-full max-w-md"
+          />
         </div>
       </div>
 
