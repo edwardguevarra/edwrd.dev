@@ -1,5 +1,5 @@
 ---
-
+import Button from "./Button.astro";
 ---
 
 <header class="bg-brand-dark py-6 lg:py-12">
@@ -75,11 +75,12 @@
 
       <!-- CTA Button -->
       <div class="flex justify-end">
-        <button
-          class="bg-white text-brand-dark w-44 h-10 px-14 rounded-full font-semibold text-sm leading-6 tracking-normal flex items-center justify-center whitespace-nowrap hover:opacity-90 transition-opacity cursor-pointer"
-        >
-          Let's Talk
-        </button>
+        <Button
+          text="Let's Talk"
+          variant="white"
+          filled={true}
+          position="right"
+        />
       </div>
     </div>
 
@@ -109,11 +110,12 @@
           class="text-white hover:opacity-80 transition-opacity py-2 cursor-pointer"
           >Blog</a
         >
-        <button
-          class="bg-white text-brand-dark px-6 py-2 rounded-full font-medium hover:opacity-90 transition-opacity w-full mt-2 cursor-pointer"
-        >
-          Let's Talk
-        </button>
+        <Button
+          text="Let's Talk"
+          variant="white"
+          filled={true}
+          position="none"
+        />
       </div>
     </nav>
   </div>

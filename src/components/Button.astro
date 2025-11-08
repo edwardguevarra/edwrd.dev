@@ -6,18 +6,28 @@ export interface Props {
   position?: "left" | "right" | "none";
   icon?: string;
   variant?: "dark" | "white";
+  filled?: boolean;
 }
 
-const { text, position = "none", icon, variant = "dark" } = Astro.props;
+const {
+  text,
+  position = "none",
+  icon,
+  variant = "dark",
+  filled = false,
+} = Astro.props;
 
 const baseClasses =
   "w-fit px-[54px] py-[9px] rounded-[50px] border font-semibold text-[14px] leading-[22px] tracking-normal text-center hover:opacity-80 transition-opacity flex items-center justify-center gap-2";
-  
-const variantClasses = 
-  variant === "white" 
-    ? "border-white text-white" 
+
+const variantClasses = filled
+  ? variant === "white"
+    ? "bg-white text-brand-dark border-white"
+    : "bg-brand-dark text-white border-brand-dark"
+  : variant === "white"
+    ? "border-white text-white"
     : "border-brand-dark text-brand-dark";
-    
+
 const positionClasses =
   position === "right" ? "ml-auto" : position === "left" ? "mr-auto" : "";
 ---
