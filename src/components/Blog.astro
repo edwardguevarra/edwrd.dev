@@ -1,9 +1,41 @@
 ---
+import Button from "./Button.astro";
+
 // Blog component - currently empty
 ---
 
-<section id="blog" class="bg-brand-dark py-6">
+<section id="blog" class="bg-brand-accent py-20 text-brand-dark">
   <div class="container">
-    <!-- Blog content will be added here -->
+    <div class="max-w-3xl ml-auto flex flex-col gap-6">
+      <div class="font-semibold text-sm text-right">
+        <div>Want to learn some practical programming tips and tricks?</div>
+        <div>
+          Check out my blog where I share insights, tutorials, and lessons
+        </div>
+        <div>
+          I've learned from real projects, whether you're just starting out or
+          looking to sharpen your skills!
+        </div>
+      </div>
+      <Button text="Checkout Blog" position="right" />
+
+      <!-- Images container -->
+      <div class="flex gap-6 justify-end mt-4">
+        <img
+          src="https://picsum.photos/seed/blog1/322/227.jpg"
+          alt="Blog preview image 1"
+          width="322"
+          height="227"
+          class="rounded-lg object-cover"
+        />
+        <img
+          src="https://picsum.photos/seed/blog2/322/227.jpg"
+          alt="Blog preview image 2"
+          width="322"
+          height="227"
+          class="rounded-lg object-cover"
+        />
+      </div>
+    </div>
   </div>
 </section>
