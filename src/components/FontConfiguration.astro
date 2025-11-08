@@ -1,0 +1,33 @@
+---
+import { AstroFont } from "astro-font";
+---
+
+<!-- Preconnect to Google Fonts domains for faster font loading -->
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+
+<AstroFont
+  config={[
+    {
+      src: [],
+      name: "Inter",
+      googleFontsURL:
+        "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap",
+      preload: true,
+      display: "swap",
+      selector: "body",
+      fallback: "sans-serif",
+      fetch: true,
+    },
+    {
+      src: [],
+      name: "Fira Code",
+      googleFontsURL:
+        "https://fonts.googleapis.com/css2?family=Fira+Code:wght@600&display=optional",
+      preload: false,
+      display: "optional",
+      fallback: "monospace",
+      fetch: false,
+    },
+  ]}
+/>

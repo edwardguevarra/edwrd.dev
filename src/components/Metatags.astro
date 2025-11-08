@@ -1,0 +1,56 @@
+---
+import heroImage from "../assets/hero.png";
+
+export interface Props {
+  title?: string;
+  description?: string;
+  keywords?: string;
+  author?: string;
+  ogTitle?: string;
+  ogDescription?: string;
+  ogUrl?: string;
+  ogImage?: string;
+  twitterTitle?: string;
+  twitterDescription?: string;
+  twitterImage?: string;
+}
+
+const {
+  title = "edwrd - Senior Full-Stack Developer",
+  description = "Edward Guevarra - Senior Full-Stack Developer with 10+ years of experience building web applications",
+  keywords = "full-stack developer, web developer, Edward Guevarra, portfolio",
+  author = "Edward Guevarra",
+  ogTitle = "edwrd dev - Senior Full-Stack Developer",
+  ogDescription = "Experienced senior dev who always wants to learn and build stuffs. Got a project in mind? Send me a message!",
+  ogUrl = "https://edwrd.dev",
+  ogImage = heroImage.src,
+  twitterTitle = "edwrd dev - Senior Full-Stack Developer",
+  twitterDescription = "Experienced senior dev who always wants to learn and build stuffs. Got a project in mind? Send me a message!",
+  twitterImage = heroImage.src,
+} = Astro.props;
+---
+
+<!-- Basic Meta Tags -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width" />
+<meta name="generator" content={Astro.generator} />
+
+<!-- SEO Meta Tags -->
+<meta name="description" content={description} />
+<meta name="keywords" content={keywords} />
+<meta name="author" content={author} />
+
+<!-- Open Graph Meta Tags -->
+<meta property="og:title" content={ogTitle} />
+<meta property="og:description" content={ogDescription} />
+<meta property="og:type" content="website" />
+<meta property="og:url" content={ogUrl} />
+{ogImage && <meta property="og:image" content={ogImage} />}
+
+<!-- Twitter Card Meta Tags -->
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content={twitterTitle} />
+<meta name="twitter:description" content={twitterDescription} />
+{twitterImage && <meta name="twitter:image" content={twitterImage} />}
+
+<title>{title}</title>

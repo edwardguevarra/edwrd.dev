@@ -1,54 +1,42 @@
 ---
+// Local component imports
 import "../styles/global.css";
+import FontConfiguration from "../components/FontConfiguration.astro";
 import Header from "../components/Header.astro";
 import Hero from "../components/Hero.astro";
 import About from "../components/About.astro";
 import Projects from "../components/Projects.astro";
 import Contact from "../components/Contact.astro";
-import { AstroFont } from "astro-font";
+import Metatags from "../components/Metatags.astro";
 ---
 
 <html lang="en">
   <head>
-    <meta charset="utf-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width" />
-    <meta name="generator" content={Astro.generator} />
-    <!-- Preconnect to Google Fonts domains for faster font loading -->
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <AstroFont
-      config={[
-        {
-          src: [],
-          name: "Inter",
-          googleFontsURL:
-            "https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap",
-          preload: true,
-          display: "swap",
-          selector: "body",
-          fallback: "sans-serif",
-          fetch: true,
-        },
-        {
-          src: [],
-          name: "Fira Code",
-          googleFontsURL:
-            "https://fonts.googleapis.com/css2?family=Fira+Code:wght@600&display=optional",
-          preload: false,
-          display: "optional",
-          fallback: "monospace",
-          fetch: false,
-        },
-      ]}
-    />
-    <title>edwrd</title>
+
+    <!-- Metatags Component -->
+    <Metatags />
+
+    <!-- Font Configuration -->
+    <FontConfiguration />
   </head>
+
   <body class="flex flex-col">
+    <!-- Skip Navigation Link for Accessibility -->
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-brand-lime text-brand-dark px-4 py-2 rounded-md z-50"
+    >
+      Skip to main content
+    </a>
+
     <Header />
-    <Hero />
-    <About />
-    <Projects />
-    <Contact />
+
+    <main id="main-content">
+      <Hero />
+      <About />
+      <Projects />
+      <Contact />
+    </main>
   </body>
 </html>
