@@ -1,17 +1,28 @@
 ---
+import { Icon } from "astro-icon/components";
+
 export interface Props {
   text: string;
   position?: "left" | "right" | "none";
+  icon?: string;
+  variant?: "dark" | "white";
 }
 
-const { text, position = "none" } = Astro.props;
+const { text, position = "none", icon, variant = "dark" } = Astro.props;
 
 const baseClasses =
-  "w-fit px-[54px] py-[9px] rounded-[50px] border border-[#251893] text-[#251893] font-semibold text-[14px] leading-[22px] tracking-normal text-center hover:opacity-80 transition-opacity";
+  "w-fit px-[54px] py-[9px] rounded-[50px] border font-semibold text-[14px] leading-[22px] tracking-normal text-center hover:opacity-80 transition-opacity flex items-center justify-center gap-2";
+  
+const variantClasses = 
+  variant === "white" 
+    ? "border-white text-white" 
+    : "border-brand-dark text-brand-dark";
+    
 const positionClasses =
   position === "right" ? "ml-auto" : position === "left" ? "mr-auto" : "";
 ---
 
-<button class={`${baseClasses} ${positionClasses}`}>
+<button class={`${baseClasses} ${variantClasses} ${positionClasses}`}>
   {text}
+  {icon && <Icon name={icon} width="16" height="16" />}
 </button>

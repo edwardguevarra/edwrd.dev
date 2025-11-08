@@ -1,0 +1,53 @@
+---
+import Button from "./Button.astro";
+
+// Contact component
+---
+
+<section id="contact" class="py-16 bg-brand-dark">
+  <div class="container pt-20">
+    <div class="flex justify-between items-start flex-wrap">
+      <div class="font-black text-6xl text-brand-accent">
+        <div>Contact Me,</div>
+        <div>Let's Talk</div>
+      </div>
+      <div class="flex flex-col gap-20">
+        <div class="text-sm text-white max-w-xl">
+          <div>
+            Got a project in mind? Need a developer to bring your ideas to life
+            or transform them into real solutions? Looking to collaborate on
+            something exciting?
+          </div>
+          <div class="mt-3">
+            Let’s connect! Shoot me a message and let’s make it happen.
+          </div>
+        </div>
+        <div class="flex flex-col gap-6">
+          <Button
+            text="edwardguevarra@gmail.com"
+            variant="white"
+            position="right"
+          />
+          <Button
+            text="LinkedIn"
+            icon="heroicons:arrow-top-right-on-square"
+            variant="white"
+            position="right"
+          />
+          <Button
+            text="GitHub"
+            icon="heroicons:arrow-top-right-on-square"
+            variant="white"
+            position="right"
+          />
+          <Button
+            text="Discord"
+            icon="heroicons:arrow-top-right-on-square"
+            variant="white"
+            position="right"
+          />
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
