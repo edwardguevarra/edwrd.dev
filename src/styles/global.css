@@ -51,3 +51,64 @@ html {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* Scroll Animation Keyframes */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Animation Base Classes */
+[data-animate] {
+  opacity: 0;
+}
+
+.animate-on-scroll {
+  animation: fadeInUp 0.8s ease-out forwards;
+}
+
+/* Stagger Delay Classes */
+.animate-delay-100 {
+  animation-delay: 0.1s;
+}
+
+.animate-delay-200 {
+  animation-delay: 0.2s;
+}
+
+.animate-delay-300 {
+  animation-delay: 0.3s;
+}
+
+.animate-delay-400 {
+  animation-delay: 0.4s;
+}
+
+.animate-delay-500 {
+  animation-delay: 0.5s;
+}
+
+.animate-delay-600 {
+  animation-delay: 0.6s;
+}
+
+/* Accessibility: Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  [data-animate] {
+    opacity: 1;
+    animation: none;
+    transform: none;
+  }
+
+  .animate-on-scroll {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

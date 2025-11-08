@@ -47,13 +47,14 @@ const experiences = [
       <div class="flex flex-col gap-6 relative shrink-0 w-full lg:w-[425px]">
         <!-- Section Title -->
         <h2
+          data-animate
           class="text-brand-dark font-black text-4xl md:text-5xl lg:text-6xl mb-8 md:mb-12 text-center lg:text-right"
         >
           <div>About</div>
           <div>Me</div>
         </h2>
         <div class="flex justify-center lg:block">
-          <div class="overflow-hidden">
+          <div data-animate class="overflow-hidden">
             <Image
               src={aboutImage1}
               alt="Edward Guevarra"
@@ -63,7 +64,10 @@ const experiences = [
               class="w-[237px] h-[414px] object-cover ml-auto"
             />
           </div>
-          <div class="overflow-hidden mt-0 lg:-mt-50">
+          <div
+            data-animate
+            class="overflow-hidden mt-0 lg:-mt-50 animate-delay-200"
+          >
             <Image
               src={aboutImage2}
               alt="Edward Guevarra"
@@ -81,7 +85,10 @@ const experiences = [
         <!-- Two Column Grid for Biography and Hobbies -->
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
           <!-- Biography Column -->
-          <div class="text-brand-dark text-sm md:text-base leading-relaxed">
+          <div
+            data-animate
+            class="text-brand-dark text-sm md:text-base leading-relaxed animate-delay-100"
+          >
             <p>
               Hey there! I'm Edward Guevarra, a senior full-stack developer
               based in Bulacan, Philippines. My journey into coding started with
@@ -101,12 +108,25 @@ const experiences = [
           </h2>
 
           <!-- Hobbies Column -->
-          <div>
+          <div data-animate class="animate-delay-200">
             <div class="grid grid-cols-2 gap-6 md:flex md:flex-col md:gap-6">
               {
-                hobbies.map((hobby) => (
-                  <Button text={hobby} class="w-full md:w-auto md:ml-auto" />
-                ))
+                hobbies.map((hobby, index) => {
+                  const delayClasses = [
+                    "animate-delay-300",
+                    "animate-delay-400",
+                    "animate-delay-500",
+                    "animate-delay-600",
+                  ];
+                  return (
+                    <div data-animate class={delayClasses[index] || ""}>
+                      <Button
+                        text={hobby}
+                        class="w-full md:w-auto md:ml-auto"
+                      />
+                    </div>
+                  );
+                })
               }
             </div>
           </div>
@@ -121,19 +141,30 @@ const experiences = [
         <!-- Experience Timeline and Job Roles Paired -->
         <div class="grid grid-cols-2 gap-6 md:space-y-4 md:block">
           {
-            experiences.map((experience) => (
-              <div class="flex flex-col md:flex-row gap-4 items-center justify-between">
-                <Button class="w-full md:w-auto" text={experience.period} />
-                <div class="space-y-1 text-center md:text-right">
-                  <div class="text-brand-dark font-bold text-sm md:text-base">
-                    {experience.title}
-                  </div>
-                  <div class="text-brand-dark text-sm md:text-base">
-                    {experience.company}
+            experiences.map((experience, index) => {
+              const delayClasses = [
+                "",
+                "animate-delay-100",
+                "animate-delay-200",
+                "animate-delay-300",
+              ];
+              return (
+                <div
+                  data-animate
+                  class={`flex flex-col md:flex-row gap-4 items-center justify-between ${delayClasses[index] || ""}`}
+                >
+                  <Button class="w-full md:w-auto" text={experience.period} />
+                  <div class="space-y-1 text-center md:text-right">
+                    <div class="text-brand-dark font-bold text-sm md:text-base">
+                      {experience.title}
+                    </div>
+                    <div class="text-brand-dark text-sm md:text-base">
+                      {experience.company}
+                    </div>
                   </div>
                 </div>
-              </div>
-            ))
+              );
+            })
           }
         </div>
       </div>

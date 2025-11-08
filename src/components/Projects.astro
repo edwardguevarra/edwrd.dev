@@ -13,8 +13,10 @@ type ProjectEntry = CollectionEntry<"projects">;
     <div class="flex flex-col md:flex-row justify-between items-center">
       <!-- Left column for Skill/Tools button and additional content -->
       <div class="w-full md:w-1/2 mb-4 md:mb-0">
-        <Button text="Skill / Tools" />
-        <div class="mt-8">
+        <div data-animate>
+          <Button text="Skill / Tools" />
+        </div>
+        <div data-animate class="mt-8 animate-delay-200">
           <Image
             src={toolsImage}
             alt="Tools"
@@ -28,7 +30,8 @@ type ProjectEntry = CollectionEntry<"projects">;
       <!-- Right column for title -->
       <div class="w-full md:w-1/2 text-center md:text-right">
         <h2
-          class="font-inter font-black text-brand-dark text-4xl md:text-5xl lg:text-6xl leading-tight md:leading-snug lg:leading-[72px] tracking-normal"
+          data-animate
+          class="font-inter font-black text-brand-dark text-4xl md:text-5xl lg:text-6xl leading-tight md:leading-snug lg:leading-[72px] tracking-normal animate-delay-100"
         >
           My Projects/<br />Works
         </h2>
@@ -36,11 +39,20 @@ type ProjectEntry = CollectionEntry<"projects">;
     </div>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 py-6">
       {
-        projects.map((project: ProjectEntry) => {
+        projects.map((project: ProjectEntry, index: number) => {
+          const delayClasses = [
+            "",
+            "animate-delay-100",
+            "animate-delay-200",
+            "animate-delay-300",
+            "animate-delay-400",
+            "animate-delay-500",
+          ];
           return (
             <a
+              data-animate
               href={project.data.link}
-              class="block group"
+              class={`block group ${delayClasses[index] || ""}`}
               target="_blank"
               rel="noopener noreferrer"
             >

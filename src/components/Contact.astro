@@ -7,54 +7,61 @@ import contactIcon from "../assets/contact.png";
 <section id="contact" class="pt-16 pb-18 bg-brand-dark">
   <div class="container pt-20 relative">
     <div class="flex justify-between items-start flex-wrap">
-      <div class="font-black text-6xl text-brand-accent">
+      <div data-animate class="font-black text-6xl text-brand-accent">
         <div>Contact Me,</div>
         <div>Let's Talk</div>
       </div>
       <div class="flex flex-col gap-20">
-        <div class="text-sm text-white max-w-xl text-right">
+        <div
+          data-animate
+          class="text-sm text-white max-w-xl text-right animate-delay-100"
+        >
           <div>
             Got a project in mind? Need a developer to bring your ideas to life
             or transform them into real solutions? Looking to collaborate on
             something exciting?
           </div>
           <div class="mt-3">
-            Let’s connect! Shoot me a message and let’s make it happen.
+            Let's connect! Shoot me a message and let's make it happen.
           </div>
         </div>
         <div class="flex flex-col gap-6">
-          <Button
-            text="edwardguevarra@gmail.com"
-            variant="white"
-            class="ml-auto"
-          />
-          <Button
-            text="LinkedIn"
-            icon="heroicons:arrow-top-right-on-square"
-            variant="white"
-            class="ml-auto"
-          />
-          <Button
-            text="GitHub"
-            icon="heroicons:arrow-top-right-on-square"
-            variant="white"
-            class="ml-auto"
-          />
-          <Button
-            text="Discord"
-            icon="heroicons:arrow-top-right-on-square"
-            variant="white"
-            class="ml-auto"
-          />
+          <div data-animate class="animate-delay-200">
+            <Button
+              text="edwardguevarra@gmail.com"
+              variant="white"
+              class="ml-auto"
+            />
+          </div>
+          <div data-animate class="animate-delay-300">
+            <Button
+              text="LinkedIn"
+              icon="heroicons:arrow-top-right-on-square"
+              variant="white"
+              class="ml-auto"
+            />
+          </div>
+          <div data-animate class="animate-delay-400">
+            <Button
+              text="GitHub"
+              icon="heroicons:arrow-top-right-on-square"
+              variant="white"
+              class="ml-auto"
+            />
+          </div>
+          <div data-animate class="animate-delay-500">
+            <Button
+              text="Discord"
+              icon="heroicons:arrow-top-right-on-square"
+              variant="white"
+              class="ml-auto"
+            />
+          </div>
         </div>
       </div>
     </div>
-    <Image
-      class="absolute -bottom-55 left-0"
-      src={contactIcon}
-      alt="Contact"
-      width={437}
-      height={445}
-    />
+    <div data-animate class="absolute -bottom-55 left-0 animate-delay-300">
+      <Image src={contactIcon} alt="Contact" width={437} height={445} />
+    </div>
   </div>
 </section>
