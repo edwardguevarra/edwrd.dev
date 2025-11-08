@@ -1,6 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import heroImage from "../assets/hero.png";
+import bgCircle from "../assets/bg-circle.png";
 ---
 
 <section
@@ -20,6 +21,15 @@ import heroImage from "../assets/hero.png";
       class="w-full h-full object-cover aspect-200/350"
     />
   </div>
+
+  <!-- Circle Background -->
+  <Image
+    class="absolute left-0 right-0 bottom-0 m-auto z-0"
+    src={bgCircle}
+    alt="BG Circle"
+    width={573}
+    height={642}
+  />
 
   <!-- Decorative arcs in bottom-right corner -->
   <div class="absolute bottom-0 right-0 w-96 h-96 opacity-20">
