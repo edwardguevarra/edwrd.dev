@@ -127,6 +127,12 @@ import Button from "./Button.astro";
   const menuIcon = document.getElementById("menu-icon");
   const closeIcon = document.getElementById("close-icon");
 
+  const closeMobileMenu = () => {
+    mobileMenu?.classList.add("hidden");
+    menuIcon?.classList.remove("hidden");
+    closeIcon?.classList.add("hidden");
+  };
+
   mobileMenuButton?.addEventListener("click", () => {
     const isHidden = mobileMenu?.classList.contains("hidden");
 
@@ -135,9 +141,13 @@ import Button from "./Button.astro";
       menuIcon?.classList.add("hidden");
       closeIcon?.classList.remove("hidden");
     } else {
-      mobileMenu?.classList.add("hidden");
-      menuIcon?.classList.remove("hidden");
-      closeIcon?.classList.add("hidden");
+      closeMobileMenu();
     }
+  });
+
+  // Close mobile menu when clicking navigation links
+  const mobileNavLinks = mobileMenu?.querySelectorAll("a[href^='#']");
+  mobileNavLinks?.forEach((link) => {
+    link.addEventListener("click", closeMobileMenu);
   });
 </script>

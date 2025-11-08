@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+html {
+  scroll-behavior: smooth;
+}
+
 @theme {
   --color-brand-dark: #251893;
   --color-brand-lime: #DFFF00;
