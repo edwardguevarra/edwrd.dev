@@ -53,22 +53,26 @@ import Button from "./Button.astro";
       <nav class="flex items-center justify-center gap-[100px]">
         <a
           href="#about"
-          class="text-white hover:opacity-80 transition-opacity font-semibold text-sm leading-[22px] tracking-normal text-center cursor-pointer"
+          data-section="about"
+          class="nav-link text-white hover:opacity-80 transition-all font-semibold text-sm leading-[22px] tracking-normal text-center cursor-pointer"
           >About</a
         >
         <a
           href="#projects"
-          class="text-white hover:opacity-80 transition-opacity font-semibold text-sm leading-[22px] tracking-normal text-center cursor-pointer"
+          data-section="projects"
+          class="nav-link text-white hover:opacity-80 transition-all font-semibold text-sm leading-[22px] tracking-normal text-center cursor-pointer"
           >Works</a
         >
         <a
           href="#contact"
-          class="text-white hover:opacity-80 transition-opacity font-semibold text-sm leading-[22px] tracking-normal text-center cursor-pointer"
+          data-section="contact"
+          class="nav-link text-white hover:opacity-80 transition-all font-semibold text-sm leading-[22px] tracking-normal text-center cursor-pointer"
           >Contact</a
         >
         <a
           href="#blog"
-          class="text-white hover:opacity-80 transition-opacity font-semibold text-sm leading-[22px] tracking-normal text-center cursor-pointer"
+          data-section="blog"
+          class="nav-link text-white hover:opacity-80 transition-all font-semibold text-sm leading-[22px] tracking-normal text-center cursor-pointer"
           >Blog</a
         >
       </nav>
@@ -84,70 +88,202 @@ import Button from "./Button.astro";
       </div>
     </div>
 
+    <!-- Mobile Menu Backdrop -->
+    <div
+      id="mobile-menu-backdrop"
+      class="mobile-menu-backdrop fixed inset-0 bg-black/50 z-40 lg:hidden hidden"
+    >
+    </div>
+
     <!-- Mobile Menu -->
     <nav
       id="mobile-menu"
-      class="hidden lg:hidden mt-6 pb-4 border-t border-white/10"
+      class="mobile-menu lg:hidden mt-6 pb-4 border-t border-white/10 relative z-50 hidden"
     >
       <div class="flex flex-col gap-4 pt-4">
         <a
           href="#about"
-          class="text-white hover:opacity-80 transition-opacity py-2 cursor-pointer"
+          data-section="about"
+          class="nav-link text-white hover:opacity-80 transition-all py-2 cursor-pointer"
           >About</a
         >
         <a
           href="#projects"
-          class="text-white hover:opacity-80 transition-opacity py-2 cursor-pointer"
+          data-section="projects"
+          class="nav-link text-white hover:opacity-80 transition-all py-2 cursor-pointer"
           >Works</a
         >
         <a
           href="#contact"
-          class="text-white hover:opacity-80 transition-opacity py-2 cursor-pointer"
+          data-section="contact"
+          class="nav-link text-white hover:opacity-80 transition-all py-2 cursor-pointer"
           >Contact</a
         >
         <a
           href="#blog"
-          class="text-white hover:opacity-80 transition-opacity py-2 cursor-pointer"
+          data-section="blog"
+          class="nav-link text-white hover:opacity-80 transition-all py-2 cursor-pointer"
           >Blog</a
         >
-        <Button
-          text="Let's Talk"
-          variant="white"
-          filled={true}
-          position="none"
-        />
+        <div id="mobile-menu-button-wrapper">
+          <Button
+            text="Let's Talk"
+            variant="white"
+            filled={true}
+            position="none"
+          />
+        </div>
       </div>
     </nav>
   </div>
 </header>
 
-<script>
+<script is:inline>
   const mobileMenuButton = document.getElementById("mobile-menu-button");
   const mobileMenu = document.getElementById("mobile-menu");
+  const mobileMenuBackdrop = document.getElementById("mobile-menu-backdrop");
   const menuIcon = document.getElementById("menu-icon");
   const closeIcon = document.getElementById("close-icon");
 
+  const openMobileMenu = () => {
+    mobileMenuBackdrop?.classList.remove("hidden");
+    mobileMenu?.classList.remove("hidden");
+    menuIcon?.classList.add("hidden");
+    closeIcon?.classList.remove("hidden");
+    // Trigger animation by removing hidden class first, then adding open class
+    requestAnimationFrame(() => {
+      mobileMenuBackdrop?.classList.add("mobile-menu-backdrop-open");
+      mobileMenu?.classList.add("mobile-menu-open");
+    });
+    // Prevent body scroll when menu is open
+    document.body.style.overflow = "hidden";
+  };
+
   const closeMobileMenu = () => {
-    mobileMenu?.classList.add("hidden");
-    menuIcon?.classList.remove("hidden");
-    closeIcon?.classList.add("hidden");
+    mobileMenuBackdrop?.classList.remove("mobile-menu-backdrop-open");
+    mobileMenu?.classList.remove("mobile-menu-open");
+    // Wait for animation to complete before hiding
+    setTimeout(() => {
+      mobileMenuBackdrop?.classList.add("hidden");
+      mobileMenu?.classList.add("hidden");
+      menuIcon?.classList.remove("hidden");
+      closeIcon?.classList.add("hidden");
+      document.body.style.overflow = "";
+    }, 300);
   };
 
   mobileMenuButton?.addEventListener("click", () => {
     const isHidden = mobileMenu?.classList.contains("hidden");
 
     if (isHidden) {
-      mobileMenu?.classList.remove("hidden");
-      menuIcon?.classList.add("hidden");
-      closeIcon?.classList.remove("hidden");
+      openMobileMenu();
     } else {
       closeMobileMenu();
     }
   });
+
+  // Close mobile menu when clicking backdrop
+  mobileMenuBackdrop?.addEventListener("click", closeMobileMenu);
 
   // Close mobile menu when clicking navigation links
   const mobileNavLinks = mobileMenu?.querySelectorAll("a[href^='#']");
   mobileNavLinks?.forEach((link) => {
     link.addEventListener("click", closeMobileMenu);
   });
+
+  // Close mobile menu when clicking "Let's Talk" button
+  const mobileMenuButtonWrapper = document.getElementById(
+    "mobile-menu-button-wrapper"
+  );
+  const mobileTalkButton = mobileMenuButtonWrapper?.querySelector("button");
+  mobileTalkButton?.addEventListener("click", closeMobileMenu);
+
+  // Active navigation state using Intersection Observer
+  const sections = document.querySelectorAll("section[id]");
+  const navLinks = document.querySelectorAll(".nav-link");
+
+  // Function to update active navigation link
+  const updateActiveNav = (activeSectionId) => {
+    navLinks.forEach((link) => {
+      const linkSection = link.getAttribute("data-section");
+      if (linkSection === activeSectionId) {
+        link.classList.add("text-brand-lime");
+        link.classList.remove("text-white");
+      } else {
+        link.classList.remove("text-brand-lime");
+        link.classList.add("text-white");
+      }
+    });
+  };
+
+  // Intersection Observer configuration
+  const observerOptions = {
+    root: null,
+    rootMargin: "-20% 0px -60% 0px", // Trigger when section is in upper portion of viewport
+    threshold: 0,
+  };
+
+  // Track which sections are currently intersecting
+  const intersectingSections = new Map();
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        intersectingSections.set(entry.target, entry.intersectionRatio);
+      } else {
+        intersectingSections.delete(entry.target);
+      }
+    });
+
+    // Determine the most visible section
+    if (intersectingSections.size > 0) {
+      let maxRatio = 0;
+      let activeSection = null;
+
+      intersectingSections.forEach((ratio, section) => {
+        if (ratio > maxRatio) {
+          maxRatio = ratio;
+          activeSection = section;
+        }
+      });
+
+      if (activeSection && activeSection.id) {
+        const sectionId = activeSection.id;
+        updateActiveNav(sectionId);
+      }
+    } else {
+      // If no sections are intersecting (e.g., at top of page), check scroll position
+      const scrollPosition = window.scrollY;
+      if (scrollPosition < 100) {
+        // Near top of page, default to first section (about)
+        updateActiveNav("about");
+      }
+    }
+  }, observerOptions);
+
+  // Observe all sections
+  sections.forEach((section) => {
+    if (section.id) {
+      observer.observe(section);
+    }
+  });
+
+  // Initial state: check which section should be active on page load
+  const checkInitialActiveSection = () => {
+    const scrollPosition = window.scrollY;
+    if (scrollPosition < 100) {
+      updateActiveNav("about");
+    } else {
+      // Find the first section that's in view
+      sections.forEach((section) => {
+        const rect = section.getBoundingClientRect();
+        if (rect.top <= window.innerHeight * 0.3 && rect.bottom >= 0) {
+          updateActiveNav(section.id);
+        }
+      });
+    }
+  };
+
+  // Set initial active state
+  checkInitialActiveSection();
 </script>
