@@ -1,5 +1,6 @@
 ---
 import Button from "./Button.astro";
+import { Image } from "astro:assets";
 
 // Blog component - currently empty
 ---
@@ -21,19 +22,19 @@ import Button from "./Button.astro";
 
       <!-- Images container -->
       <div class="flex gap-6 justify-end mt-4">
-        <img
+        <Image
           src="https://picsum.photos/seed/blog1/322/227.jpg"
           alt="Blog preview image 1"
           width="322"
           height="227"
-          class="rounded-lg object-cover"
+          class="rounded-lg object-cover shadow-[6px_6px_6px_0px_rgba(0,0,0,0.25)]"
         />
-        <img
+        <Image
           src="https://picsum.photos/seed/blog2/322/227.jpg"
           alt="Blog preview image 2"
           width="322"
           height="227"
-          class="rounded-lg object-cover"
+          class="rounded-lg object-cover shadow-[6px_6px_6px_0px_rgba(0,0,0,0.25)]"
         />
       </div>
     </div>
