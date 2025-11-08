@@ -1,0 +1,192 @@
+---
+import { getCollection, type CollectionEntry } from "astro:content";
+import { Image } from "astro:assets";
+import Header from "../../components/Header.astro";
+import Footer from "../../components/Footer.astro";
+import Metatags from "../../components/Metatags.astro";
+import FontConfiguration from "../../components/FontConfiguration.astro";
+import { formatDate } from "../../utils/date";
+import "../../styles/global.css";
+
+const blogPosts = await getCollection("blog");
+type BlogEntry = CollectionEntry<"blog">;
+
+// Sort posts by date (newest first)
+const sortedPosts = blogPosts.sort(
+  (a, b) => b.data.date.getTime() - a.data.date.getTime()
+);
+---
+
+<html lang="en">
+  <head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <Metatags 
+      title="Blog - edwrd.dev"
+      description="Practical programming tips, tutorials, and insights from real projects"
+    />
+    <FontConfiguration />
+  </head>
+
+  <body class="flex flex-col">
+    <a
+      href="#main-content"
+      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-brand-lime text-brand-dark px-4 py-2 rounded-md z-50"
+    >
+      Skip to main content
+    </a>
+
+    <Header />
+
+    <main id="main-content" class="bg-brand-accent min-h-screen">
+      <div class="container mx-auto px-4 py-12 lg:py-20">
+        <!-- Page Header -->
+        <div class="mb-12 lg:mb-16">
+          <h1
+            data-animate
+            class="font-inter font-black text-brand-dark text-4xl md:text-5xl lg:text-6xl leading-tight mb-4"
+          >
+            Blog
+          </h1>
+          <p
+            data-animate
+            class="text-brand-dark text-lg md:text-xl max-w-2xl animate-delay-100"
+          >
+            Practical programming tips, tutorials, and insights from real projects.
+            Whether you're just starting out or looking to sharpen your skills!
+          </p>
+        </div>
+
+        <!-- Blog Posts Grid -->
+        {sortedPosts.length > 0 ? (
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {sortedPosts.map((post: BlogEntry, index: number) => {
+              const delayClasses = [
+                "",
+                "animate-delay-100",
+                "animate-delay-200",
+                "animate-delay-300",
+                "animate-delay-400",
+                "animate-delay-500",
+              ];
+              return (
+                <a
+                  href={`/blog/${post.id}`}
+                  data-animate
+                  class={`block group ${delayClasses[index] || ""}`}
+                >
+                  <article class="bg-white rounded-lg overflow-hidden shadow-[6px_6px_6px_0px_rgba(0,0,0,0.25)] hover:shadow-[8px_8px_8px_0px_rgba(0,0,0,0.3)] transition-all duration-300 h-full flex flex-col">
+                    <!-- Featured Image -->
+                    <div class="relative overflow-hidden">
+                      <Image
+                        src={post.data.featuredImage}
+                        alt={post.data.featuredImageAlt}
+                        width={800}
+                        height={400}
+                        class="w-full h-48 object-cover group-hover:scale-105 transition-transform duration-300"
+                        loading="lazy"
+                      />
+                    </div>
+
+                    <!-- Content -->
+                    <div class="p-6 flex flex-col grow">
+                      <!-- Tags -->
+                      <div class="flex flex-wrap gap-2 mb-3">
+                        {post.data.tags.slice(0, 3).map((tag) => (
+                          <span
+                            class="text-xs px-2 py-1 bg-brand-lime text-brand-dark rounded-full font-semibold"
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+
+                      <!-- Title -->
+                      <h2 class="font-inter font-bold text-brand-dark text-xl mb-2 group-hover:text-brand-dark/80 transition-colors">
+                        {post.data.title}
+                      </h2>
+
+                      <!-- Description -->
+                      <p class="text-brand-dark/70 text-sm mb-4 line-clamp-3 grow">
+                        {post.data.description}
+                      </p>
+
+                      <!-- Meta -->
+                      <div class="flex items-center justify-between text-xs text-brand-dark/60 mt-auto pt-4 border-t border-brand-dark/10">
+                        <span>{formatDate(post.data.date)}</span>
+                        <span>{post.data.author}</span>
+                      </div>
+                    </div>
+                  </article>
+                </a>
+              );
+            })}
+          </div>
+        ) : (
+          <div class="text-center py-12">
+            <p class="text-brand-dark text-lg">No blog posts yet. Check back soon!</p>
+          </div>
+        )}
+      </div>
+    </main>
+
+    <Footer />
+  </body>
+
+  <script>
+    // Scroll Animation Handler using IntersectionObserver
+    (function () {
+      const prefersReducedMotion = window.matchMedia(
+        "(prefers-reduced-motion: reduce)"
+      ).matches;
+
+      if (prefersReducedMotion) {
+        const animatedElements =
+          document.querySelectorAll<HTMLElement>("[data-animate]");
+        animatedElements.forEach((el) => {
+          el.style.opacity = "1";
+          el.style.transform = "none";
+        });
+        return;
+      }
+
+      const observerOptions = {
+        root: null,
+        rootMargin: "0px 0px -100px 0px",
+        threshold: 0.1,
+      };
+
+      const observer = new IntersectionObserver((entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            entry.target.classList.add("animate-on-scroll");
+            observer.unobserve(entry.target);
+          }
+        });
+      }, observerOptions);
+
+      const animatedElements =
+        document.querySelectorAll<HTMLElement>("[data-animate]");
+      animatedElements.forEach((el) => {
+        observer.observe(el);
+      });
+
+      const checkInitialView = () => {
+        animatedElements.forEach((el) => {
+          const rect = el.getBoundingClientRect();
+          const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+          if (isInViewport) {
+            el.classList.add("animate-on-scroll");
+            observer.unobserve(el);
+          }
+        });
+      };
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", checkInitialView);
+      } else {
+        checkInitialView();
+      }
+    })();
+  </script>
+</html>
+

@@ -1,5 +1,13 @@
 ---
 import Button from "./Button.astro";
+import { getNavigationItems } from "../config/navigation";
+
+// Check if we're on a blog page
+const isBlogPage = Astro.url.pathname.startsWith("/blog");
+const isHomePage = Astro.url.pathname === "/";
+
+// Get navigation items with computed hrefs
+const navItems = getNavigationItems(isHomePage);
 ---
 
 <header class="bg-brand-dark py-6 lg:py-12">
@@ -7,7 +15,12 @@ import Button from "./Button.astro";
     <!-- Mobile Header -->
     <div class="flex items-center justify-between lg:hidden">
       <!-- Logo -->
-      <div class="text-brand-lime font-bold text-xl">edwrd</div>
+      <a
+        href="/"
+        class="text-brand-lime font-bold text-xl hover:opacity-80 transition-opacity"
+      >
+        edwrd
+      </a>
 
       <!-- Mobile Menu Button -->
       <button
@@ -47,34 +60,29 @@ import Button from "./Button.astro";
     <!-- Desktop Header -->
     <div class="hidden lg:grid lg:grid-cols-3 items-center">
       <!-- Logo -->
-      <div class="text-brand-lime font-bold text-xl">edwrd</div>
+      <a
+        href="/"
+        class="text-brand-lime font-bold text-xl hover:opacity-80 transition-opacity"
+      >
+        edwrd
+      </a>
 
       <!-- Navigation Links -->
       <nav class="flex items-center justify-center gap-[100px]">
-        <a
-          href="#about"
-          data-section="about"
-          class="nav-link text-white hover:opacity-80 transition-all font-semibold text-sm leading-[22px] tracking-normal text-center cursor-pointer"
-          >About</a
-        >
-        <a
-          href="#projects"
-          data-section="projects"
-          class="nav-link text-white hover:opacity-80 transition-all font-semibold text-sm leading-[22px] tracking-normal text-center cursor-pointer"
-          >Works</a
-        >
-        <a
-          href="#contact"
-          data-section="contact"
-          class="nav-link text-white hover:opacity-80 transition-all font-semibold text-sm leading-[22px] tracking-normal text-center cursor-pointer"
-          >Contact</a
-        >
-        <a
-          href="#blog"
-          data-section="blog"
-          class="nav-link text-white hover:opacity-80 transition-all font-semibold text-sm leading-[22px] tracking-normal text-center cursor-pointer"
-          >Blog</a
-        >
+        {
+          navItems.map((item) => (
+            <a
+              href={item.href}
+              data-section={item.section}
+              {...(item.section === "blog" && !isHomePage
+                ? { "data-astro-prefetch": "true" }
+                : {})}
+              class={`nav-link ${item.section === "blog" && isBlogPage ? "text-brand-lime" : "text-white"} hover:opacity-80 transition-all font-semibold text-sm leading-[22px] tracking-normal text-center cursor-pointer`}
+            >
+              {item.label}
+            </a>
+          ))
+        }
       </nav>
 
       <!-- CTA Button -->
@@ -101,36 +109,19 @@ import Button from "./Button.astro";
       class="mobile-menu lg:hidden mt-6 pb-4 border-t border-white/10 relative z-50 hidden"
     >
       <div class="flex flex-col gap-4 pt-4">
-        <a
-          href="#about"
-          data-section="about"
-          class="nav-link text-white hover:opacity-80 transition-all py-2 cursor-pointer"
-          >About</a
-        >
-        <a
-          href="#projects"
-          data-section="projects"
-          class="nav-link text-white hover:opacity-80 transition-all py-2 cursor-pointer"
-          >Works</a
-        >
-        <a
-          href="#contact"
-          data-section="contact"
-          class="nav-link text-white hover:opacity-80 transition-all py-2 cursor-pointer"
-          >Contact</a
-        >
-        <a
-          href="#blog"
-          data-section="blog"
-          class="nav-link text-white hover:opacity-80 transition-all py-2 cursor-pointer"
-          >Blog</a
-        >
+        {
+          navItems.map((item) => (
+            <a
+              href={item.href}
+              data-section={item.section}
+              class={`nav-link ${item.section === "blog" && isBlogPage ? "text-brand-lime" : "text-white"} hover:opacity-80 transition-all py-2 cursor-pointer`}
+            >
+              {item.label}
+            </a>
+          ))
+        }
         <div id="mobile-menu-button-wrapper">
-          <Button
-            text="Let's Talk"
-            variant="white"
-            filled={true}
-          />
+          <Button text="Let's Talk" variant="white" filled={true} />
         </div>
       </div>
     </nav>
@@ -185,7 +176,7 @@ import Button from "./Button.astro";
   mobileMenuBackdrop?.addEventListener("click", closeMobileMenu);
 
   // Close mobile menu when clicking navigation links
-  const mobileNavLinks = mobileMenu?.querySelectorAll("a[href^='#']");
+  const mobileNavLinks = mobileMenu?.querySelectorAll(".nav-link");
   mobileNavLinks?.forEach((link) => {
     link.addEventListener("click", closeMobileMenu);
   });
@@ -201,6 +192,9 @@ import Button from "./Button.astro";
   const sections = document.querySelectorAll("section[id]");
   const navLinks = document.querySelectorAll(".nav-link");
 
+  // Check if we're on a blog page
+  const isBlogPage = window.location.pathname.startsWith("/blog");
+
   // Function to update active navigation link
   const updateActiveNav = (activeSectionId) => {
     navLinks.forEach((link) => {
@@ -209,11 +203,29 @@ import Button from "./Button.astro";
         link.classList.add("text-brand-lime");
         link.classList.remove("text-white");
       } else {
+        // Don't override blog link styling if we're on blog page
+        if (linkSection === "blog" && isBlogPage) {
+          return;
+        }
         link.classList.remove("text-brand-lime");
         link.classList.add("text-white");
       }
     });
   };
+
+  // If on blog page, highlight blog link
+  if (isBlogPage) {
+    navLinks.forEach((link) => {
+      const linkSection = link.getAttribute("data-section");
+      if (linkSection === "blog") {
+        link.classList.add("text-brand-lime");
+        link.classList.remove("text-white");
+      } else {
+        link.classList.remove("text-brand-lime");
+        link.classList.add("text-white");
+      }
+    });
+  }
 
   // Intersection Observer configuration
   const observerOptions = {
@@ -260,15 +272,13 @@ import Button from "./Button.astro";
     }
   }, observerOptions);
 
-  // Observe all sections
-  sections.forEach((section) => {
-    if (section.id) {
-      observer.observe(section);
-    }
-  });
-
   // Initial state: check which section should be active on page load
   const checkInitialActiveSection = () => {
+    // Don't run intersection observer logic on blog pages
+    if (isBlogPage) {
+      return;
+    }
+
     const scrollPosition = window.scrollY;
     if (scrollPosition < 100) {
       updateActiveNav("about");
@@ -283,6 +293,15 @@ import Button from "./Button.astro";
     }
   };
 
-  // Set initial active state
-  checkInitialActiveSection();
+  // Set initial active state (only on homepage)
+  if (!isBlogPage) {
+    checkInitialActiveSection();
+
+    // Observe all sections (only on homepage)
+    sections.forEach((section) => {
+      if (section.id) {
+        observer.observe(section);
+      }
+    });
+  }
 </script>
