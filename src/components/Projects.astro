@@ -1,4 +1,5 @@
 ---
+import { Image } from "astro:assets";
 import Button from "./Button.astro";
 ---
 
@@ -21,6 +22,38 @@ import Button from "./Button.astro";
           My Projects/<br />Works
         </h2>
       </div>
+    </div>
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 py-6">
+      <a href="#" class="block group" target="_blank" rel="noopener noreferrer">
+        <img
+          src="https://picsum.photos/seed/project1/425/300.jpg"
+          alt="Project 1"
+          width="425"
+          height="300"
+          loading="lazy"
+          class="object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
+        />
+      </a>
+      <a href="#" class="block group" target="_blank" rel="noopener noreferrer">
+        <img
+          src="https://picsum.photos/seed/project2/425/300.jpg"
+          alt="Project 2"
+          width="425"
+          height="300"
+          loading="lazy"
+          class="object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
+        />
+      </a>
+      <a href="#" class="block group" target="_blank" rel="noopener noreferrer">
+        <img
+          src="https://picsum.photos/seed/project3/425/300.jpg"
+          alt="Project 3"
+          width="425"
+          height="300"
+          loading="lazy"
+          class="object-cover rounded-lg transition-transform duration-300 group-hover:scale-105"
+        />
+      </a>
     </div>
   </div>
 </section>
