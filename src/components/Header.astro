@@ -45,7 +45,7 @@ const navItems = getNavigationItems(isHomePage);
       </a>
 
       <!-- Navigation Links -->
-      <nav class="flex items-center justify-center gap-[100px]">
+      <nav class="flex items-center justify-center gap-[100px] relative z-10">
         {
           navItems.map((item) => (
             <a
@@ -63,7 +63,7 @@ const navItems = getNavigationItems(isHomePage);
       </nav>
 
       <!-- CTA Button -->
-      <div class="flex justify-end">
+      <div class="flex justify-end relative z-0">
         <Button
           text="Let's Talk"
           variant="white"
