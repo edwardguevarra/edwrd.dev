@@ -1,0 +1,33 @@
+---
+import type { NavLinkProps } from "../types/header.types";
+
+const {
+  href,
+  label,
+  section,
+  isActive = false,
+  isMobile = false,
+  prefetch = false,
+} = Astro.props as NavLinkProps;
+
+const baseClasses = "nav-link hover:opacity-80 transition-all cursor-pointer";
+const sizeClasses = isMobile
+  ? "py-2"
+  : "font-semibold text-sm leading-[22px] tracking-normal text-center";
+const colorClasses = isActive ? "text-brand-lime" : "text-white";
+
+const classes = `${baseClasses} ${sizeClasses} ${colorClasses}`;
+const roleAttr = isMobile ? "menuitem" : "none";
+const ariaCurrent = isActive ? "page" : undefined;
+---
+
+<a
+  href={href}
+  data-section={section}
+  class={classes}
+  role={roleAttr}
+  {...ariaCurrent && { "aria-current": ariaCurrent }}
+  {...prefetch && { "data-astro-prefetch": "true" }}
+>
+  {label}
+</a>

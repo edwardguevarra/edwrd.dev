@@ -26,9 +26,11 @@ This is a personal portfolio website built with Astro 5, featuring a modern sing
 ### Key Directories
 - `src/pages/` - Route definitions (homepage and blog pages)
 - `src/components/` - Reusable Astro components
+- `src/services/` - Business logic services and controllers
+- `src/types/` - TypeScript type definitions and interfaces
 - `src/content/` - Content collections (projects and blog posts)
 - `src/config/` - Configuration files (navigation)
-- `src/utils/` - Utility functions
+- `src/utils/` - General utility functions
 
 ### Content Management System
 The project uses Astro Content Collections with TypeScript schemas:
@@ -52,9 +54,18 @@ Dynamic navigation handled through `src/config/navigation.ts`:
 
 #### Header Component (`src/components/Header.astro`)
 - Responsive navigation with mobile menu
-- Intersection Observer for active section highlighting
-- Mobile-first design with desktop enhancement
-- Complex state management for menu toggle and scroll behavior
+- Modular architecture using specialized services
+- Extracted components: `NavLink.astro` and `MobileMenu.astro`
+- Business logic separated into services layer
+
+#### Header Services (`src/services/`)
+- `navigation-manager.ts` - Handles active section highlighting with Intersection Observer
+- `mobile-menu-controller.ts` - Manages mobile menu state, animations, and accessibility
+- Services include proper cleanup and error handling
+
+#### Header Types (`src/types/`)
+- `header.types.ts` - Type definitions for navigation components
+- Centralized interfaces for NavigationItem, NavLinkProps, MobileMenuProps
 
 #### Content Components
 - `Hero.astro` - Landing section
@@ -66,6 +77,8 @@ Dynamic navigation handled through `src/config/navigation.ts`:
 
 #### Shared Components
 - `Button.astro` - Consistent button styling across the site
+- `NavLink.astro` - Reusable navigation link with active state handling
+- `MobileMenu.astro` - Extracted mobile menu with backdrop and navigation
 - `Metatags.astro` - SEO meta tags
 - `FontConfiguration.astro` - Typography settings
 
@@ -98,6 +111,13 @@ Uses `astro-icon` with Heroicons (`@iconify-json/heroicons`) for consistent icon
 ### TypeScript Integration
 - Content schemas provide type safety for markdown content
 - Navigation configuration typed with interfaces
+- Dedicated type definitions in `src/types/` for component interfaces
 - Date utilities for blog post formatting
+
+### Architecture Pattern
+- **Services Layer**: Business logic separated from presentation (`src/services/`)
+- **Component Layer**: UI components with clear responsibilities (`src/components/`)
+- **Type Layer**: Centralized type definitions (`src/types/`)
+- **Dynamic Imports**: Services loaded on-demand for better performance
 
 The codebase follows modern web development practices with emphasis on accessibility, performance, and user experience.
