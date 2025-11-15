@@ -9,7 +9,9 @@ import Button from "./Button.astro";
   class="bg-brand-dark relative flex-1 flex flex-col items-center justify-center py-4 md:py-8"
 >
   <!-- Hero Image - Immediately discoverable for LCP optimization -->
-  <div class="absolute w-[200px] h-[350px] -bottom-20 z-50 contain-layout">
+  <div
+    class="w-[200px] h-[350px] -bottom-20 z-50 contain-layout md:absolute md:w-[200px] md:h-[350px] md:-bottom-20"
+  >
     <Image
       src={heroImage}
       alt="Hero"
@@ -49,7 +51,7 @@ import Button from "./Button.astro";
   </div>
 
   <!-- Centered Title -->
-  <div class="text-center mb-4 md:mb-6 z-10">
+  <div class="text-center mb-8 md:mb-6 z-10">
     <h1
       data-animate
       class="text-brand-accent font-black text-8xl leading-16 tracking-normal mb-1"
@@ -73,23 +75,11 @@ import Button from "./Button.astro";
   <!-- Content Grid -->
   <div class="container z-10">
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
-      <!-- Left Content Block -->
-      <div class="flex flex-col justify-end space-y-6">
-        <p
-          data-animate
-          class="text-white text-sm font-normal leading-5 tracking-normal max-w-[240px] lg:max-w-[352px] animate-delay-300"
-        >
-          Experienced senior dev who always wants to learn and build stuffs. Got
-          a project in mind? Send me a message!
-        </p>
-        <div data-animate class="animate-delay-400">
-          <Button text="Let's Talk" variant="lime" filled={true} />
-        </div>
-      </div>
-
-      <!-- Right Content Block - Statistics -->
-      <div class="flex flex-col justify-end items-end space-y-3 md:space-y-4">
-        <div data-animate class="text-right animate-delay-300">
+      <!-- Right Content Block - Statistics (shown first on mobile) -->
+      <div
+        class="flex flex-col justify-end items-center md:items-end space-y-3 md:space-y-4 md:order-last order-first text-center md:text-right"
+      >
+        <div data-animate class="text-center md:text-right animate-delay-300">
           <div
             class="text-white text-2xl font-semibold leading-8 tracking-normal"
           >
@@ -101,7 +91,7 @@ import Button from "./Button.astro";
             years of experience
           </div>
         </div>
-        <div data-animate class="text-right animate-delay-400">
+        <div data-animate class="text-center md:text-right animate-delay-400">
           <div
             class="text-white text-2xl font-semibold leading-8 tracking-normal"
           >
@@ -113,7 +103,7 @@ import Button from "./Button.astro";
             projects completed
           </div>
         </div>
-        <div data-animate class="text-right animate-delay-500">
+        <div data-animate class="text-center md:text-right animate-delay-500">
           <div
             class="text-white text-2xl font-semibold leading-8 tracking-normal"
           >
@@ -124,6 +114,25 @@ import Button from "./Button.astro";
           >
             errors debugged
           </div>
+        </div>
+      </div>
+
+      <!-- Left Content Block (shown second on mobile) -->
+      <div
+        class="flex flex-col justify-end space-y-6 md:order-first order-last text-center md:text-left"
+      >
+        <p
+          data-animate
+          class="text-white text-sm font-normal leading-5 tracking-normal max-w-[240px] lg:max-w-[352px] animate-delay-300 mx-auto md:mx-0"
+        >
+          Experienced senior dev who always wants to learn and build stuffs. Got
+          a project in mind? Send me a message!
+        </p>
+        <div
+          data-animate
+          class="animate-delay-400 flex justify-center md:justify-start"
+        >
+          <Button text="Let's Talk" variant="lime" filled={true} />
         </div>
       </div>
     </div>
