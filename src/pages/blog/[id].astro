@@ -6,6 +6,7 @@ import Footer from "../../components/Footer.astro";
 import Metatags from "../../components/Metatags.astro";
 import FontConfiguration from "../../components/FontConfiguration.astro";
 import Button from "../../components/Button.astro";
+import Prose from "../../components/Prose.astro";
 import { formatDate } from "../../utils/date";
 import "../../styles/global.css";
 
@@ -80,7 +81,10 @@ const { Content } = await render(post);
         </div>
 
         <!-- Article Header -->
-        <article class="max-w-4xl mx-auto">
+        <article
+          class="bg-white rounded-lg shadow-lg p-6 md:p-8 lg:p-12"
+          data-animate
+        >
           <!-- Featured Image -->
           <div class="mb-8" data-animate>
             <Image
@@ -124,11 +128,10 @@ const { Content } = await render(post);
           </div>
 
           <!-- Article Content -->
-          <div
-            data-animate
-            class="prose prose-lg max-w-none prose-headings:text-brand-dark prose-headings:font-bold prose-p:text-brand-dark/90 prose-a:text-brand-dark prose-a:underline prose-strong:text-brand-dark prose-strong:font-bold prose-code:text-brand-dark prose-code:bg-brand-lime prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-brand-dark prose-pre:text-white animate-delay-400"
-          >
-            <Content />
+          <div data-animate class="animate-delay-400">
+            <Prose>
+              <Content />
+            </Prose>
           </div>
 
           <!-- Back to Blog Button -->
@@ -198,77 +201,38 @@ const { Content } = await render(post);
       }
     })();
   </script>
+
+  <style>
+    /* White background container styling */
+    .bg-white {
+      background-color: white;
+    }
+
+    .shadow-lg {
+      box-shadow:
+        0 10px 15px -3px rgba(0, 0, 0, 0.1),
+        0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    }
+
+    .rounded-lg {
+      border-radius: 0.5rem;
+    }
+
+    /* Responsive padding for the article container */
+    .p-6 {
+      padding: 1.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .md\:p-8 {
+        padding: 2rem;
+      }
+    }
+
+    @media (min-width: 1024px) {
+      .lg\:p-12 {
+        padding: 3rem;
+      }
+    }
+  </style>
 </html>
-
-<style>
-  /* Prose styles for markdown content */
-  .prose {
-    line-height: 1.75;
-  }
-
-  .prose h1,
-  .prose h2,
-  .prose h3,
-  .prose h4 {
-    margin-top: 2em;
-    margin-bottom: 1em;
-  }
-
-  .prose h2 {
-    font-size: 1.875em;
-  }
-
-  .prose h3 {
-    font-size: 1.5em;
-  }
-
-  .prose p {
-    margin-bottom: 1.25em;
-  }
-
-  .prose ul,
-  .prose ol {
-    margin-bottom: 1.25em;
-    padding-left: 1.625em;
-  }
-
-  .prose li {
-    margin-top: 0.5em;
-    margin-bottom: 0.5em;
-  }
-
-  .prose code {
-    font-family: "Fira Code", monospace;
-    font-size: 0.9em;
-  }
-
-  .prose pre {
-    padding: 1em;
-    border-radius: 0.5rem;
-    overflow-x: auto;
-    margin-bottom: 1.5em;
-  }
-
-  .prose pre code {
-    background: transparent;
-    padding: 0;
-  }
-
-  .prose blockquote {
-    border-left: 4px solid var(--color-brand-lime);
-    padding-left: 1em;
-    margin-left: 0;
-    font-style: italic;
-    color: var(--color-brand-dark);
-    opacity: 0.8;
-  }
-
-  .prose img {
-    border-radius: 0.5rem;
-    margin: 2em 0;
-  }
-
-  .prose a:hover {
-    opacity: 0.8;
-  }
-</style>
