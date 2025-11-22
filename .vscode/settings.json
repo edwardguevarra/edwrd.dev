@@ -1,0 +1,18 @@
+{
+    "restoreTerminals.terminals": [
+        {
+            "splitTerminals": [
+                {
+                    "name": "Dev",
+                    "commands": [
+                        "nvm use lts",
+                        "npm run dev"
+                    ]
+                },
+                {
+                    "name": "Terminal",
+                }
+            ]
+        },
+    ]
+}

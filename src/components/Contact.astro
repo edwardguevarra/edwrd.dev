@@ -2,19 +2,47 @@
 import Button from "./Button.astro";
 import { Image } from "astro:assets";
 import contactIcon from "../assets/contact.png";
+
+const contactLinks = [
+  {
+    text: "edwardguevarra@gmail.com",
+    icon: undefined,
+    delay: 200,
+  },
+  {
+    text: "LinkedIn",
+    icon: "heroicons:arrow-top-right-on-square",
+    delay: 300,
+  },
+  {
+    text: "GitHub",
+    icon: "heroicons:arrow-top-right-on-square",
+    delay: 400,
+  },
+  {
+    text: "Discord",
+    icon: "heroicons:arrow-top-right-on-square",
+    delay: 500,
+  },
+];
 ---
 
 <section id="contact" class="pt-16 pb-18 bg-brand-dark">
-  <div class="container pt-20 relative">
-    <div class="flex justify-between items-start flex-wrap">
-      <div data-animate class="font-black text-6xl text-brand-accent">
+  <div class="container pt-0 xl:pt-20 relative">
+    <div
+      class="flex justify-between items-center xl:items-start flex-wrap flex-col xl:flex-row"
+    >
+      <div
+        data-animate
+        class="font-black text-6xl text-brand-accent pb-8 lg:pb-0 text-center xl:text-left"
+      >
         <div>Contact Me,</div>
         <div>Let's Talk</div>
       </div>
-      <div class="flex flex-col gap-20">
+      <div class="flex flex-col gap-20 pt-8 xl:pt-0">
         <div
           data-animate
-          class="text-sm text-white max-w-xl text-right animate-delay-100"
+          class="text-sm text-white max-w-xl text-center xl:text-right animate-delay-100"
         >
           <div>
             Got a project in mind? Need a developer to bring your ideas to life
@@ -26,41 +54,25 @@ import contactIcon from "../assets/contact.png";
           </div>
         </div>
         <div class="flex flex-col gap-6">
-          <div data-animate class="animate-delay-200">
-            <Button
-              text="edwardguevarra@gmail.com"
-              variant="white"
-              class="ml-auto"
-            />
-          </div>
-          <div data-animate class="animate-delay-300">
-            <Button
-              text="LinkedIn"
-              icon="heroicons:arrow-top-right-on-square"
-              variant="white"
-              class="ml-auto"
-            />
-          </div>
-          <div data-animate class="animate-delay-400">
-            <Button
-              text="GitHub"
-              icon="heroicons:arrow-top-right-on-square"
-              variant="white"
-              class="ml-auto"
-            />
-          </div>
-          <div data-animate class="animate-delay-500">
-            <Button
-              text="Discord"
-              icon="heroicons:arrow-top-right-on-square"
-              variant="white"
-              class="ml-auto"
-            />
-          </div>
+          {
+            contactLinks.map((link) => (
+              <div data-animate class={`animate-delay-${link.delay}`}>
+                <Button
+                  text={link.text}
+                  icon={link.icon}
+                  variant="white"
+                  class="ml-auto mr-auto md:mr-0"
+                />
+              </div>
+            ))
+          }
         </div>
       </div>
     </div>
-    <div data-animate class="absolute -bottom-55 left-0 animate-delay-300">
+    <div
+      data-animate
+      class="absolute -bottom-55 left-0 animate-delay-300 hidden md:block"
+    >
       <Image src={contactIcon} alt="Contact" width={437} height={445} />
     </div>
   </div>
