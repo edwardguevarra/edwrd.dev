@@ -87,12 +87,17 @@ After I finish a task (or a small batch), I take the Cursor conversation and tur
 
 I use Linear and GitHub MCP so Cursor can read and update issues and PRs directly. (I'll cover MCP setup in another post.)
 
-### Ready-made prompts I use
+### Cursor commands I use
 
-**Linear summary:**
+Cursor has a [Commands](https://cursor.com/docs/context/commands) feature: reusable workflows triggered with `/` in the chat. Create `.md` files in `.cursor/commands/` (project) or `~/.cursor/commands/` (global)—the filename becomes the command (e.g., `linear-summary.md` → `/linear-summary`).
 
-```
+**Setup:** Create `.cursor/commands/` in your project root, then add these three files:
+
+**1. `linear-summary.md`** — Use `/linear-summary` after a task to summarize for Linear:
+
+```markdown
 Summarize this conversation for a Linear comment. Requirements:
+
 - High-level, non-technical
 - No code snippets
 - Minimal implementation details
@@ -100,20 +105,23 @@ Summarize this conversation for a Linear comment. Requirements:
 - 2-4 sentences max
 ```
 
-**GitHub technical write-up:**
+**2. `github-technical-writeup.md`** — Use `/github-technical-writeup` for PR descriptions:
 
-```
+```markdown
 Generate a GitHub PR description (or issue comment) from this conversation. Include:
+
 - What was implemented and why
 - Key code snippets or architecture decisions
 - Technical detail is fine — this is for engineers
 ```
 
-**Testing instructions:**
+**3. `testing-instructions.md`** — Use `/testing-instructions` to generate test steps:
 
-```
+```markdown
 Generate manual testing instructions for what we built. Include: steps to run, what to click/check, edge cases, and how to verify it works. Write for another dev.
 ```
+
+Copy the content inside each code block into the corresponding `.md` file. After that, typing `/` in Cursor chat will show these commands. Include the relevant conversation context (or use Linear/GitHub MCP) when you run them.
 
 ## Why This Works
 
