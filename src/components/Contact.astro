@@ -5,22 +5,26 @@ import contactIcon from "../assets/contact.png";
 
 const contactLinks = [
   {
-    text: "edwardguevarra@gmail.com",
+    text: "edwardguevarra2003@gmail.com",
+    href: "mailto:edwardguevarra2003@gmail.com",
     icon: undefined,
     delay: 200,
   },
   {
     text: "LinkedIn",
+    href: "https://linkedin.com/in/edwardguevarra",
     icon: "heroicons:arrow-top-right-on-square",
     delay: 300,
   },
   {
     text: "GitHub",
+    href: "https://github.com/shizokura",
     icon: "heroicons:arrow-top-right-on-square",
     delay: 400,
   },
   {
     text: "Discord",
+    href: "https://discord.com/users/204564936729427968",
     icon: "heroicons:arrow-top-right-on-square",
     delay: 500,
   },
@@ -59,6 +63,7 @@ const contactLinks = [
               <div data-animate class={`animate-delay-${link.delay}`}>
                 <Button
                   text={link.text}
+                  href={link.href}
                   icon={link.icon}
                   variant="white"
                   class="ml-auto mr-auto md:mr-0"

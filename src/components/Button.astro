@@ -4,6 +4,7 @@ import { Icon } from "astro-icon/components";
 export interface Props {
   text: string;
   class?: string;
+  href?: string;
   icon?: string;
   variant?: "dark" | "white" | "lime";
   filled?: boolean;
@@ -12,6 +13,7 @@ export interface Props {
 const {
   text,
   class: className = "",
+  href,
   icon,
   variant = "dark",
   filled = false,
@@ -33,7 +35,19 @@ const variantClasses = filled
       : "border-brand-dark text-brand-dark";
 ---
 
-<button class={`${baseClasses} ${variantClasses} ${className}`}>
-  {text}
-  {icon && <Icon name={icon} width="16" height="16" />}
-</button>
+{href ? (
+  <a
+    href={href}
+    target="_blank"
+    rel="noopener noreferrer"
+    class={`${baseClasses} ${variantClasses} ${className}`}
+  >
+    {text}
+    {icon && <Icon name={icon} width="16" height="16" />}
+  </a>
+) : (
+  <button class={`${baseClasses} ${variantClasses} ${className}`}>
+    {text}
+    {icon && <Icon name={icon} width="16" height="16" />}
+  </button>
+)}
