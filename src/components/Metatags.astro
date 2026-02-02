@@ -31,6 +31,12 @@ const {
 ---
 
 <link rel="sitemap" href="/sitemap-index.xml" />
+<link
+  rel="alternate"
+  type="application/rss+xml"
+  title="Blog - edwrd.dev"
+  href={new URL("rss.xml", Astro.site)}
+/>
 
 <!-- Basic Meta Tags -->
 <meta charset="utf-8" />
