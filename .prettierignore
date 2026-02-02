@@ -1,0 +1,6 @@
+dist
+node_modules
+.astro
+*.min.js
+public/__astro_font_generated__
+CLAUDE.md

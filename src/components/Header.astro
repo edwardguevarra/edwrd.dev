@@ -20,7 +20,7 @@ const navItems = getNavigationItems(isHomePage);
       <!-- Logo -->
       <a
         href="/"
-        class="text-brand-lime font-bold text-xl hover:opacity-80 transition-opacity"
+        class="text-brand-lime text-xl font-bold transition-opacity hover:opacity-80"
       >
         edwrd
       </a>
@@ -28,28 +28,32 @@ const navItems = getNavigationItems(isHomePage);
       <!-- Mobile Menu Button -->
       <button
         id="mobile-menu-button"
-        class="text-white p-2"
+        class="p-2 text-white"
         aria-label="Toggle navigation menu"
         aria-expanded="false"
         aria-controls="mobile-menu"
       >
-        <Icon id="menu-icon" name="heroicons:bars-3" class="w-6 h-6" />
-        <Icon id="close-icon" name="heroicons:x-mark" class="w-6 h-6 hidden" />
+        <Icon id="menu-icon" name="heroicons:bars-3" class="h-6 w-6" />
+        <Icon id="close-icon" name="heroicons:x-mark" class="hidden h-6 w-6" />
       </button>
     </div>
 
     <!-- Desktop Header -->
-    <div class="hidden lg:grid lg:grid-cols-3 items-center">
+    <div class="hidden items-center lg:grid lg:grid-cols-3">
       <!-- Logo -->
       <a
         href="/"
-        class="text-brand-lime font-bold text-xl hover:opacity-80 transition-opacity"
+        class="text-brand-lime text-xl font-bold transition-opacity hover:opacity-80"
       >
         edwrd
       </a>
 
       <!-- Navigation Links -->
-      <nav class="flex items-center justify-center gap-[100px] relative z-10" role="navigation" aria-label="Main navigation">
+      <nav
+        class="relative z-10 flex items-center justify-center gap-[100px]"
+        role="navigation"
+        aria-label="Main navigation"
+      >
         {
           navItems.map((item) => (
             <NavLink
@@ -64,7 +68,7 @@ const navItems = getNavigationItems(isHomePage);
       </nav>
 
       <!-- CTA Button -->
-      <div class="flex justify-end relative z-0">
+      <div class="relative z-0 flex justify-end">
         <Button
           text="Let's Talk"
           variant="white"
@@ -81,26 +85,28 @@ const navItems = getNavigationItems(isHomePage);
 
 <script>
   // Wait for DOM to be ready
-  document.addEventListener('DOMContentLoaded', () => {
+  document.addEventListener("DOMContentLoaded", () => {
     // Load navigation services dynamically
     Promise.all([
-      import('../services/navigation-manager.js'),
-      import('../services/mobile-menu-controller.js')
-    ]).then(([{ NavigationManager }, { MobileMenuController }]) => {
-      // Initialize navigation manager for active section highlighting
-      const navigationManager = new NavigationManager();
-      navigationManager.initialize();
+      import("../services/navigation-manager.js"),
+      import("../services/mobile-menu-controller.js"),
+    ])
+      .then(([{ NavigationManager }, { MobileMenuController }]) => {
+        // Initialize navigation manager for active section highlighting
+        const navigationManager = new NavigationManager();
+        navigationManager.initialize();
 
-      // Initialize mobile menu controller for mobile menu functionality
-      const mobileMenuController = new MobileMenuController();
+        // Initialize mobile menu controller for mobile menu functionality
+        const mobileMenuController = new MobileMenuController();
 
-      // Cleanup on page unload
-      window.addEventListener('beforeunload', () => {
-        navigationManager.destroy();
-        mobileMenuController.destroy();
+        // Cleanup on page unload
+        window.addEventListener("beforeunload", () => {
+          navigationManager.destroy();
+          mobileMenuController.destroy();
+        });
+      })
+      .catch((error) => {
+        console.error("Failed to load navigation services:", error);
       });
-    }).catch(error => {
-      console.error('Failed to load navigation services:', error);
-    });
   });
 </script>

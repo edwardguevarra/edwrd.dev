@@ -35,19 +35,21 @@ const variantClasses = filled
       : "border-brand-dark text-brand-dark";
 ---
 
-{href ? (
-  <a
-    href={href}
-    target="_blank"
-    rel="noopener noreferrer"
-    class={`${baseClasses} ${variantClasses} ${className}`}
-  >
-    {text}
-    {icon && <Icon name={icon} width="16" height="16" />}
-  </a>
-) : (
-  <button class={`${baseClasses} ${variantClasses} ${className}`}>
-    {text}
-    {icon && <Icon name={icon} width="16" height="16" />}
-  </button>
-)}
+{
+  href ? (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      class={`${baseClasses} ${variantClasses} ${className}`}
+    >
+      {text}
+      {icon && <Icon name={icon} width="16" height="16" />}
+    </a>
+  ) : (
+    <button class={`${baseClasses} ${variantClasses} ${className}`}>
+      {text}
+      {icon && <Icon name={icon} width="16" height="16" />}
+    </button>
+  )
+}

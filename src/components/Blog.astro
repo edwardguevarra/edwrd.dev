@@ -5,11 +5,11 @@ import { Image } from "astro:assets";
 // Blog component - currently empty
 ---
 
-<section id="blog" class="bg-brand-accent py-20 text-brand-dark">
+<section id="blog" class="bg-brand-accent text-brand-dark py-20">
   <div class="container">
-    <div class="max-w-3xl ml-auto flex flex-col gap-6">
+    <div class="ml-auto flex max-w-3xl flex-col gap-6">
       <!-- Text -->
-      <div data-animate class="font-semibold text-sm text-right">
+      <div data-animate class="text-right text-sm font-semibold">
         <div>Want to learn some practical programming tips and tricks?</div>
         <div>
           Check out my blog where I share insights, tutorials, and lessons
@@ -28,7 +28,7 @@ import { Image } from "astro:assets";
       </div>
 
       <!-- Images container -->
-      <div class="flex gap-6 justify-end">
+      <div class="flex justify-end gap-6">
         <div data-animate class="animate-delay-300">
           <Image
             src="https://picsum.photos/seed/blog1/322/227.jpg"

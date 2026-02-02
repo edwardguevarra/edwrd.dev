@@ -10,13 +10,13 @@ type ProjectEntry = CollectionEntry<"projects">;
 
 <section id="projects" class="bg-brand-accent pt-6 pb-20">
   <div class="container mx-auto px-4">
-    <div class="flex flex-col md:flex-row justify-between items-center">
+    <div class="flex flex-col items-center justify-between md:flex-row">
       <!-- Left column for Skill/Tools button and additional content -->
-      <div class="w-full md:w-1/2 mb-4 md:mb-0">
+      <div class="mb-4 w-full md:mb-0 md:w-1/2">
         <div data-animate>
           <Button text="Skill / Tools" />
         </div>
-        <div data-animate class="mt-8 animate-delay-200">
+        <div data-animate class="animate-delay-200 mt-8">
           <Image
             src={toolsImage}
             alt="Tools"
@@ -28,16 +28,16 @@ type ProjectEntry = CollectionEntry<"projects">;
       </div>
 
       <!-- Right column for title -->
-      <div class="w-full md:w-1/2 text-center md:text-right pt-8 md:pt-0">
+      <div class="w-full pt-8 text-center md:w-1/2 md:pt-0 md:text-right">
         <h2
           data-animate
-          class="font-inter font-black text-brand-dark text-4xl md:text-5xl lg:text-6xl leading-tight md:leading-snug lg:leading-[72px] tracking-normal animate-delay-100"
+          class="font-inter text-brand-dark animate-delay-100 text-4xl leading-tight font-black tracking-normal md:text-5xl md:leading-snug lg:text-6xl lg:leading-[72px]"
         >
           My Projects/<br />Works
         </h2>
       </div>
     </div>
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 py-6">
+    <div class="grid grid-cols-1 gap-6 py-6 md:grid-cols-3">
       {
         projects.map((project: ProjectEntry, index: number) => {
           const delayClasses = [
@@ -52,7 +52,7 @@ type ProjectEntry = CollectionEntry<"projects">;
             <a
               data-animate
               href={project.data.link}
-              class={`block group ${delayClasses[index] || ""}`}
+              class={`group block ${delayClasses[index] || ""}`}
               target="_blank"
               rel="noopener noreferrer"
             >
@@ -62,7 +62,7 @@ type ProjectEntry = CollectionEntry<"projects">;
                 width={425}
                 height={300}
                 loading="lazy"
-                class="w-full object-cover rounded-lg transition-transform duration-300 group-hover:scale-105 shadow-[6px_6px_6px_0px_rgba(0,0,0,0.25)]"
+                class="w-full rounded-lg object-cover shadow-[6px_6px_6px_0px_rgba(0,0,0,0.25)] transition-transform duration-300 group-hover:scale-105"
               />
             </a>
           );

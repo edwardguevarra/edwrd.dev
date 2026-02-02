@@ -42,13 +42,13 @@ const experiences = [
 
   <div class="container">
     <!-- Two Column Grid -->
-    <div class="flex flex-col lg:flex-row gap-8 md:gap-12 items-start">
+    <div class="flex flex-col items-start gap-8 md:gap-12 lg:flex-row">
       <!-- Left Column - Images -->
-      <div class="flex flex-col gap-6 relative shrink-0 w-full lg:w-[425px]">
+      <div class="relative flex w-full shrink-0 flex-col gap-6 lg:w-[425px]">
         <!-- Section Title -->
         <h2
           data-animate
-          class="text-brand-dark font-black text-4xl md:text-5xl lg:text-6xl mb-8 md:mb-12 text-center lg:text-right"
+          class="text-brand-dark mb-8 text-center text-4xl font-black md:mb-12 md:text-5xl lg:text-right lg:text-6xl"
         >
           <div>About</div>
           <div>Me</div>
@@ -61,12 +61,12 @@ const experiences = [
               width={237}
               height={414}
               loading="lazy"
-              class="w-[237px] h-[414px] object-cover ml-auto"
+              class="ml-auto h-[414px] w-[237px] object-cover"
             />
           </div>
           <div
             data-animate
-            class="overflow-hidden mt-0 lg:-mt-50 animate-delay-200"
+            class="animate-delay-200 mt-0 overflow-hidden lg:-mt-50"
           >
             <Image
               src={aboutImage2}
@@ -74,20 +74,20 @@ const experiences = [
               width={237}
               height={414}
               loading="lazy"
-              class="w-[237px] h-[414px] object-cover"
+              class="h-[414px] w-[237px] object-cover"
             />
           </div>
         </div>
       </div>
 
       <!-- Combined Column - Biography, Experience Timeline, Hobbies, and Job Roles -->
-      <div class="flex flex-col gap-6 md:gap-16 pt-0 lg:pt-47">
+      <div class="flex flex-col gap-6 pt-0 md:gap-16 lg:pt-47">
         <!-- Two Column Grid for Biography and Hobbies -->
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
           <!-- Biography Column -->
           <div
             data-animate
-            class="text-brand-dark text-sm md:text-base leading-relaxed animate-delay-100"
+            class="text-brand-dark animate-delay-100 text-sm leading-relaxed md:text-base"
           >
             <p>
               Hey there! I'm Edward Guevarra, a senior full-stack developer
@@ -102,7 +102,7 @@ const experiences = [
           </div>
 
           <h2
-            class="block my-6 md:hidden text-brand-dark font-black text-4xl md:text-5xl lg:text-6xl md:mb-12 text-center lg:text-right"
+            class="text-brand-dark my-6 block text-center text-4xl font-black md:mb-12 md:hidden md:text-5xl lg:text-right lg:text-6xl"
           >
             Bio
           </h2>
@@ -122,7 +122,7 @@ const experiences = [
                     <div data-animate class={delayClasses[index] || ""}>
                       <Button
                         text={hobby}
-                        class="w-full md:w-auto md:ml-auto"
+                        class="w-full md:ml-auto md:w-auto"
                       />
                     </div>
                   );
@@ -133,13 +133,13 @@ const experiences = [
         </div>
 
         <h2
-          class="block my-6 md:hidden text-brand-dark font-black text-4xl md:text-5xl lg:text-6xl text-center lg:text-right"
+          class="text-brand-dark my-6 block text-center text-4xl font-black md:hidden md:text-5xl lg:text-right lg:text-6xl"
         >
           Experiences
         </h2>
 
         <!-- Experience Timeline and Job Roles Paired -->
-        <div class="grid grid-cols-2 gap-6 md:space-y-4 md:block">
+        <div class="grid grid-cols-2 gap-6 md:block md:space-y-4">
           {
             experiences.map((experience, index) => {
               const delayClasses = [
@@ -151,11 +151,11 @@ const experiences = [
               return (
                 <div
                   data-animate
-                  class={`flex flex-col md:flex-row gap-4 items-center justify-between ${delayClasses[index] || ""}`}
+                  class={`flex flex-col items-center justify-between gap-4 md:flex-row ${delayClasses[index] || ""}`}
                 >
                   <Button class="w-full md:w-auto" text={experience.period} />
                   <div class="space-y-1 text-center md:text-right">
-                    <div class="text-brand-dark font-bold text-sm md:text-base">
+                    <div class="text-brand-dark text-sm font-bold md:text-base">
                       {experience.title}
                     </div>
                     <div class="text-brand-dark text-sm md:text-base">

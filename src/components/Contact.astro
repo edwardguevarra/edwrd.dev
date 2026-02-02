@@ -31,14 +31,14 @@ const contactLinks = [
 ];
 ---
 
-<section id="contact" class="pt-16 pb-18 bg-brand-dark">
-  <div class="container pt-0 xl:pt-20 relative">
+<section id="contact" class="bg-brand-dark pt-16 pb-18">
+  <div class="relative container pt-0 xl:pt-20">
     <div
-      class="flex justify-between items-center xl:items-start flex-wrap flex-col xl:flex-row"
+      class="flex flex-col flex-wrap items-center justify-between xl:flex-row xl:items-start"
     >
       <div
         data-animate
-        class="font-black text-6xl text-brand-accent pb-8 lg:pb-0 text-center xl:text-left"
+        class="text-brand-accent pb-8 text-center text-6xl font-black lg:pb-0 xl:text-left"
       >
         <div>Contact Me,</div>
         <div>Let's Talk</div>
@@ -46,7 +46,7 @@ const contactLinks = [
       <div class="flex flex-col gap-20 pt-8 xl:pt-0">
         <div
           data-animate
-          class="text-sm text-white max-w-xl text-center xl:text-right animate-delay-100"
+          class="animate-delay-100 max-w-xl text-center text-sm text-white xl:text-right"
         >
           <div>
             Got a project in mind? Need a developer to bring your ideas to life
@@ -66,7 +66,7 @@ const contactLinks = [
                   href={link.href}
                   icon={link.icon}
                   variant="white"
-                  class="ml-auto mr-auto md:mr-0"
+                  class="mr-auto ml-auto md:mr-0"
                 />
               </div>
             ))
@@ -76,7 +76,7 @@ const contactLinks = [
     </div>
     <div
       data-animate
-      class="absolute -bottom-55 left-0 animate-delay-300 hidden md:block"
+      class="animate-delay-300 absolute -bottom-55 left-0 hidden md:block"
     >
       <Image src={contactIcon} alt="Contact" width={437} height={445} />
     </div>

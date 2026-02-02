@@ -18,16 +18,25 @@ export class MobileMenuController {
     this.mobileMenuBackdrop = document.getElementById("mobile-menu-backdrop");
     this.menuIcon = document.getElementById("menu-icon");
     this.closeIcon = document.getElementById("close-icon");
-    this.mobileMenuButtonWrapper = document.getElementById("mobile-menu-button-wrapper");
-    this.mobileTalkButton = this.mobileMenuButtonWrapper?.querySelector("button") || null;
+    this.mobileMenuButtonWrapper = document.getElementById(
+      "mobile-menu-button-wrapper"
+    );
+    this.mobileTalkButton =
+      this.mobileMenuButtonWrapper?.querySelector("button") || null;
   }
 
   private attachEventListeners() {
     // Main menu button toggle
-    this.menuButton?.addEventListener("click", this.handleMenuToggle.bind(this));
+    this.menuButton?.addEventListener(
+      "click",
+      this.handleMenuToggle.bind(this)
+    );
 
     // Close menu when clicking backdrop
-    this.mobileMenuBackdrop?.addEventListener("click", this.closeMobileMenu.bind(this));
+    this.mobileMenuBackdrop?.addEventListener(
+      "click",
+      this.closeMobileMenu.bind(this)
+    );
 
     // Close mobile menu when clicking navigation links
     const mobileNavLinks = this.mobileMenu?.querySelectorAll(".nav-link");
@@ -36,14 +45,20 @@ export class MobileMenuController {
     });
 
     // Close mobile menu when clicking "Let's Talk" button
-    this.mobileTalkButton?.addEventListener("click", this.closeMobileMenu.bind(this));
+    this.mobileTalkButton?.addEventListener(
+      "click",
+      this.closeMobileMenu.bind(this)
+    );
 
     // Handle escape key
     document.addEventListener("keydown", this.handleKeyDown.bind(this));
   }
 
   private handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === "Escape" && !this.mobileMenu?.classList.contains("hidden")) {
+    if (
+      event.key === "Escape" &&
+      !this.mobileMenu?.classList.contains("hidden")
+    ) {
       this.closeMobileMenu();
     }
   };
@@ -59,7 +74,12 @@ export class MobileMenuController {
   };
 
   public openMobileMenu = () => {
-    if (!this.mobileMenuBackdrop || !this.mobileMenu || !this.menuIcon || !this.closeIcon) {
+    if (
+      !this.mobileMenuBackdrop ||
+      !this.mobileMenu ||
+      !this.menuIcon ||
+      !this.closeIcon
+    ) {
       return;
     }
 
@@ -70,11 +90,13 @@ export class MobileMenuController {
 
     // Update ARIA attributes
     if (this.menuButton) this.menuButton.setAttribute("aria-expanded", "true");
-    if (this.mobileMenuBackdrop) this.mobileMenuBackdrop.setAttribute("aria-hidden", "false");
+    if (this.mobileMenuBackdrop)
+      this.mobileMenuBackdrop.setAttribute("aria-hidden", "false");
 
     // Trigger animation by removing hidden class first, then adding open class
     requestAnimationFrame(() => {
-      if (this.mobileMenuBackdrop) this.mobileMenuBackdrop.classList.add("mobile-menu-backdrop-open");
+      if (this.mobileMenuBackdrop)
+        this.mobileMenuBackdrop.classList.add("mobile-menu-backdrop-open");
       if (this.mobileMenu) this.mobileMenu.classList.add("mobile-menu-open");
     });
 
@@ -82,12 +104,19 @@ export class MobileMenuController {
     document.body.style.overflow = "hidden";
 
     // Focus management - focus the first navigation link
-    const firstNavLink = this.mobileMenu.querySelector(".nav-link") as HTMLElement;
+    const firstNavLink = this.mobileMenu.querySelector(
+      ".nav-link"
+    ) as HTMLElement;
     firstNavLink?.focus();
   };
 
   public closeMobileMenu = () => {
-    if (!this.mobileMenuBackdrop || !this.mobileMenu || !this.menuIcon || !this.closeIcon) {
+    if (
+      !this.mobileMenuBackdrop ||
+      !this.mobileMenu ||
+      !this.menuIcon ||
+      !this.closeIcon
+    ) {
       return;
     }
 
@@ -96,11 +125,13 @@ export class MobileMenuController {
 
     // Update ARIA attributes
     if (this.menuButton) this.menuButton.setAttribute("aria-expanded", "false");
-    if (this.mobileMenuBackdrop) this.mobileMenuBackdrop.setAttribute("aria-hidden", "true");
+    if (this.mobileMenuBackdrop)
+      this.mobileMenuBackdrop.setAttribute("aria-hidden", "true");
 
     // Wait for animation to complete before hiding
     setTimeout(() => {
-      if (this.mobileMenuBackdrop) this.mobileMenuBackdrop.classList.add("hidden");
+      if (this.mobileMenuBackdrop)
+        this.mobileMenuBackdrop.classList.add("hidden");
       if (this.mobileMenu) this.mobileMenu.classList.add("hidden");
       if (this.menuIcon) this.menuIcon.classList.remove("hidden");
       if (this.closeIcon) this.closeIcon.classList.add("hidden");

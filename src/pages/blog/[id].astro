@@ -49,7 +49,7 @@ const { Content } = await render(post);
   <body class="flex flex-col">
     <a
       href="#main-content"
-      class="sr-only focus:not-sr-only focus:absolute focus:top-4 focus:left-4 bg-brand-lime text-brand-dark px-4 py-2 rounded-md z-50"
+      class="bg-brand-lime text-brand-dark sr-only z-50 rounded-md px-4 py-2 focus:not-sr-only focus:absolute focus:top-4 focus:left-4"
     >
       Skip to main content
     </a>
@@ -62,10 +62,10 @@ const { Content } = await render(post);
         <div class="mb-8" data-animate>
           <a
             href="/blog"
-            class="inline-flex items-center gap-2 text-brand-dark hover:opacity-80 transition-opacity font-semibold"
+            class="text-brand-dark inline-flex items-center gap-2 font-semibold transition-opacity hover:opacity-80"
           >
             <svg
-              class="w-5 h-5"
+              class="h-5 w-5"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -82,7 +82,7 @@ const { Content } = await render(post);
 
         <!-- Article Header -->
         <article
-          class="bg-white rounded-lg shadow-lg p-6 md:p-8 lg:p-12"
+          class="rounded-lg bg-white p-6 shadow-lg md:p-8 lg:p-12"
           data-animate
         >
           <!-- Featured Image -->
@@ -99,7 +99,7 @@ const { Content } = await render(post);
           <!-- Title -->
           <h1
             data-animate
-            class="font-inter font-black text-brand-dark text-3xl md:text-4xl lg:text-5xl leading-tight mb-4 animate-delay-100"
+            class="font-inter text-brand-dark animate-delay-100 mb-4 text-3xl leading-tight font-black md:text-4xl lg:text-5xl"
           >
             {post.data.title}
           </h1>
@@ -107,7 +107,7 @@ const { Content } = await render(post);
           <!-- Meta Information -->
           <div
             data-animate
-            class="flex flex-wrap items-center gap-4 mb-6 text-brand-dark/70 text-sm animate-delay-200"
+            class="text-brand-dark/70 animate-delay-200 mb-6 flex flex-wrap items-center gap-4 text-sm"
           >
             <time datetime={post.data.date.toISOString()}>
               {formatDate(post.data.date)}
@@ -117,10 +117,10 @@ const { Content } = await render(post);
           </div>
 
           <!-- Tags -->
-          <div data-animate class="flex flex-wrap gap-2 mb-8 animate-delay-300">
+          <div data-animate class="animate-delay-300 mb-8 flex flex-wrap gap-2">
             {
               post.data.tags.map((tag) => (
-                <span class="text-xs px-3 py-1 bg-brand-lime text-brand-dark rounded-full font-semibold">
+                <span class="bg-brand-lime text-brand-dark rounded-full px-3 py-1 text-xs font-semibold">
                   {tag}
                 </span>
               ))
@@ -135,7 +135,7 @@ const { Content } = await render(post);
           </div>
 
           <!-- Back to Blog Button -->
-          <div class="mt-12 pt-8 border-t border-brand-dark/10" data-animate>
+          <div class="border-brand-dark/10 mt-12 border-t pt-8" data-animate>
             <a href="/blog">
               <Button text="Back to Blog" variant="dark" />
             </a>

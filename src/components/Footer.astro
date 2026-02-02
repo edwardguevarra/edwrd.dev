@@ -8,44 +8,44 @@ import { getNavigationItems } from "../config/navigation";
 const navItems = getNavigationItems(false);
 ---
 
-<footer class="bg-brand-dark border-t border-white/10 mt-auto">
-  <div class="container relative">
+<footer class="bg-brand-dark mt-auto border-t border-white/10">
+  <div class="relative container">
     <!-- Circle Background -->
     <Image
       src={bgCircle}
       alt="BG Circle"
       width={573}
       height={642}
-      class="absolute left-0 right-0 bottom-0 m-auto z-0"
+      class="absolute right-0 bottom-0 left-0 z-0 m-auto"
     />
 
     <!-- Branding -->
     <div
-      class="text-center text-brand-accent font-black text-8xl py-16 hidden md:block"
+      class="text-brand-accent hidden py-16 text-center text-8xl font-black md:block"
     >
       edwrd.dev
     </div>
 
     <!-- Footer Content -->
     <div
-      class="flex flex-wrap justify-between items-center gap-8 pb-10 pt-20 lg:pt-40 flex-col lg:flex-row"
+      class="flex flex-col flex-wrap items-center justify-between gap-8 pt-20 pb-10 lg:flex-row lg:pt-40"
     >
       <!-- Logo -->
       <div
-        class="text-brand-lime font-bold text-xl text-center lg:text-left relative z-10"
+        class="text-brand-lime relative z-10 text-center text-xl font-bold lg:text-left"
       >
         edwrd
       </div>
 
       <!-- Navigation Links -->
       <nav
-        class="flex items-center justify-center gap-4 lg:gap-[100px] relative z-10"
+        class="relative z-10 flex items-center justify-center gap-4 lg:gap-[100px]"
       >
         {
           navItems.map((item) => (
             <a
               href={item.href}
-              class="text-white hover:opacity-80 transition-opacity font-semibold text-sm leading-[22px] tracking-normal text-center cursor-pointer"
+              class="cursor-pointer text-center text-sm leading-[22px] font-semibold tracking-normal text-white transition-opacity hover:opacity-80"
             >
               {item.label}
             </a>
@@ -54,7 +54,7 @@ const navItems = getNavigationItems(false);
       </nav>
 
       <!-- CTA Button -->
-      <div class="flex justify-center lg:justify-end relative z-10">
+      <div class="relative z-10 flex justify-center lg:justify-end">
         <Button
           text="Let's Talk"
           variant="white"
