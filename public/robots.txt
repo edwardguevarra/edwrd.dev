@@ -1,0 +1,8 @@
+# https://edwrd.dev/robots.txt
+User-agent: *
+Allow: /
+
+# Optional: add Disallow lines to block paths, e.g.:
+# Disallow: /private/
+
+Sitemap: https://edwrd.dev/sitemap-index.xml
