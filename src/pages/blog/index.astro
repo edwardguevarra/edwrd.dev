@@ -15,6 +15,14 @@ type BlogEntry = CollectionEntry<"blog">;
 const sortedPosts = blogPosts.sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime()
 );
+
+// Prepare posts data for client-side search
+const postsData = sortedPosts.map((post) => ({
+  id: post.id,
+  title: post.data.title,
+  tags: post.data.tags,
+  description: post.data.description,
+}));
 ---
 
 <html lang="en">
@@ -64,10 +72,45 @@ const sortedPosts = blogPosts.sort(
           </a>
         </div>
 
+        <!-- Search Input -->
+        <div class="mb-8" data-animate>
+          <div class="relative max-w-2xl">
+            <svg
+              class="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-brand-dark/60"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              aria-hidden="true"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
+              />
+            </svg>
+            <input
+              type="search"
+              id="blog-search"
+              aria-label="Search blog posts by title or tag"
+              placeholder="Search by title or tag..."
+              class="w-full rounded-lg border-2 border-brand-dark bg-white py-3 pl-12 pr-4 text-brand-dark shadow-[6px_6px_6px_0px_rgba(0,0,0,0.25)] placeholder-brand-dark/40 transition-all duration-300 focus:border-brand-lime focus:outline-none focus:shadow-[8px_8px_8px_0px_rgba(0,0,0,0.3)]"
+              data-posts={JSON.stringify(postsData)}
+            />
+          </div>
+        </div>
+
+        <!-- No Results Message -->
+        <div id="no-results" class="hidden py-12 text-center">
+          <p class="text-brand-dark text-lg">
+            No blog posts found matching your search. Try a different term.
+          </p>
+        </div>
+
         <!-- Blog Posts Grid -->
         {
           sortedPosts.length > 0 ? (
-            <div class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div id="blog-posts-grid" class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
               {sortedPosts.map((post: BlogEntry, index: number) => {
                 const delayClasses = [
                   "",
@@ -81,6 +124,7 @@ const sortedPosts = blogPosts.sort(
                   <a
                     href={`/blog/${post.id}`}
                     data-animate
+                    data-post-id={post.id}
                     class={`group block ${delayClasses[index] || ""}`}
                   >
                     <article class="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-[6px_6px_6px_0px_rgba(0,0,0,0.25)] transition-all duration-300 hover:shadow-[8px_8px_8px_0px_rgba(0,0,0,0.3)]">
@@ -189,5 +233,109 @@ const sortedPosts = blogPosts.sort(
         checkInitialView();
       }
     })();
+
+    // Blog Search Implementation
+    (function () {
+      const searchInput = document.getElementById("blog-search") as HTMLInputElement;
+      const postsGrid = document.getElementById("blog-posts-grid") as HTMLElement;
+      const noResults = document.getElementById("no-results") as HTMLElement;
+
+      if (!searchInput || !postsGrid || !noResults) return;
+
+      const postsData = JSON.parse(searchInput.dataset.posts || "[]");
+      let debounceTimer: number | null = null;
+
+      function filterPosts(searchTerm: string): void {
+        const normalizedSearch = searchTerm.toLowerCase().trim();
+        const postCards = postsGrid.querySelectorAll<HTMLAnchorElement>(
+          "a[data-post-id]"
+        );
+
+        let visibleCount = 0;
+
+        postCards.forEach((card) => {
+          const postId = card.dataset.postId;
+          const postData = postsData.find((p: { id: string }) => p.id === postId);
+
+          if (!postData) return;
+
+          const matchesSearch =
+            normalizedSearch === "" ||
+            postData.title.toLowerCase().includes(normalizedSearch) ||
+            postData.tags.some((tag: string) =>
+              tag.toLowerCase().includes(normalizedSearch)
+            );
+
+          if (matchesSearch) {
+            card.style.display = "block";
+            card.classList.remove("opacity-0");
+            card.classList.add("opacity-100");
+            visibleCount++;
+          } else {
+            card.classList.remove("opacity-100");
+            card.classList.add("opacity-0");
+            setTimeout(() => {
+              if (card.classList.contains("opacity-0")) {
+                card.style.display = "none";
+              }
+            }, 300);
+          }
+        });
+
+        if (visibleCount === 0 && normalizedSearch !== "") {
+          noResults.classList.remove("hidden");
+        } else {
+          noResults.classList.add("hidden");
+        }
+      }
+
+      function updateURL(searchTerm: string): void {
+        const url = new URL(window.location.href);
+        if (searchTerm.trim()) {
+          url.searchParams.set("q", searchTerm.trim());
+        } else {
+          url.searchParams.delete("q");
+        }
+        window.history.replaceState({}, "", url.toString());
+      }
+
+      function handleSearch(event: Event): void {
+        const target = event.target as HTMLInputElement;
+        const searchTerm = target.value;
+
+        if (debounceTimer) {
+          window.clearTimeout(debounceTimer);
+        }
+
+        debounceTimer = window.setTimeout(() => {
+          filterPosts(searchTerm);
+          updateURL(searchTerm);
+        }, 300);
+      }
+
+      searchInput.addEventListener("input", handleSearch);
+
+      const urlParams = new URLSearchParams(window.location.search);
+      const searchFromURL = urlParams.get("q");
+      if (searchFromURL) {
+        searchInput.value = searchFromURL;
+        filterPosts(searchFromURL);
+      }
+    })();
+
+    // Search transition styles
+    const style = document.createElement("style");
+    style.textContent = `
+      [data-post-id] {
+        transition: opacity 300ms ease-in-out;
+      }
+      .opacity-0 {
+        opacity: 0 !important;
+      }
+      .opacity-100 {
+        opacity: 1 !important;
+      }
+    `;
+    document.head.appendChild(style);
   </script>
 </html>
