@@ -1,9 +1,15 @@
 import type { MobileMenuElements } from "./types";
 import type { MobileMenuService } from "../../types/shared.types";
+import { createLogger } from "../../utils/logger";
+import {
+  ServiceInitializationError,
+  DOMElementNotFoundError,
+} from "../../errors/types";
 
 export function createMobileMenuService(
   elements: MobileMenuElements
 ): MobileMenuService {
+  const logger = createLogger("MobileMenuService");
   const {
     menuButton,
     mobileMenu,
@@ -13,17 +19,53 @@ export function createMobileMenuService(
     mobileTalkButton,
   } = elements;
 
+  if (!menuButton) {
+    throw new DOMElementNotFoundError("menuButton");
+  }
+
+  if (!mobileMenu) {
+    throw new DOMElementNotFoundError("mobileMenu");
+  }
+
+  if (!mobileMenuBackdrop) {
+    throw new DOMElementNotFoundError("mobileMenuBackdrop");
+  }
+
+  if (!menuIcon) {
+    throw new DOMElementNotFoundError("menuIcon");
+  }
+
+  if (!closeIcon) {
+    throw new DOMElementNotFoundError("closeIcon");
+  }
+
+  if (!mobileTalkButton) {
+    logger.warn("Optional mobileTalkButton not provided");
+  }
+
+  logger.info("Service created");
+
   const attachEventListeners = () => {
-    menuButton.addEventListener("click", handleMenuToggle);
-    mobileMenuBackdrop.addEventListener("click", close);
+    try {
+      menuButton.addEventListener("click", handleMenuToggle);
+      mobileMenuBackdrop.addEventListener("click", close);
 
-    const mobileNavLinks = mobileMenu.querySelectorAll(".nav-link");
-    mobileNavLinks.forEach((link) => {
-      link.addEventListener("click", close);
-    });
+      const mobileNavLinks = mobileMenu.querySelectorAll(".nav-link");
+      mobileNavLinks.forEach((link) => {
+        link.addEventListener("click", close);
+      });
 
-    mobileTalkButton?.addEventListener("click", close);
-    document.addEventListener("keydown", handleKeyDown);
+      mobileTalkButton?.addEventListener("click", close);
+      document.addEventListener("keydown", handleKeyDown);
+      logger.info("Event listeners attached");
+    } catch (error) {
+      logger.error("Failed to attach event listeners", { error });
+      throw new ServiceInitializationError(
+        "MobileMenuService",
+        "Failed to attach event listeners",
+        error
+      );
+    }
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
@@ -78,20 +120,32 @@ export function createMobileMenuService(
   };
 
   const initialize = () => {
-    attachEventListeners();
+    try {
+      logger.info("Initializing service");
+      attachEventListeners();
+      logger.info("Service initialized");
+    } catch (error) {
+      logger.error("Initialization failed", { error });
+      throw error;
+    }
   };
 
   const destroy = () => {
-    menuButton.removeEventListener("click", handleMenuToggle);
-    mobileMenuBackdrop.removeEventListener("click", close);
-    document.removeEventListener("keydown", handleKeyDown);
+    try {
+      menuButton.removeEventListener("click", handleMenuToggle);
+      mobileMenuBackdrop.removeEventListener("click", close);
+      document.removeEventListener("keydown", handleKeyDown);
 
-    const mobileNavLinks = mobileMenu.querySelectorAll(".nav-link");
-    mobileNavLinks.forEach((link) => {
-      link.removeEventListener("click", close);
-    });
+      const mobileNavLinks = mobileMenu.querySelectorAll(".nav-link");
+      mobileNavLinks.forEach((link) => {
+        link.removeEventListener("click", close);
+      });
 
-    mobileTalkButton?.removeEventListener("click", close);
+      mobileTalkButton?.removeEventListener("click", close);
+      logger.info("Service destroyed");
+    } catch (error) {
+      logger.error("Cleanup failed", { error });
+    }
   };
 
   return {

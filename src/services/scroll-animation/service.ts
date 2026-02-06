@@ -1,11 +1,24 @@
 import type { ScrollAnimationServiceConfig } from "./types";
 import type { ScrollAnimationService } from "../../types/shared.types";
+import { createLogger } from "../../utils/logger";
+import { ServiceInitializationError, ObserverError } from "../../errors/types";
 
 export function createScrollAnimationService(
   config: ScrollAnimationServiceConfig
 ): ScrollAnimationService {
+  const logger = createLogger("ScrollAnimationService");
   let observer: IntersectionObserver | null = null;
   const { animatedElements } = config.elements;
+
+  if (!animatedElements || animatedElements.length === 0) {
+    logger.warn(
+      "No animated elements provided, service will not animate anything"
+    );
+  } else {
+    logger.info("Service created", {
+      elementsCount: animatedElements.length,
+    });
+  }
 
   const defaultConfig = {
     rootMargin: "0px 0px -100px 0px",
@@ -24,10 +37,16 @@ export function createScrollAnimationService(
       return false;
     }
 
+    if (!animatedElements || animatedElements.length === 0) {
+      logger.info("Reduced motion preferred, no elements to animate");
+      return true;
+    }
+
     animatedElements.forEach((el) => {
       el.style.opacity = "1";
       el.style.transform = "none";
     });
+    logger.info("Reduced motion preferred, animation disabled");
     return true;
   };
 
@@ -50,8 +69,16 @@ export function createScrollAnimationService(
   };
 
   const observeElements = () => {
+    if (!animatedElements || animatedElements.length === 0) {
+      return;
+    }
+
     animatedElements.forEach((el) => {
-      observer!.observe(el);
+      try {
+        observer!.observe(el);
+      } catch (error) {
+        throw new ObserverError("observe", el, error);
+      }
     });
   };
 
@@ -67,23 +94,41 @@ export function createScrollAnimationService(
   };
 
   const initialize = () => {
-    if (handleReducedMotion()) {
-      return;
-    }
+    try {
+      logger.info("Initializing service");
 
-    setupObserver();
-    observeElements();
+      if (handleReducedMotion()) {
+        return;
+      }
 
-    if (document.readyState === "loading") {
-      document.addEventListener("DOMContentLoaded", checkInitialView);
-    } else {
-      checkInitialView();
+      setupObserver();
+      observeElements();
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", checkInitialView);
+      } else {
+        checkInitialView();
+      }
+
+      logger.info("Service initialized");
+    } catch (error) {
+      logger.error("Initialization failed", { error });
+      throw new ServiceInitializationError(
+        "ScrollAnimationService",
+        "Failed to initialize",
+        error
+      );
     }
   };
 
   const destroy = () => {
-    if (observer) {
-      observer.disconnect();
+    try {
+      if (observer) {
+        observer.disconnect();
+      }
+      logger.info("Service destroyed");
+    } catch (error) {
+      logger.error("Cleanup failed", { error });
     }
   };
 

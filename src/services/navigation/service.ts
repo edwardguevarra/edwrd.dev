@@ -7,13 +7,34 @@ import {
   shouldSkipBlogHighlight,
   SECTION_IDS,
 } from "./config";
+import { createLogger } from "../../utils/logger";
+import { ServiceInitializationError, ObserverError } from "../../errors/types";
 
 export function createNavigationService(
   config: NavigationServiceConfig
 ): NavigationService {
+  const logger = createLogger("NavigationService");
   let observer: IntersectionObserver | null = null;
   const { sections, navLinks } = config.elements;
   const intersectingSections = new Map<Element, number>();
+
+  if (!navLinks || navLinks.length === 0) {
+    throw new ServiceInitializationError(
+      "NavigationService",
+      "navLinks must be provided"
+    );
+  }
+
+  if (!sections || sections.length === 0) {
+    logger.warn(
+      "No sections provided, service will only handle nav link highlighting"
+    );
+  }
+
+  logger.info("Service created", {
+    sectionsCount: sections?.length ?? 0,
+    navLinksCount: navLinks.length,
+  });
 
   const defaultConfig = {
     rootMargin: "-20% 0px -60% 0px",
@@ -31,6 +52,8 @@ export function createNavigationService(
   };
 
   const handleIntersection = (entries: IntersectionObserverEntry[]) => {
+    if (!sections || sections.length === 0) return;
+
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         intersectingSections.set(entry.target, entry.intersectionRatio);
@@ -87,6 +110,10 @@ export function createNavigationService(
       return;
     }
 
+    if (!sections || sections.length === 0) {
+      return;
+    }
+
     const scrollPosition = window.scrollY;
     if (scrollPosition < 100) {
       updateActiveNav(getDefaultActiveSection());
@@ -104,40 +131,58 @@ export function createNavigationService(
   };
 
   const initialize = () => {
-    const isCurrentPageBlog = isBlogPage(window.location.pathname);
+    try {
+      logger.info("Initializing service");
+      const isCurrentPageBlog = isBlogPage(window.location.pathname);
 
-    if (isCurrentPageBlog) {
-      navLinks.forEach((link) => {
-        const linkSection = link.getAttribute("data-section");
-        if (linkSection === SECTION_IDS.BLOG) {
-          link.classList.add(getActiveLinkClasses(true));
-          link.classList.remove(getActiveLinkClasses(false));
-        } else {
-          link.classList.remove(getActiveLinkClasses(true));
-          link.classList.add(getActiveLinkClasses(false));
-        }
-      });
-      return;
-    }
+      if (isCurrentPageBlog) {
+        navLinks.forEach((link) => {
+          const linkSection = link.getAttribute("data-section");
+          if (linkSection === SECTION_IDS.BLOG) {
+            link.classList.add(getActiveLinkClasses(true));
+            link.classList.remove(getActiveLinkClasses(false));
+          } else {
+            link.classList.remove(getActiveLinkClasses(true));
+            link.classList.add(getActiveLinkClasses(false));
+          }
+        });
+        logger.info("Initialized on blog page");
+        return;
+      }
 
-    checkInitialActiveSection();
-    setupObserver();
+      checkInitialActiveSection();
+      setupObserver();
 
-    if (observer) {
-      sections.forEach((section) => {
-        const sectionId = (section as HTMLElement).id;
-        if (sectionId) {
-          observer!.observe(section);
-        }
-      });
+      if (observer && sections && sections.length > 0) {
+        sections.forEach((section) => {
+          try {
+            observer!.observe(section);
+          } catch (error) {
+            throw new ObserverError("observe", section, error);
+          }
+        });
+        logger.info("Observer initialized for all sections");
+      }
+    } catch (error) {
+      logger.error("Initialization failed", { error });
+      throw new ServiceInitializationError(
+        "NavigationService",
+        "Failed to initialize",
+        error
+      );
     }
   };
 
   const destroy = () => {
-    if (observer) {
-      observer.disconnect();
+    try {
+      if (observer) {
+        observer.disconnect();
+      }
+      intersectingSections.clear();
+      logger.info("Service destroyed");
+    } catch (error) {
+      logger.error("Cleanup failed", { error });
     }
-    intersectingSections.clear();
   };
 
   return {

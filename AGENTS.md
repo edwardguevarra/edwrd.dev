@@ -85,10 +85,76 @@ export function createService(config: Config): Service {
 
 ### Error Handling
 
-- Check for null/undefined before DOM operations
-- Services handle initialization failures gracefully
-- Use try-catch in event handlers and async operations
-- Validate element existence before querying/selecting
+- **Custom error types** in `src/errors/types.ts`:
+  - `ServiceInitializationError` - service initialization failures
+  - `DOMElementNotFoundError` - missing required DOM elements
+  - `ConfigurationError` - invalid configuration values
+  - `ObserverError` - IntersectionObserver operation failures
+
+- **Logging utility** in `src/utils/logger.ts`:
+  - Use `createLogger(context)` to create a scoped logger
+  - Methods: `info()`, `warn()`, `error()`, `debug()`
+  - All logs include context data and timestamp
+
+- **Service error handling pattern**:
+
+  ```ts
+  export function createService(config: Config): Service {
+    const logger = createLogger("ServiceName");
+
+    // Validate required inputs
+    if (!config.requiredField) {
+      throw new ConfigurationError("Required field missing");
+    }
+
+    const initialize = () => {
+      try {
+        logger.info("Initializing service");
+        // initialization logic
+      } catch (error) {
+        logger.error("Initialization failed", { error });
+        throw new ServiceInitializationError(
+          "ServiceName",
+          "Failed to initialize",
+          error
+        );
+      }
+    };
+
+    const destroy = () => {
+      try {
+        // cleanup logic
+        logger.info("Service destroyed");
+      } catch (error) {
+        logger.error("Cleanup failed", { error });
+      }
+    };
+
+    return { initialize, destroy };
+  }
+  ```
+
+- **Component error boundary pattern**:
+
+  ```ts
+  import("../services/service.js")
+    .then(({ createService }) => {
+      const service = createService(config);
+      service.initialize();
+    })
+    .catch((error) => {
+      console.error("[ComponentName] Failed to load service:", {
+        error: error instanceof Error ? error.message : String(error),
+        stack: error instanceof Error ? error.stack : undefined,
+      });
+    });
+  ```
+
+- **Optional vs required elements**:
+  - Required: Throw `DOMElementNotFoundError` if missing
+  - Optional: Log warning and continue, use optional chaining `?.`
+
+- **Observer operations**: Wrap in try-catch with `ObserverError`
 
 ### Testing
 

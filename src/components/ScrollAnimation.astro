@@ -18,7 +18,13 @@
         });
       })
       .catch((error) => {
-        console.error("Failed to load scroll animation service:", error);
+        console.warn(
+          "[ScrollAnimation] Failed to load scroll animation service:",
+          {
+            error: error instanceof Error ? error.message : String(error),
+            stack: error instanceof Error ? error.stack : undefined,
+          }
+        );
       });
   });
 </script>
