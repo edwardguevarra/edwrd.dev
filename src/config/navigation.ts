@@ -1,8 +1,4 @@
-export interface NavigationItem {
-  label: string;
-  section: string;
-  href: string; // This will be computed dynamically
-}
+import type { NavigationItem } from "../types/header.types";
 
 export const navigationItems: Omit<NavigationItem, "href">[] = [
   { label: "About", section: "about" },
