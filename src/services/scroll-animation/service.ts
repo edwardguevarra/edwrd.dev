@@ -83,9 +83,13 @@ export function createScrollAnimationService(
   };
 
   const checkInitialView = () => {
+    if (!animatedElements || animatedElements.length === 0) {
+      return;
+    }
+
     animatedElements.forEach((el) => {
       const rect = el.getBoundingClientRect();
-      const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
+      const isInViewport = rect.top < window.innerHeight && rect.bottom >= 0;
       if (isInViewport) {
         el.classList.add(finalConfig.animateClass);
         observer?.unobserve(el);
