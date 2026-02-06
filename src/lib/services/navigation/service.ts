@@ -1,4 +1,4 @@
-import type { NavigationElements, NavigationServiceConfig } from "./types";
+import type { NavigationServiceConfig } from "./types";
 import type { NavigationService } from "../../types/shared.types";
 
 export function createNavigationService(

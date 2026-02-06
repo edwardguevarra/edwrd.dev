@@ -2,7 +2,7 @@
 import { Image } from "astro:assets";
 import aboutImage1 from "../assets/about-1.png";
 import aboutImage2 from "../assets/about-2.png";
-import Button from "./Button.astro";
+import OutlineButton from "./buttons/OutlineButton.astro";
 import Marquee from "./Marquee.astro";
 
 const hobbies = [
@@ -109,7 +109,7 @@ const experiences = [
 
           <!-- Hobbies Column -->
           <div data-animate class="animate-delay-200">
-            <div class="grid grid-cols-2 gap-6 md:flex md:flex-col md:gap-6">
+            <div class="grid grid-cols-1 gap-6 md:flex md:flex-col md:gap-6">
               {
                 hobbies.map((hobby, index) => {
                   const delayClasses = [
@@ -120,9 +120,10 @@ const experiences = [
                   ];
                   return (
                     <div data-animate class={delayClasses[index] || ""}>
-                      <Button
+                      <OutlineButton
                         text={hobby}
                         class="w-full md:ml-auto md:w-auto"
+                        data-testid={`hobby-button-${index}`}
                       />
                     </div>
                   );
@@ -139,7 +140,7 @@ const experiences = [
         </h2>
 
         <!-- Experience Timeline and Job Roles Paired -->
-        <div class="grid grid-cols-2 gap-6 md:block md:space-y-4">
+        <div class="grid grid-cols-1 gap-6 md:block md:space-y-4">
           {
             experiences.map((experience, index) => {
               const delayClasses = [
@@ -153,7 +154,11 @@ const experiences = [
                   data-animate
                   class={`flex flex-col items-center justify-between gap-4 md:flex-row ${delayClasses[index] || ""}`}
                 >
-                  <Button class="w-full md:w-auto" text={experience.period} />
+                  <OutlineButton
+                    class="w-full md:w-auto"
+                    text={experience.period}
+                    data-testid={`experience-button-${index}`}
+                  />
                   <div class="space-y-1 text-center md:text-right">
                     <div class="text-brand-dark text-sm font-bold md:text-base">
                       {experience.title}

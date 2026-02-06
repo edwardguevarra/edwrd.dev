@@ -1,5 +1,5 @@
 ---
-import Button from "./Button.astro";
+import OutlineButton from "./buttons/OutlineButton.astro";
 import { Image } from "astro:assets";
 import contactIcon from "../assets/contact.png";
 
@@ -8,24 +8,28 @@ const contactLinks = [
     text: "edwardguevarra2003@gmail.com",
     href: "mailto:edwardguevarra2003@gmail.com",
     icon: undefined,
+    target: undefined,
     delay: 200,
   },
   {
     text: "LinkedIn",
     href: "https://linkedin.com/in/edwardguevarra",
     icon: "heroicons:arrow-top-right-on-square",
+    target: "_blank",
     delay: 300,
   },
   {
     text: "GitHub",
     href: "https://github.com/shizokura",
     icon: "heroicons:arrow-top-right-on-square",
+    target: "_blank",
     delay: 400,
   },
   {
     text: "Discord",
     href: "https://discord.com/users/204564936729427968",
     icon: "heroicons:arrow-top-right-on-square",
+    target: "_blank",
     delay: 500,
   },
 ];
@@ -61,11 +65,12 @@ const contactLinks = [
           {
             contactLinks.map((link) => (
               <div data-animate class={`animate-delay-${link.delay}`}>
-                <Button
+                <OutlineButton
                   text={link.text}
                   href={link.href}
                   icon={link.icon}
-                  variant="white"
+                  target={link.target}
+                  color="white"
                   class="mr-auto ml-auto md:mr-0"
                 />
               </div>

@@ -1,7 +1,4 @@
-import type {
-  ScrollAnimationElements,
-  ScrollAnimationServiceConfig,
-} from "./types";
+import type { ScrollAnimationServiceConfig } from "./types";
 import type { ScrollAnimationService } from "../../types/shared.types";
 
 export function createScrollAnimationService(

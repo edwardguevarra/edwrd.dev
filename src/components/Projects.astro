@@ -1,7 +1,7 @@
 ---
 import { Image } from "astro:assets";
 import toolsImage from "../../public/images/tools.png";
-import Button from "./Button.astro";
+import OutlineButton from "./buttons/OutlineButton.astro";
 import { getCollection, type CollectionEntry } from "astro:content";
 
 const projects = await getCollection("projects");
@@ -14,7 +14,7 @@ type ProjectEntry = CollectionEntry<"projects">;
       <!-- Left column for Skill/Tools button and additional content -->
       <div class="mb-4 w-full md:mb-0 md:w-1/2">
         <div data-animate>
-          <Button text="Skill / Tools" />
+          <OutlineButton text="Skill / Tools" />
         </div>
         <div data-animate class="animate-delay-200 mt-8">
           <Image

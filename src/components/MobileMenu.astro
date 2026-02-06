@@ -1,5 +1,5 @@
 ---
-import Button from "./Button.astro";
+import FilledButton from "./buttons/FilledButton.astro";
 import NavLink from "./NavLink.astro";
 import type { MobileMenuProps } from "../types/header.types";
 
@@ -37,7 +37,7 @@ const { navItems, isBlogPage } = Astro.props as MobileMenuProps;
       ))
     }
     <div id="mobile-menu-button-wrapper">
-      <Button text="Let's Talk" variant="white" filled={true} />
+      <FilledButton href="/#contact" text="Let's Talk" color="white" />
     </div>
   </div>
 </nav>

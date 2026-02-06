@@ -5,7 +5,7 @@ import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
 import Metatags from "../../components/Metatags.astro";
 import FontConfiguration from "../../components/FontConfiguration.astro";
-import Button from "../../components/Button.astro";
+import OutlineButton from "../../components/buttons/OutlineButton.astro";
 import Prose from "../../components/Prose.astro";
 import ScrollAnimation from "../../components/ScrollAnimation.astro";
 import { formatDate } from "../../utils/date";
@@ -138,7 +138,7 @@ const { Content } = await render(post);
           <!-- Back to Blog Button -->
           <div class="border-brand-dark/10 mt-12 border-t pt-8" data-animate>
             <a href="/blog">
-              <Button text="Back to Blog" variant="dark" />
+              <OutlineButton text="Back to Blog" />
             </a>
           </div>
         </article>

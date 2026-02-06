@@ -1,5 +1,5 @@
 ---
-import Button from "./Button.astro";
+import FilledButton from "./buttons/FilledButton.astro";
 import MobileMenu from "./MobileMenu.astro";
 import NavLink from "./NavLink.astro";
 import { getNavigationItems } from "../config/navigation";
@@ -69,10 +69,10 @@ const navItems = getNavigationItems(isHomePage);
 
       <!-- CTA Button -->
       <div class="relative z-0 flex justify-end">
-        <Button
+        <FilledButton
+          href="/#contact"
           text="Let's Talk"
-          variant="white"
-          filled={true}
+          color="white"
           class="ml-auto"
         />
       </div>
@@ -97,14 +97,18 @@ const navItems = getNavigationItems(isHomePage);
         const navLinks = document.querySelectorAll(".nav-link");
         const mobileMenuButton = document.getElementById("mobile-menu-button");
         const mobileMenu = document.getElementById("mobile-menu");
-        const mobileMenuBackdrop = document.getElementById("mobile-menu-backdrop");
+        const mobileMenuBackdrop = document.getElementById(
+          "mobile-menu-backdrop"
+        );
         const menuIcon = document.getElementById("menu-icon");
         const closeIcon = document.getElementById("close-icon");
         const mobileMenuButtonWrapper = document.getElementById(
           "mobile-menu-button-wrapper"
         );
         const mobileTalkButton =
-          mobileMenuButtonWrapper?.querySelector("button") || null;
+          (mobileMenuButtonWrapper?.querySelector(
+            "a, button"
+          ) as HTMLElement) || null;
 
         // Validate required elements
         if (
@@ -116,7 +120,9 @@ const navItems = getNavigationItems(isHomePage);
           !menuIcon ||
           !closeIcon
         ) {
-          console.error("Required DOM elements not found for navigation services");
+          console.error(
+            "Required DOM elements not found for navigation services"
+          );
           return;
         }
 

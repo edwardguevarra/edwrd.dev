@@ -1,5 +1,5 @@
 ---
-import Button from "./Button.astro";
+import FilledButton from "./buttons/FilledButton.astro";
 import { Image } from "astro:assets";
 import bgCircle from "../assets/bg-circle.png";
 import { getNavigationItems } from "../config/navigation";
@@ -61,11 +61,10 @@ const navItems = getNavigationItems(false);
 
       <!-- CTA Button -->
       <div class="relative z-10 flex justify-center lg:justify-end">
-        <Button
-          href="mailto:edwardguevarra2003@gmail.com"
+        <FilledButton
+          href="/#contact"
           text="Let's Talk"
-          variant="white"
-          filled={true}
+          color="white"
           class="ml-auto"
         />
       </div>

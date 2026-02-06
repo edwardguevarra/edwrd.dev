@@ -155,4 +155,42 @@ describe("createMobileMenuService", () => {
     expect(removeSpy).toHaveBeenCalled();
     expect(documentSpy).toHaveBeenCalled();
   });
+
+  it("closes menu when talk button is <a> element", () => {
+    const menuButton = document.createElement("button");
+    const mobileMenu = document.createElement("div");
+    const backdrop = document.createElement("div");
+    const menuIcon = document.createElement("span");
+    const closeIcon = document.createElement("span");
+    const talkButton = document.createElement("a");
+
+    mobileMenu.classList.add("hidden", "mobile-menu-open");
+    backdrop.classList.add("hidden", "mobile-menu-backdrop-open");
+    menuIcon.classList.add("hidden");
+    closeIcon.classList.add("block");
+    talkButton.href = "/#contact";
+
+    const elements: MobileMenuElements = {
+      menuButton,
+      mobileMenu,
+      mobileMenuBackdrop: backdrop,
+      menuIcon,
+      closeIcon,
+      mobileTalkButton: talkButton,
+    };
+
+    const service = createMobileMenuService(elements);
+    service.initialize();
+
+    talkButton.click();
+
+    vi.useFakeTimers();
+    vi.advanceTimersByTime(300);
+    vi.useRealTimers();
+
+    expect(backdrop.classList.contains("hidden")).toBe(true);
+    expect(mobileMenu.classList.contains("hidden")).toBe(true);
+
+    service.destroy();
+  });
 });

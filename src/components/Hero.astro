@@ -2,7 +2,7 @@
 import { Image } from "astro:assets";
 import heroImage from "../assets/hero.png";
 import bgCircle from "../assets/bg-circle.png";
-import Button from "./Button.astro";
+import FilledButton from "./buttons/FilledButton.astro";
 ---
 
 <section
@@ -132,7 +132,7 @@ import Button from "./Button.astro";
           data-animate
           class="animate-delay-400 flex justify-center md:justify-start"
         >
-          <Button text="Let's Talk" variant="lime" filled={true} />
+          <FilledButton href="/#contact" text="Let's Talk" color="lime" />
         </div>
       </div>
     </div>
