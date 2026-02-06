@@ -88,21 +88,59 @@ const navItems = getNavigationItems(isHomePage);
   document.addEventListener("DOMContentLoaded", () => {
     // Load navigation services dynamically
     Promise.all([
-      import("../services/navigation-manager.js"),
-      import("../services/mobile-menu-controller.js"),
+      import("../lib/services/navigation/index.js"),
+      import("../lib/services/mobile-menu/index.js"),
     ])
-      .then(([{ NavigationManager }, { MobileMenuController }]) => {
-        // Initialize navigation manager for active section highlighting
-        const navigationManager = new NavigationManager();
-        navigationManager.initialize();
+      .then(([{ createNavigationService }, { createMobileMenuService }]) => {
+        // Query DOM elements
+        const sections = document.querySelectorAll("section[id]");
+        const navLinks = document.querySelectorAll(".nav-link");
+        const mobileMenuButton = document.getElementById("mobile-menu-button");
+        const mobileMenu = document.getElementById("mobile-menu");
+        const mobileMenuBackdrop = document.getElementById("mobile-menu-backdrop");
+        const menuIcon = document.getElementById("menu-icon");
+        const closeIcon = document.getElementById("close-icon");
+        const mobileMenuButtonWrapper = document.getElementById(
+          "mobile-menu-button-wrapper"
+        );
+        const mobileTalkButton =
+          mobileMenuButtonWrapper?.querySelector("button") || null;
 
-        // Initialize mobile menu controller for mobile menu functionality
-        const mobileMenuController = new MobileMenuController();
+        // Validate required elements
+        if (
+          !sections ||
+          !navLinks ||
+          !mobileMenuButton ||
+          !mobileMenu ||
+          !mobileMenuBackdrop ||
+          !menuIcon ||
+          !closeIcon
+        ) {
+          console.error("Required DOM elements not found for navigation services");
+          return;
+        }
+
+        // Initialize navigation service
+        const navigationService = createNavigationService({
+          elements: { sections, navLinks },
+        });
+        navigationService.initialize();
+
+        // Initialize mobile menu service
+        const mobileMenuService = createMobileMenuService({
+          menuButton: mobileMenuButton,
+          mobileMenu: mobileMenu,
+          mobileMenuBackdrop: mobileMenuBackdrop,
+          menuIcon: menuIcon,
+          closeIcon: closeIcon,
+          mobileTalkButton: mobileTalkButton,
+        });
+        mobileMenuService.initialize();
 
         // Cleanup on page unload
         window.addEventListener("beforeunload", () => {
-          navigationManager.destroy();
-          mobileMenuController.destroy();
+          navigationService.destroy();
+          mobileMenuService.destroy();
         });
       })
       .catch((error) => {

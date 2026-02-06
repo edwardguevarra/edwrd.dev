@@ -1,16 +1,24 @@
 <script>
   document.addEventListener("DOMContentLoaded", () => {
-    import("../services/scroll-animation-manager.js")
-      .then(({ ScrollAnimationManager }) => {
-        const scrollAnimationManager = new ScrollAnimationManager();
-        scrollAnimationManager.initialize();
+    import("../lib/services/scroll-animation/index.js")
+      .then(({ createScrollAnimationService }) => {
+        // Query animated elements
+        const animatedElements =
+          document.querySelectorAll<HTMLElement>("[data-animate]");
 
+        // Initialize scroll animation service
+        const scrollAnimationService = createScrollAnimationService({
+          elements: { animatedElements },
+        });
+        scrollAnimationService.initialize();
+
+        // Cleanup on page unload
         window.addEventListener("beforeunload", () => {
-          scrollAnimationManager.destroy();
+          scrollAnimationService.destroy();
         });
       })
       .catch((error) => {
-        console.error("Failed to load scroll animation manager:", error);
+        console.error("Failed to load scroll animation service:", error);
       });
   });
 </script>
