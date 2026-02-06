@@ -7,6 +7,7 @@ import Metatags from "../../components/Metatags.astro";
 import FontConfiguration from "../../components/FontConfiguration.astro";
 import Button from "../../components/Button.astro";
 import Prose from "../../components/Prose.astro";
+import ScrollAnimation from "../../components/ScrollAnimation.astro";
 import { formatDate } from "../../utils/date";
 import "../../styles/global.css";
 
@@ -145,64 +146,8 @@ const { Content } = await render(post);
     </main>
 
     <Footer />
-  </body><script>
-    // Scroll Animation Handler using IntersectionObserver
-    (function () {
-      const prefersReducedMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      ).matches;
-
-      if (prefersReducedMotion) {
-        const animatedElements =
-          document.querySelectorAll<HTMLElement>("[data-animate]");
-        animatedElements.forEach((el) => {
-          el.style.opacity = "1";
-          el.style.transform = "none";
-        });
-        return;
-      }
-
-      const observerOptions = {
-        root: null,
-        rootMargin: "0px 0px -100px 0px",
-        threshold: 0.1,
-      };
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("animate-on-scroll");
-            observer.unobserve(entry.target);
-          }
-        });
-      }, observerOptions);
-
-      const animatedElements =
-        document.querySelectorAll<HTMLElement>("[data-animate]");
-      animatedElements.forEach((el) => {
-        observer.observe(el);
-      });
-
-      const checkInitialView = () => {
-        animatedElements.forEach((el) => {
-          const rect = el.getBoundingClientRect();
-          const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
-          if (isInViewport) {
-            el.classList.add("animate-on-scroll");
-            observer.unobserve(el);
-          }
-        });
-      };
-
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", checkInitialView);
-      } else {
-        checkInitialView();
-      }
-    })();
-  </script>
-
-  <style>
+    <ScrollAnimation />
+  </body><style>
     /* White background container styling */
     .bg-white {
       background-color: white;

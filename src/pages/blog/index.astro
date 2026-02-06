@@ -5,6 +5,7 @@ import Header from "../../components/Header.astro";
 import Footer from "../../components/Footer.astro";
 import Metatags from "../../components/Metatags.astro";
 import FontConfiguration from "../../components/FontConfiguration.astro";
+import ScrollAnimation from "../../components/ScrollAnimation.astro";
 import { formatDate } from "../../utils/date";
 import "../../styles/global.css";
 
@@ -76,7 +77,7 @@ const postsData = sortedPosts.map((post) => ({
         <div class="mb-8" data-animate>
           <div class="relative max-w-2xl">
             <svg
-              class="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-brand-dark/60"
+              class="text-brand-dark/60 absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2"
               fill="none"
               stroke="currentColor"
               viewBox="0 0 24 24"
@@ -86,15 +87,14 @@ const postsData = sortedPosts.map((post) => ({
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"
-              />
+                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
             </svg>
             <input
               type="search"
               id="blog-search"
               aria-label="Search blog posts by title or tag"
               placeholder="Search by title or tag..."
-              class="w-full rounded-lg border-2 border-brand-dark bg-white py-3 pl-12 pr-4 text-brand-dark shadow-[6px_6px_6px_0px_rgba(0,0,0,0.25)] placeholder-brand-dark/40 transition-all duration-300 focus:border-brand-lime focus:outline-none focus:shadow-[8px_8px_8px_0px_rgba(0,0,0,0.3)]"
+              class="border-brand-dark text-brand-dark placeholder-brand-dark/40 focus:border-brand-lime w-full rounded-lg border-2 bg-white py-3 pr-4 pl-12 shadow-[6px_6px_6px_0px_rgba(0,0,0,0.25)] transition-all duration-300 focus:shadow-[8px_8px_8px_0px_rgba(0,0,0,0.3)] focus:outline-none"
               data-posts={JSON.stringify(postsData)}
             />
           </div>
@@ -110,7 +110,10 @@ const postsData = sortedPosts.map((post) => ({
         <!-- Blog Posts Grid -->
         {
           sortedPosts.length > 0 ? (
-            <div id="blog-posts-grid" class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
+            <div
+              id="blog-posts-grid"
+              class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+            >
               {sortedPosts.map((post: BlogEntry, index: number) => {
                 const delayClasses = [
                   "",
@@ -178,66 +181,16 @@ const postsData = sortedPosts.map((post) => ({
     </main>
 
     <Footer />
+    <ScrollAnimation />
   </body><script>
-    // Scroll Animation Handler using IntersectionObserver
-    (function () {
-      const prefersReducedMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      ).matches;
-
-      if (prefersReducedMotion) {
-        const animatedElements =
-          document.querySelectorAll<HTMLElement>("[data-animate]");
-        animatedElements.forEach((el) => {
-          el.style.opacity = "1";
-          el.style.transform = "none";
-        });
-        return;
-      }
-
-      const observerOptions = {
-        root: null,
-        rootMargin: "0px 0px -100px 0px",
-        threshold: 0.1,
-      };
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("animate-on-scroll");
-            observer.unobserve(entry.target);
-          }
-        });
-      }, observerOptions);
-
-      const animatedElements =
-        document.querySelectorAll<HTMLElement>("[data-animate]");
-      animatedElements.forEach((el) => {
-        observer.observe(el);
-      });
-
-      const checkInitialView = () => {
-        animatedElements.forEach((el) => {
-          const rect = el.getBoundingClientRect();
-          const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
-          if (isInViewport) {
-            el.classList.add("animate-on-scroll");
-            observer.unobserve(el);
-          }
-        });
-      };
-
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", checkInitialView);
-      } else {
-        checkInitialView();
-      }
-    })();
-
     // Blog Search Implementation
     (function () {
-      const searchInput = document.getElementById("blog-search") as HTMLInputElement;
-      const postsGrid = document.getElementById("blog-posts-grid") as HTMLElement;
+      const searchInput = document.getElementById(
+        "blog-search"
+      ) as HTMLInputElement;
+      const postsGrid = document.getElementById(
+        "blog-posts-grid"
+      ) as HTMLElement;
       const noResults = document.getElementById("no-results") as HTMLElement;
 
       if (!searchInput || !postsGrid || !noResults) return;
@@ -247,15 +200,16 @@ const postsData = sortedPosts.map((post) => ({
 
       function filterPosts(searchTerm: string): void {
         const normalizedSearch = searchTerm.toLowerCase().trim();
-        const postCards = postsGrid.querySelectorAll<HTMLAnchorElement>(
-          "a[data-post-id]"
-        );
+        const postCards =
+          postsGrid.querySelectorAll<HTMLAnchorElement>("a[data-post-id]");
 
         let visibleCount = 0;
 
         postCards.forEach((card) => {
           const postId = card.dataset.postId;
-          const postData = postsData.find((p: { id: string }) => p.id === postId);
+          const postData = postsData.find(
+            (p: { id: string }) => p.id === postId
+          );
 
           if (!postData) return;
 

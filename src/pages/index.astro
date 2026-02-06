@@ -10,6 +10,7 @@ import Contact from "../components/Contact.astro";
 import Blog from "../components/Blog.astro";
 import Metatags from "../components/Metatags.astro";
 import Footer from "../components/Footer.astro";
+import ScrollAnimation from "../components/ScrollAnimation.astro";
 ---
 
 <html lang="en">
@@ -43,69 +44,6 @@ import Footer from "../components/Footer.astro";
     </main>
 
     <Footer />
-  </body><script>
-    // Scroll Animation Handler using IntersectionObserver
-    (function () {
-      // Check if user prefers reduced motion
-      const prefersReducedMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      ).matches;
-
-      if (prefersReducedMotion) {
-        // If reduced motion is preferred, show all elements immediately
-        const animatedElements =
-          document.querySelectorAll<HTMLElement>("[data-animate]");
-        animatedElements.forEach((el) => {
-          el.style.opacity = "1";
-          el.style.transform = "none";
-        });
-        return;
-      }
-
-      // IntersectionObserver options
-      const observerOptions = {
-        root: null,
-        rootMargin: "0px 0px -100px 0px", // Trigger when element is 100px from bottom of viewport
-        threshold: 0.1, // Trigger when 10% of element is visible
-      };
-
-      // Create observer
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            // Add animation class when element enters viewport
-            entry.target.classList.add("animate-on-scroll");
-            // Unobserve after animation is triggered
-            observer.unobserve(entry.target);
-          }
-        });
-      }, observerOptions);
-
-      // Observe all elements with data-animate attribute
-      const animatedElements =
-        document.querySelectorAll<HTMLElement>("[data-animate]");
-      animatedElements.forEach((el) => {
-        observer.observe(el);
-      });
-
-      // For elements already in viewport on page load, trigger immediately
-      const checkInitialView = () => {
-        animatedElements.forEach((el) => {
-          const rect = el.getBoundingClientRect();
-          const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
-          if (isInViewport) {
-            el.classList.add("animate-on-scroll");
-            observer.unobserve(el);
-          }
-        });
-      };
-
-      // Run check after DOM is fully loaded
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", checkInitialView);
-      } else {
-        checkInitialView();
-      }
-    })();
-  </script>
+    <ScrollAnimation />
+  </body>
 </html>

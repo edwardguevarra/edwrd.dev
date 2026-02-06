@@ -1,0 +1,16 @@
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    import("../services/scroll-animation-manager.js")
+      .then(({ ScrollAnimationManager }) => {
+        const scrollAnimationManager = new ScrollAnimationManager();
+        scrollAnimationManager.initialize();
+
+        window.addEventListener("beforeunload", () => {
+          scrollAnimationManager.destroy();
+        });
+      })
+      .catch((error) => {
+        console.error("Failed to load scroll animation manager:", error);
+      });
+  });
+</script>
