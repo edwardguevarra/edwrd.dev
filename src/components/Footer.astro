@@ -2,7 +2,7 @@
 import FilledButton from "./buttons/FilledButton.astro";
 import { Image } from "astro:assets";
 import bgCircle from "../assets/bg-circle.png";
-import { getNavigationItems } from "../config/navigation";
+import { getNavigationItems } from "../services/navigation/config";
 
 // Footer links should work from any page, so use full paths
 const navItems = getNavigationItems(false);

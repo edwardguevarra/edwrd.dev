@@ -1,13 +1,14 @@
 import { describe, it, expect, vi } from "vitest";
 import { createNavigationService } from "../service";
 import type { NavigationElements, NavigationServiceConfig } from "../types";
+import { SECTION_IDS } from "../config";
 
 describe("createNavigationService", () => {
   it("initializes without errors", () => {
     const mockSection = document.createElement("section");
-    mockSection.id = "about";
+    mockSection.id = SECTION_IDS.ABOUT;
     const mockLink = document.createElement("a");
-    mockLink.setAttribute("data-section", "about");
+    mockLink.setAttribute("data-section", SECTION_IDS.ABOUT);
     mockLink.classList.add("nav-link");
 
     const mockSections = [mockSection] as unknown as NodeListOf<Element>;
@@ -31,7 +32,7 @@ describe("createNavigationService", () => {
 
   it("initializes gracefully on blog pages", () => {
     const mockLink = document.createElement("a");
-    mockLink.setAttribute("data-section", "blog");
+    mockLink.setAttribute("data-section", SECTION_IDS.BLOG);
     mockLink.classList.add("nav-link", "text-white");
 
     const mockSections = [] as unknown as NodeListOf<Element>;
@@ -58,9 +59,9 @@ describe("createNavigationService", () => {
 
   it("cleanup removes all references", () => {
     const mockSection = document.createElement("section");
-    mockSection.id = "about";
+    mockSection.id = SECTION_IDS.ABOUT;
     const mockLink = document.createElement("a");
-    mockLink.setAttribute("data-section", "about");
+    mockLink.setAttribute("data-section", SECTION_IDS.ABOUT);
     mockLink.classList.add("nav-link");
 
     const mockSections = [mockSection] as unknown as NodeListOf<Element>;

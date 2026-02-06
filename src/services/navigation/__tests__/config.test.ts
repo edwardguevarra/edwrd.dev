@@ -1,33 +1,30 @@
 import { describe, it, expect } from "vitest";
-import {
-  getNavigationItems,
-  navigationItems,
-  type NavigationItem,
-} from "./navigation";
+import { getNavigationItems, SECTION_IDS } from "../config";
+import type { NavigationItem } from "../../../types/header.types";
 
 describe("getNavigationItems", () => {
   it("returns items with hash hrefs when on homepage (isHomePage: true)", () => {
     const items = getNavigationItems(true);
 
-    expect(items).toHaveLength(navigationItems.length);
+    expect(items).toHaveLength(4);
     expect(items[0]).toMatchObject({
       label: "About",
-      section: "about",
+      section: SECTION_IDS.ABOUT,
       href: "#about",
     });
     expect(items[1]).toMatchObject({
       label: "Works",
-      section: "projects",
+      section: SECTION_IDS.PROJECTS,
       href: "#projects",
     });
     expect(items[2]).toMatchObject({
       label: "Contact",
-      section: "contact",
+      section: SECTION_IDS.CONTACT,
       href: "#contact",
     });
     expect(items[3]).toMatchObject({
       label: "Blog",
-      section: "blog",
+      section: SECTION_IDS.BLOG,
       href: "#blog",
     });
   });
@@ -35,25 +32,25 @@ describe("getNavigationItems", () => {
   it("returns items with path hrefs when not on homepage (isHomePage: false)", () => {
     const items = getNavigationItems(false);
 
-    expect(items).toHaveLength(navigationItems.length);
+    expect(items).toHaveLength(4);
     expect(items[0]).toMatchObject({
       label: "About",
-      section: "about",
+      section: SECTION_IDS.ABOUT,
       href: "/#about",
     });
     expect(items[1]).toMatchObject({
       label: "Works",
-      section: "projects",
+      section: SECTION_IDS.PROJECTS,
       href: "/#projects",
     });
     expect(items[2]).toMatchObject({
       label: "Contact",
-      section: "contact",
+      section: SECTION_IDS.CONTACT,
       href: "/#contact",
     });
     expect(items[3]).toMatchObject({
       label: "Blog",
-      section: "blog",
+      section: SECTION_IDS.BLOG,
       href: "/blog",
     });
   });

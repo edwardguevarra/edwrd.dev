@@ -26,10 +26,9 @@ This is a personal portfolio website built with Astro 5, featuring a modern sing
 ### Key Directories
 - `src/pages/` - Route definitions (homepage and blog pages)
 - `src/components/` - Reusable Astro components
-- `src/services/` - Business logic services and controllers
-- `src/types/` - TypeScript type definitions and interfaces
+- `src/services/` - Business logic services (navigation, mobile-menu, scroll-animation)
+- `src/types/` - TypeScript type definitions (component and service types)
 - `src/content/` - Content collections (projects and blog posts)
-- `src/config/` - Configuration files (navigation)
 - `src/utils/` - General utility functions
 
 ### Content Management System
@@ -39,7 +38,9 @@ The project uses Astro Content Collections with TypeScript schemas:
 - **Blog**: Located in `src/content/blog/` with schema requiring title, description, date, author, tags, and featured images
 
 ### Navigation System
-Dynamic navigation handled through `src/config/navigation.ts`:
+Dynamic navigation handled through `src/services/navigation/`:
+- `config.ts` - Centralized navigation configuration (sections, classes, utilities)
+- `service.ts` - Handles active section highlighting with Intersection Observer
 - Automatically computes hrefs based on current page context
 - Handles both homepage (hash-based) and separate pages
 - Special logic for blog section navigation

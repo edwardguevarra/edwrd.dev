@@ -1,5 +1,12 @@
 import type { NavigationServiceConfig } from "./types";
 import type { NavigationService } from "../../types/shared.types";
+import {
+  isBlogPage,
+  getDefaultActiveSection,
+  getActiveLinkClasses,
+  shouldSkipBlogHighlight,
+  SECTION_IDS,
+} from "./config";
 
 export function createNavigationService(
   config: NavigationServiceConfig
@@ -53,37 +60,36 @@ export function createNavigationService(
     } else {
       const scrollPosition = window.scrollY;
       if (scrollPosition < 100) {
-        updateActiveNav("about");
+        updateActiveNav(getDefaultActiveSection());
       }
     }
   };
 
   const updateActiveNav = (activeSectionId: string) => {
+    const isCurrentPageBlog = isBlogPage(window.location.pathname);
     navLinks.forEach((link) => {
       const linkSection = link.getAttribute("data-section");
       if (linkSection === activeSectionId) {
-        link.classList.add("text-brand-lime");
-        link.classList.remove("text-white");
+        link.classList.add(getActiveLinkClasses(true));
+        link.classList.remove(getActiveLinkClasses(false));
       } else {
-        const isBlogPage = window.location.pathname.startsWith("/blog");
-        if (linkSection === "blog" && isBlogPage) {
+        if (shouldSkipBlogHighlight(linkSection || "", isCurrentPageBlog)) {
           return;
         }
-        link.classList.remove("text-brand-lime");
-        link.classList.add("text-white");
+        link.classList.remove(getActiveLinkClasses(true));
+        link.classList.add(getActiveLinkClasses(false));
       }
     });
   };
 
   const checkInitialActiveSection = () => {
-    const isBlogPage = window.location.pathname.startsWith("/blog");
-    if (isBlogPage) {
+    if (isBlogPage(window.location.pathname)) {
       return;
     }
 
     const scrollPosition = window.scrollY;
     if (scrollPosition < 100) {
-      updateActiveNav("about");
+      updateActiveNav(getDefaultActiveSection());
     } else {
       sections.forEach((section) => {
         const rect = section.getBoundingClientRect();
@@ -98,17 +104,17 @@ export function createNavigationService(
   };
 
   const initialize = () => {
-    const isBlogPage = window.location.pathname.startsWith("/blog");
+    const isCurrentPageBlog = isBlogPage(window.location.pathname);
 
-    if (isBlogPage) {
+    if (isCurrentPageBlog) {
       navLinks.forEach((link) => {
         const linkSection = link.getAttribute("data-section");
-        if (linkSection === "blog") {
-          link.classList.add("text-brand-lime");
-          link.classList.remove("text-white");
+        if (linkSection === SECTION_IDS.BLOG) {
+          link.classList.add(getActiveLinkClasses(true));
+          link.classList.remove(getActiveLinkClasses(false));
         } else {
-          link.classList.remove("text-brand-lime");
-          link.classList.add("text-white");
+          link.classList.remove(getActiveLinkClasses(true));
+          link.classList.add(getActiveLinkClasses(false));
         }
       });
       return;

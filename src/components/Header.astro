@@ -2,7 +2,7 @@
 import FilledButton from "./buttons/FilledButton.astro";
 import MobileMenu from "./MobileMenu.astro";
 import NavLink from "./NavLink.astro";
-import { getNavigationItems } from "../config/navigation";
+import { getNavigationItems } from "../services/navigation/config";
 import { Icon } from "astro-icon/components";
 
 // Check if we're on a blog page
@@ -88,8 +88,8 @@ const navItems = getNavigationItems(isHomePage);
   document.addEventListener("DOMContentLoaded", () => {
     // Load navigation services dynamically
     Promise.all([
-      import("../lib/services/navigation/index.js"),
-      import("../lib/services/mobile-menu/index.js"),
+      import("../services/navigation/index.js"),
+      import("../services/mobile-menu/index.js"),
     ])
       .then(([{ createNavigationService }, { createMobileMenuService }]) => {
         // Query DOM elements
