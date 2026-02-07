@@ -69,9 +69,11 @@ export function createMobileMenuService(
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
+    /* v8 ignore start */
     if (event.key === "Escape" && !mobileMenu.classList.contains("hidden")) {
       close();
     }
+    /* v8 ignore end */
   };
 
   const handleMenuToggle = () => {

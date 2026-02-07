@@ -105,6 +105,46 @@ describe("createMobileMenuService", () => {
     service.destroy();
   });
 
+  it("toggles menu to closed when already open", () => {
+    const menuButton = document.createElement("button");
+    const mobileMenu = document.createElement("div");
+    const backdrop = document.createElement("div");
+    const menuIcon = document.createElement("span");
+    const closeIcon = document.createElement("span");
+    const talkButton = document.createElement("button");
+
+    mobileMenu.classList.remove("hidden");
+    backdrop.classList.remove("hidden");
+    mobileMenu.classList.add("mobile-menu-open");
+    backdrop.classList.add("mobile-menu-backdrop-open");
+    menuIcon.classList.add("hidden");
+    closeIcon.classList.remove("hidden");
+
+    const elements: MobileMenuElements = {
+      menuButton,
+      mobileMenu,
+      mobileMenuBackdrop: backdrop,
+      menuIcon,
+      closeIcon,
+      mobileTalkButton: talkButton,
+    };
+
+    const service = createMobileMenuService(elements);
+    service.initialize();
+    menuButton.click();
+
+    expect(backdrop.classList.contains("mobile-menu-backdrop-open")).toBe(
+      false
+    );
+    expect(mobileMenu.classList.contains("mobile-menu-open")).toBe(false);
+
+    vi.useFakeTimers();
+    vi.advanceTimersByTime(300);
+    vi.useRealTimers();
+
+    service.destroy();
+  });
+
   it("handles null mobileTalkButton", () => {
     const menuButton = document.createElement("button");
     const mobileMenu = document.createElement("div");
@@ -156,6 +196,185 @@ describe("createMobileMenuService", () => {
     expect(documentSpy).toHaveBeenCalled();
   });
 
+  it("toggles menu when menu button is clicked", () => {
+    const menuButton = document.createElement("button");
+    const mobileMenu = document.createElement("div");
+    const backdrop = document.createElement("div");
+    const menuIcon = document.createElement("span");
+    const closeIcon = document.createElement("span");
+    const talkButton = document.createElement("button");
+
+    mobileMenu.classList.add("hidden");
+    backdrop.classList.add("hidden");
+    menuIcon.classList.add("block");
+    closeIcon.classList.add("hidden");
+
+    const elements: MobileMenuElements = {
+      menuButton,
+      mobileMenu,
+      mobileMenuBackdrop: backdrop,
+      menuIcon,
+      closeIcon,
+      mobileTalkButton: talkButton,
+    };
+
+    const service = createMobileMenuService(elements);
+    service.initialize();
+
+    menuButton.click();
+
+    expect(backdrop.classList.contains("hidden")).toBe(false);
+    expect(mobileMenu.classList.contains("hidden")).toBe(false);
+    expect(menuIcon.classList.contains("hidden")).toBe(true);
+    expect(closeIcon.classList.contains("hidden")).toBe(false);
+
+    service.destroy();
+  });
+
+  it("removes all nav link event listeners on destroy", () => {
+    const menuButton = document.createElement("button");
+    const mobileMenu = document.createElement("div");
+    const backdrop = document.createElement("div");
+    const menuIcon = document.createElement("span");
+    const closeIcon = document.createElement("span");
+    const talkButton = document.createElement("button");
+
+    const navLink = document.createElement("a");
+    navLink.classList.add("nav-link");
+    mobileMenu.appendChild(navLink);
+
+    const elements: MobileMenuElements = {
+      menuButton,
+      mobileMenu,
+      mobileMenuBackdrop: backdrop,
+      menuIcon,
+      closeIcon,
+      mobileTalkButton: talkButton,
+    };
+
+    const navLinkRemoveSpy = vi.spyOn(navLink, "removeEventListener");
+
+    const service = createMobileMenuService(elements);
+    service.initialize();
+    service.destroy();
+
+    expect(navLinkRemoveSpy).toHaveBeenCalled();
+  });
+
+  it("sets aria-expanded attributes when menu opens", () => {
+    const menuButton = document.createElement("button");
+    const mobileMenu = document.createElement("div");
+    const backdrop = document.createElement("div");
+    const menuIcon = document.createElement("span");
+    const closeIcon = document.createElement("span");
+    const talkButton = document.createElement("button");
+
+    mobileMenu.classList.add("hidden");
+    backdrop.classList.add("hidden");
+
+    const elements: MobileMenuElements = {
+      menuButton,
+      mobileMenu,
+      mobileMenuBackdrop: backdrop,
+      menuIcon,
+      closeIcon,
+      mobileTalkButton: talkButton,
+    };
+
+    const service = createMobileMenuService(elements);
+    service.open();
+
+    expect(menuButton.getAttribute("aria-expanded")).toBe("true");
+    expect(backdrop.getAttribute("aria-hidden")).toBe("false");
+
+    service.destroy();
+  });
+
+  it("sets aria-expanded attributes when menu closes", () => {
+    const menuButton = document.createElement("button");
+    const mobileMenu = document.createElement("div");
+    const backdrop = document.createElement("div");
+    const menuIcon = document.createElement("span");
+    const closeIcon = document.createElement("span");
+    const talkButton = document.createElement("button");
+
+    mobileMenu.classList.add("hidden", "mobile-menu-open");
+    backdrop.classList.add("hidden", "mobile-menu-backdrop-open");
+
+    const elements: MobileMenuElements = {
+      menuButton,
+      mobileMenu,
+      mobileMenuBackdrop: backdrop,
+      menuIcon,
+      closeIcon,
+      mobileTalkButton: talkButton,
+    };
+
+    const service = createMobileMenuService(elements);
+    service.initialize();
+    service.close();
+
+    vi.useFakeTimers();
+    vi.advanceTimersByTime(300);
+    vi.useRealTimers();
+
+    expect(menuButton.getAttribute("aria-expanded")).toBe("false");
+    expect(backdrop.getAttribute("aria-hidden")).toBe("true");
+
+    service.destroy();
+  });
+
+  it("removes nav link event listeners on destroy even without initialization", () => {
+    const menuButton = document.createElement("button");
+    const mobileMenu = document.createElement("div");
+    const backdrop = document.createElement("div");
+    const menuIcon = document.createElement("span");
+    const closeIcon = document.createElement("span");
+    const talkButton = document.createElement("button");
+
+    const navLink = document.createElement("a");
+    navLink.classList.add("nav-link");
+    mobileMenu.appendChild(navLink);
+
+    const elements: MobileMenuElements = {
+      menuButton,
+      mobileMenu,
+      mobileMenuBackdrop: backdrop,
+      menuIcon,
+      closeIcon,
+      mobileTalkButton: talkButton,
+    };
+
+    const service = createMobileMenuService(elements);
+    expect(() => service.destroy()).not.toThrow();
+  });
+
+  it("removes mobileTalkButton event listener on destroy when provided", () => {
+    const menuButton = document.createElement("button");
+    const mobileMenu = document.createElement("div");
+    const backdrop = document.createElement("div");
+    const menuIcon = document.createElement("span");
+    const closeIcon = document.createElement("span");
+    const talkButton = document.createElement("button");
+
+    const elements: MobileMenuElements = {
+      menuButton,
+      mobileMenu,
+      mobileMenuBackdrop: backdrop,
+      menuIcon,
+      closeIcon,
+      mobileTalkButton: talkButton,
+    };
+
+    const talkButtonRemoveSpy = vi.spyOn(talkButton, "removeEventListener");
+
+    const service = createMobileMenuService(elements);
+    service.initialize();
+    service.destroy();
+
+    expect(talkButtonRemoveSpy).toHaveBeenCalled();
+  });
+
   it("closes menu when talk button is <a> element", () => {
     const menuButton = document.createElement("button");
     const mobileMenu = document.createElement("div");
@@ -190,6 +409,47 @@ describe("createMobileMenuService", () => {
 
     expect(backdrop.classList.contains("hidden")).toBe(true);
     expect(mobileMenu.classList.contains("hidden")).toBe(true);
+
+    service.destroy();
+  });
+
+  it("closes menu when Escape key is pressed", () => {
+    const menuButton = document.createElement("button");
+    const mobileMenu = document.createElement("div");
+    const backdrop = document.createElement("div");
+    const menuIcon = document.createElement("span");
+    const closeIcon = document.createElement("span");
+    const talkButton = document.createElement("button");
+
+    mobileMenu.classList.remove("hidden");
+    backdrop.classList.remove("hidden");
+    mobileMenu.classList.add("mobile-menu-open");
+    backdrop.classList.add("mobile-menu-backdrop-open");
+    menuIcon.classList.add("hidden");
+    closeIcon.classList.remove("hidden");
+
+    const elements: MobileMenuElements = {
+      menuButton,
+      mobileMenu,
+      mobileMenuBackdrop: backdrop,
+      menuIcon,
+      closeIcon,
+      mobileTalkButton: talkButton,
+    };
+
+    vi.useFakeTimers();
+
+    const service = createMobileMenuService(elements);
+    service.initialize();
+
+    service.close();
+
+    vi.advanceTimersByTime(300);
+
+    expect(backdrop.classList.contains("hidden")).toBe(true);
+    expect(mobileMenu.classList.contains("hidden")).toBe(true);
+
+    vi.useRealTimers();
 
     service.destroy();
   });

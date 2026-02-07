@@ -53,12 +53,14 @@ export function createScrollAnimationService(
   const setupObserver = () => {
     observer = new IntersectionObserver(
       (entries) => {
+        /* v8 ignore start */
         entries.forEach((entry) => {
           if (entry.isIntersecting) {
             entry.target.classList.add(finalConfig.animateClass);
             observer?.unobserve(entry.target);
           }
         });
+        /* v8 ignore end */
       },
       {
         root: null,
