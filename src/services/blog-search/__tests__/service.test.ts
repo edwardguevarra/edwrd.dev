@@ -115,6 +115,26 @@ describe("createBlogSearchService", () => {
     service.destroy();
   });
 
+  it("filters posts by tags and handles case-insensitive search", () => {
+    const { elements, searchInput, firstCard, secondCard, noResults } =
+      createSearchDom();
+    const service = createBlogSearchService({ elements });
+
+    service.initialize();
+
+    searchInput.value = "ASTRO";
+    searchInput.dispatchEvent(new Event("input"));
+
+    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(300);
+
+    expect(firstCard.style.display).toBe("block");
+    expect(secondCard.style.display).toBe("none");
+    expect(noResults.classList.contains("hidden")).toBe(true);
+
+    service.destroy();
+  });
+
   it("shows no results message when no posts match", () => {
     const { elements, searchInput, firstCard, secondCard, noResults } =
       createSearchDom();
@@ -135,6 +155,36 @@ describe("createBlogSearchService", () => {
     service.destroy();
   });
 
+  it("hides no results message again when a later search matches posts", () => {
+    const { elements, searchInput, firstCard, secondCard, noResults } =
+      createSearchDom();
+    const service = createBlogSearchService({ elements });
+
+    service.initialize();
+
+    searchInput.value = "no-match";
+    searchInput.dispatchEvent(new Event("input"));
+
+    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(300);
+
+    expect(noResults.classList.contains("hidden")).toBe(false);
+    expect(firstCard.style.display).toBe("none");
+    expect(secondCard.style.display).toBe("none");
+
+    searchInput.value = "Astro";
+    searchInput.dispatchEvent(new Event("input"));
+
+    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(300);
+
+    expect(noResults.classList.contains("hidden")).toBe(true);
+    expect(firstCard.style.display).toBe("block");
+    expect(secondCard.style.display).toBe("none");
+
+    service.destroy();
+  });
+
   it("loads search term from URL during initialization", () => {
     const { elements, searchInput, firstCard, secondCard } = createSearchDom();
     window.history.replaceState({}, "", "/blog?q=astro");
@@ -147,6 +197,66 @@ describe("createBlogSearchService", () => {
     expect(searchInput.value).toBe("astro");
     expect(firstCard.style.display).toBe("block");
     expect(secondCard.style.display).toBe("none");
+
+    service.destroy();
+  });
+
+  it("syncs the search term to URL only after debounce", () => {
+    const { elements, searchInput } = createSearchDom();
+    const service = createBlogSearchService({ elements, debounceMs: 500 });
+
+    service.initialize();
+
+    searchInput.value = "testing";
+    searchInput.dispatchEvent(new Event("input"));
+
+    expect(new URL(window.location.href).searchParams.get("q")).toBeNull();
+
+    vi.advanceTimersByTime(499);
+    expect(new URL(window.location.href).searchParams.get("q")).toBeNull();
+
+    vi.advanceTimersByTime(1);
+    expect(new URL(window.location.href).searchParams.get("q")).toBe("testing");
+
+    service.destroy();
+  });
+
+  it("applies only the latest input when events fire before debounce", () => {
+    const { elements, searchInput, firstCard, secondCard } = createSearchDom();
+    const service = createBlogSearchService({ elements, debounceMs: 300 });
+
+    service.initialize();
+
+    searchInput.value = "astro";
+    searchInput.dispatchEvent(new Event("input"));
+    vi.advanceTimersByTime(150);
+
+    searchInput.value = "testing";
+    searchInput.dispatchEvent(new Event("input"));
+
+    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(300);
+
+    expect(firstCard.style.display).toBe("none");
+    expect(secondCard.style.display).toBe("block");
+    expect(new URL(window.location.href).searchParams.get("q")).toBe("testing");
+
+    service.destroy();
+  });
+
+  it("removes the query parameter when the input is cleared", () => {
+    const { elements, searchInput } = createSearchDom();
+    window.history.replaceState({}, "", "/blog?q=existing");
+
+    const service = createBlogSearchService({ elements, debounceMs: 300 });
+    service.initialize();
+
+    searchInput.value = "   ";
+    searchInput.dispatchEvent(new Event("input"));
+
+    vi.advanceTimersByTime(300);
+
+    expect(new URL(window.location.href).searchParams.get("q")).toBeNull();
 
     service.destroy();
   });
