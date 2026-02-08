@@ -242,6 +242,7 @@ describe("createMobileMenuService", () => {
 
     const navLink = document.createElement("a");
     navLink.classList.add("nav-link");
+    navLink.href = "/#about";
     mobileMenu.appendChild(navLink);
 
     const elements: MobileMenuElements = {
@@ -287,6 +288,7 @@ describe("createMobileMenuService", () => {
 
     expect(menuButton.getAttribute("aria-expanded")).toBe("true");
     expect(backdrop.getAttribute("aria-hidden")).toBe("false");
+    expect(mobileMenu.getAttribute("aria-hidden")).toBe("false");
 
     service.destroy();
   });
@@ -321,6 +323,7 @@ describe("createMobileMenuService", () => {
 
     expect(menuButton.getAttribute("aria-expanded")).toBe("false");
     expect(backdrop.getAttribute("aria-hidden")).toBe("true");
+    expect(mobileMenu.getAttribute("aria-hidden")).toBe("true");
 
     service.destroy();
   });
@@ -335,6 +338,7 @@ describe("createMobileMenuService", () => {
 
     const navLink = document.createElement("a");
     navLink.classList.add("nav-link");
+    navLink.href = "/#about";
     mobileMenu.appendChild(navLink);
 
     const elements: MobileMenuElements = {
@@ -612,6 +616,7 @@ describe("createMobileMenuService", () => {
     const navLink = document.createElement("a");
 
     navLink.classList.add("nav-link");
+    navLink.href = "/#about";
     mobileMenu.appendChild(navLink);
     mobileMenu.classList.add("hidden");
     backdrop.classList.add("hidden");
@@ -635,5 +640,53 @@ describe("createMobileMenuService", () => {
     expect(navLinkFocusSpy).toHaveBeenCalled();
 
     service.destroy();
+  });
+
+  it("restores focus to menu button after closing", () => {
+    const menuButton = document.createElement("button");
+    const mobileMenu = document.createElement("div");
+    const backdrop = document.createElement("div");
+    const menuIcon = document.createElement("span");
+    const closeIcon = document.createElement("span");
+    const navLink = document.createElement("a");
+
+    navLink.classList.add("nav-link");
+    navLink.href = "/#about";
+    mobileMenu.appendChild(navLink);
+    mobileMenu.classList.add("hidden");
+    backdrop.classList.add("hidden");
+    closeIcon.classList.add("hidden");
+
+    document.body.appendChild(menuButton);
+    document.body.appendChild(mobileMenu);
+    document.body.appendChild(backdrop);
+
+    const elements: MobileMenuElements = {
+      menuButton,
+      mobileMenu,
+      mobileMenuBackdrop: backdrop,
+      menuIcon,
+      closeIcon,
+      mobileTalkButton: null,
+    };
+
+    vi.useFakeTimers();
+
+    const service = createMobileMenuService(elements);
+    service.initialize();
+
+    menuButton.focus();
+    menuButton.click();
+    expect(document.activeElement).toBe(navLink);
+
+    service.close();
+    vi.advanceTimersByTime(MOBILE_MENU_CLOSE_DELAY_MS);
+    expect(document.activeElement).toBe(menuButton);
+
+    service.destroy();
+    vi.useRealTimers();
+    menuButton.remove();
+    mobileMenu.remove();
+    backdrop.remove();
   });
 });

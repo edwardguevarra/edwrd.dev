@@ -7,6 +7,15 @@ import {
   DOMElementNotFoundError,
 } from "../../errors/types";
 
+const FOCUSABLE_SELECTOR = [
+  "a[href]",
+  "button:not([disabled])",
+  "textarea:not([disabled])",
+  "input:not([disabled])",
+  "select:not([disabled])",
+  "[tabindex]:not([tabindex='-1'])",
+].join(", ");
+
 export function createMobileMenuService(
   elements: MobileMenuElements
 ): MobileMenuService {
@@ -46,6 +55,38 @@ export function createMobileMenuService(
 
   logger.info("Service created");
 
+  let previouslyFocusedElement: HTMLElement | null = null;
+  let closeTimeoutId: ReturnType<typeof setTimeout> | null = null;
+
+  const isMenuOpen = (): boolean => !mobileMenu.classList.contains("hidden");
+
+  const getFocusableElements = (): HTMLElement[] =>
+    Array.from(mobileMenu.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
+
+  const trapFocus = (event: KeyboardEvent) => {
+    const focusableElements = getFocusableElements();
+    if (focusableElements.length === 0) {
+      event.preventDefault();
+      mobileMenu.focus();
+      return;
+    }
+
+    const firstElement = focusableElements[0];
+    const lastElement = focusableElements[focusableElements.length - 1];
+    const activeElement = document.activeElement as HTMLElement | null;
+
+    if (event.shiftKey && activeElement === firstElement) {
+      event.preventDefault();
+      lastElement.focus();
+      return;
+    }
+
+    if (!event.shiftKey && activeElement === lastElement) {
+      event.preventDefault();
+      firstElement.focus();
+    }
+  };
+
   const attachEventListeners = () => {
     try {
       menuButton.addEventListener("click", handleMenuToggle);
@@ -70,14 +111,22 @@ export function createMobileMenuService(
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === "Escape" && !mobileMenu.classList.contains("hidden")) {
+    if (!isMenuOpen()) {
+      return;
+    }
+
+    if (event.key === "Escape") {
       close();
+      return;
+    }
+
+    if (event.key === "Tab") {
+      trapFocus(event);
     }
   };
 
   const handleMenuToggle = () => {
-    const isHidden = mobileMenu.classList.contains("hidden");
-    if (isHidden) {
+    if (!isMenuOpen()) {
       open();
     } else {
       close();
@@ -85,6 +134,16 @@ export function createMobileMenuService(
   };
 
   const open = () => {
+    if (closeTimeoutId) {
+      clearTimeout(closeTimeoutId);
+      closeTimeoutId = null;
+    }
+
+    previouslyFocusedElement =
+      document.activeElement instanceof HTMLElement
+        ? document.activeElement
+        : null;
+
     mobileMenuBackdrop.classList.remove("hidden");
     mobileMenu.classList.remove("hidden");
     menuIcon.classList.add("hidden");
@@ -92,6 +151,7 @@ export function createMobileMenuService(
 
     menuButton.setAttribute("aria-expanded", "true");
     mobileMenuBackdrop.setAttribute("aria-hidden", "false");
+    mobileMenu.setAttribute("aria-hidden", "false");
 
     requestAnimationFrame(() => {
       mobileMenuBackdrop.classList.add("mobile-menu-backdrop-open");
@@ -100,23 +160,43 @@ export function createMobileMenuService(
 
     document.body.style.overflow = "hidden";
 
-    const firstNavLink = mobileMenu.querySelector(".nav-link") as HTMLElement;
-    firstNavLink?.focus();
+    const [firstFocusableElement] = getFocusableElements();
+    if (firstFocusableElement) {
+      firstFocusableElement.focus();
+    } else {
+      mobileMenu.focus();
+    }
   };
 
   const close = () => {
+    if (closeTimeoutId) {
+      clearTimeout(closeTimeoutId);
+    }
+
     mobileMenuBackdrop.classList.remove("mobile-menu-backdrop-open");
     mobileMenu.classList.remove("mobile-menu-open");
 
     menuButton.setAttribute("aria-expanded", "false");
     mobileMenuBackdrop.setAttribute("aria-hidden", "true");
+    mobileMenu.setAttribute("aria-hidden", "true");
 
-    setTimeout(() => {
+    closeTimeoutId = setTimeout(() => {
       mobileMenuBackdrop.classList.add("hidden");
       mobileMenu.classList.add("hidden");
       menuIcon.classList.remove("hidden");
       closeIcon.classList.add("hidden");
       document.body.style.overflow = "";
+
+      const shouldRestorePreviousFocus =
+        previouslyFocusedElement !== null &&
+        previouslyFocusedElement !== document.body &&
+        document.contains(previouslyFocusedElement);
+      const focusTarget = shouldRestorePreviousFocus
+        ? previouslyFocusedElement
+        : menuButton;
+      focusTarget.focus();
+      previouslyFocusedElement = null;
+      closeTimeoutId = null;
     }, MOBILE_MENU_CLOSE_DELAY_MS);
   };
 
@@ -143,6 +223,11 @@ export function createMobileMenuService(
       });
 
       mobileTalkButton?.removeEventListener("click", close);
+      if (closeTimeoutId) {
+        clearTimeout(closeTimeoutId);
+        closeTimeoutId = null;
+      }
+      document.body.style.overflow = "";
       logger.info("Service destroyed");
     } catch (error) {
       logger.error("Cleanup failed", { error });

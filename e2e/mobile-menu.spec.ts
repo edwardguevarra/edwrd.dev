@@ -74,7 +74,7 @@ test.describe("Mobile Menu", () => {
     await menuButton.click();
     await expect(mobileMenu).toBeVisible();
 
-    const aboutLink = mobileMenu.getByRole("menuitem", { name: "About" });
+    const aboutLink = mobileMenu.getByRole("link", { name: "About" });
     await aboutLink.click();
 
     await expect(mobileMenu).toBeHidden();
@@ -86,10 +86,14 @@ test.describe("Mobile Menu", () => {
     const menuButton = page.getByRole("button", {
       name: "Toggle navigation menu",
     });
+    const mobileMenu = page.locator("#mobile-menu");
 
     await menuButton.click();
 
     await expect(menuButton).toHaveAttribute("aria-expanded", "true");
+    await expect(mobileMenu).toHaveAttribute("role", "dialog");
+    await expect(mobileMenu).toHaveAttribute("aria-modal", "true");
+    await expect(mobileMenu).toHaveAttribute("aria-hidden", "false");
   });
 
   test("mobile menu has correct aria attributes when closed", async ({
@@ -98,8 +102,11 @@ test.describe("Mobile Menu", () => {
     const menuButton = page.getByRole("button", {
       name: "Toggle navigation menu",
     });
+    const mobileMenu = page.locator("#mobile-menu");
 
     await expect(menuButton).toHaveAttribute("aria-expanded", "false");
+    await expect(menuButton).toHaveAttribute("aria-haspopup", "dialog");
+    await expect(mobileMenu).toHaveAttribute("aria-hidden", "true");
   });
 
   test("mobile menu backdrop has correct aria-hidden attribute", async ({

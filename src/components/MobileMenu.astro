@@ -17,27 +17,31 @@ const { navItems, isBlogPage } = Astro.props as MobileMenuProps;
 </div>
 
 <!-- Mobile Menu -->
-<nav
+<div
   id="mobile-menu"
   class="mobile-menu relative z-[70] mt-6 hidden border-t border-white/10 pb-4 lg:hidden"
-  aria-label="Mobile navigation"
-  role="navigation"
+  role="dialog"
   aria-modal="true"
+  aria-label="Mobile navigation"
+  aria-hidden="true"
+  tabindex="-1"
 >
-  <div class="flex flex-col gap-4 pt-4" role="menubar">
-    {
-      navItems.map((item) => (
-        <NavLink
-          href={item.href}
-          label={item.label}
-          section={item.section}
-          isActive={item.section === "blog" && isBlogPage}
-          isMobile={true}
-        />
-      ))
-    }
-    <div id="mobile-menu-button-wrapper">
-      <FilledButton href="/#contact" text="Let's Talk" color="white" />
+  <nav aria-label="Mobile navigation links">
+    <div class="flex flex-col gap-4 pt-4">
+      {
+        navItems.map((item) => (
+          <NavLink
+            href={item.href}
+            label={item.label}
+            section={item.section}
+            isActive={item.section === "blog" && isBlogPage}
+            isMobile={true}
+          />
+        ))
+      }
+      <div id="mobile-menu-button-wrapper">
+        <FilledButton href="/#contact" text="Let's Talk" color="white" />
+      </div>
     </div>
-  </div>
-</nav>
+  </nav>
+</div>
