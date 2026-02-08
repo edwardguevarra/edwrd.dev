@@ -14,6 +14,22 @@ test.describe("Blog index", () => {
     await expect(postLink).toBeVisible();
     await expect(postLink).toContainText("Cursor IDE");
   });
+
+  test("filters posts from search input", async ({ page }) => {
+    await page.goto("/blog");
+
+    const searchInput = page.locator("#blog-search");
+    await searchInput.fill("cursor");
+    await page.waitForTimeout(600);
+
+    await expect(page.locator("#no-results")).toBeHidden();
+    await expect(page.locator("a[data-post-id]:visible")).toHaveCount(1);
+
+    await searchInput.fill("zzzznotfound");
+    await page.waitForTimeout(600);
+
+    await expect(page.locator("#no-results")).toBeVisible();
+  });
 });
 
 test.describe("Blog post", () => {

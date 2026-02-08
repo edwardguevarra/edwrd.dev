@@ -1,15 +1,10 @@
 ---
-import { getCollection, getEntry, render } from "astro:content";
 import { Image } from "astro:assets";
-import Header from "../../components/Header.astro";
-import Footer from "../../components/Footer.astro";
-import Metatags from "../../components/Metatags.astro";
-import FontConfiguration from "../../components/FontConfiguration.astro";
+import { getCollection, getEntry, render } from "astro:content";
 import OutlineButton from "../../components/buttons/OutlineButton.astro";
 import Prose from "../../components/Prose.astro";
-import ScrollAnimation from "../../components/ScrollAnimation.astro";
+import PageLayout from "../../layouts/PageLayout.astro";
 import { formatDate } from "../../utils/date";
-import "../../styles/global.css";
 
 export async function getStaticPaths() {
   const blogPosts = await getCollection("blog");
@@ -31,124 +26,18 @@ if (!post) {
 const { Content } = await render(post);
 ---
 
-<html lang="en">
-  <head>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <Metatags
-      title={`${post.data.title} - Blog - edwrd.dev`}
-      description={post.data.description}
-      ogTitle={post.data.title}
-      ogDescription={post.data.description}
-      ogImage={post.data.featuredImage}
-      twitterTitle={post.data.title}
-      twitterDescription={post.data.description}
-      twitterImage={post.data.featuredImage}
-    />
-    <FontConfiguration />
-  </head>
-
-  <body class="flex flex-col">
-    <a
-      href="#main-content"
-      class="bg-brand-lime text-brand-dark sr-only z-50 rounded-md px-4 py-2 focus:not-sr-only focus:absolute focus:top-4 focus:left-4"
-    >
-      Skip to main content
-    </a>
-
-    <Header />
-
-    <main id="main-content" class="bg-brand-accent min-h-screen">
-      <div class="container mx-auto px-4 py-12 lg:py-20">
-        <!-- Back Button -->
-        <div class="mb-8" data-animate>
-          <a
-            href="/blog"
-            class="text-brand-dark inline-flex items-center gap-2 font-semibold transition-opacity hover:opacity-80"
-          >
-            <svg
-              class="h-5 w-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M15 19l-7-7 7-7"></path>
-            </svg>
-            Back to Blog
-          </a>
-        </div>
-
-        <!-- Article Header -->
-        <article
-          class="rounded-lg bg-white p-6 shadow-lg md:p-8 lg:p-12"
-          data-animate
-        >
-          <!-- Featured Image -->
-          <div class="mb-8" data-animate>
-            <Image
-              src={post.data.featuredImage}
-              alt={post.data.featuredImageAlt}
-              width={800}
-              height={400}
-              class="w-full rounded-lg object-cover shadow-[6px_6px_6px_0px_rgba(0,0,0,0.25)]"
-            />
-          </div>
-
-          <!-- Title -->
-          <h1
-            data-animate
-            class="font-inter text-brand-dark animate-delay-100 mb-4 text-3xl leading-tight font-black md:text-4xl lg:text-5xl"
-          >
-            {post.data.title}
-          </h1>
-
-          <!-- Meta Information -->
-          <div
-            data-animate
-            class="text-brand-dark/70 animate-delay-200 mb-6 flex flex-wrap items-center gap-4 text-sm"
-          >
-            <time datetime={post.data.date.toISOString()}>
-              {formatDate(post.data.date)}
-            </time>
-            <span>•</span>
-            <span>By {post.data.author}</span>
-          </div>
-
-          <!-- Tags -->
-          <div data-animate class="animate-delay-300 mb-8 flex flex-wrap gap-2">
-            {
-              post.data.tags.map((tag) => (
-                <span class="bg-brand-lime text-brand-dark rounded-full px-3 py-1 text-xs font-semibold">
-                  {tag}
-                </span>
-              ))
-            }
-          </div>
-
-          <!-- Article Content -->
-          <div data-animate class="animate-delay-400">
-            <Prose>
-              <Content />
-            </Prose>
-          </div>
-
-          <!-- Back to Blog Button -->
-          <div class="border-brand-dark/10 mt-12 border-t pt-8" data-animate>
-            <a href="/blog">
-              <OutlineButton text="Back to Blog" />
-            </a>
-          </div>
-        </article>
-      </div>
-    </main>
-
-    <Footer />
-    <ScrollAnimation />
-  </body><style>
-    /* White background container styling */
+<PageLayout
+  title={`${post.data.title} - Blog - edwrd.dev`}
+  description={post.data.description}
+  ogTitle={post.data.title}
+  ogDescription={post.data.description}
+  ogImage={post.data.featuredImage.src}
+  twitterTitle={post.data.title}
+  twitterDescription={post.data.description}
+  twitterImage={post.data.featuredImage.src}
+  mainClass="bg-brand-accent min-h-screen"
+>
+  <style slot="head">
     .bg-white {
       background-color: white;
     }
@@ -163,7 +52,6 @@ const { Content } = await render(post);
       border-radius: 0.5rem;
     }
 
-    /* Responsive padding for the article container */
     .p-6 {
       padding: 1.5rem;
     }
@@ -180,4 +68,82 @@ const { Content } = await render(post);
       }
     }
   </style>
-</html>
+
+  <div class="container mx-auto px-4 py-12 lg:py-20">
+    <div class="mb-8" data-animate>
+      <a
+        href="/blog"
+        class="text-brand-dark inline-flex items-center gap-2 font-semibold transition-opacity hover:opacity-80"
+      >
+        <svg
+          class="h-5 w-5"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M15 19l-7-7 7-7"></path>
+        </svg>
+        Back to Blog
+      </a>
+    </div>
+
+    <article
+      class="rounded-lg bg-white p-6 shadow-lg md:p-8 lg:p-12"
+      data-animate
+    >
+      <div class="mb-8" data-animate>
+        <Image
+          src={post.data.featuredImage}
+          alt={post.data.featuredImageAlt}
+          width={800}
+          height={400}
+          class="w-full rounded-lg object-cover shadow-[6px_6px_6px_0px_rgba(0,0,0,0.25)]"
+        />
+      </div>
+
+      <h1
+        data-animate
+        class="font-inter text-brand-dark animate-delay-100 mb-4 text-3xl leading-tight font-black md:text-4xl lg:text-5xl"
+      >
+        {post.data.title}
+      </h1>
+
+      <div
+        data-animate
+        class="text-brand-dark/70 animate-delay-200 mb-6 flex flex-wrap items-center gap-4 text-sm"
+      >
+        <time datetime={post.data.date.toISOString()}
+          >{formatDate(post.data.date)}</time
+        >
+        <span>•</span>
+        <span>By {post.data.author}</span>
+      </div>
+
+      <div data-animate class="animate-delay-300 mb-8 flex flex-wrap gap-2">
+        {
+          post.data.tags.map((tag) => (
+            <span class="bg-brand-lime text-brand-dark rounded-full px-3 py-1 text-xs font-semibold">
+              {tag}
+            </span>
+          ))
+        }
+      </div>
+
+      <div data-animate class="animate-delay-400">
+        <Prose>
+          <Content />
+        </Prose>
+      </div>
+
+      <div class="border-brand-dark/10 mt-12 border-t pt-8" data-animate>
+        <a href="/blog">
+          <OutlineButton text="Back to Blog" />
+        </a>
+      </div>
+    </article>
+  </div>
+</PageLayout>

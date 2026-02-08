@@ -1,23 +1,16 @@
 ---
-import { getCollection, type CollectionEntry } from "astro:content";
 import { Image } from "astro:assets";
-import Header from "../../components/Header.astro";
-import Footer from "../../components/Footer.astro";
-import Metatags from "../../components/Metatags.astro";
-import FontConfiguration from "../../components/FontConfiguration.astro";
-import ScrollAnimation from "../../components/ScrollAnimation.astro";
+import { getCollection, type CollectionEntry } from "astro:content";
+import PageLayout from "../../layouts/PageLayout.astro";
 import { formatDate } from "../../utils/date";
-import "../../styles/global.css";
 
 const blogPosts = await getCollection("blog");
 type BlogEntry = CollectionEntry<"blog">;
 
-// Sort posts by date (newest first)
 const sortedPosts = blogPosts.sort(
   (a, b) => b.data.date.getTime() - a.data.date.getTime()
 );
 
-// Prepare posts data for client-side search
 const postsData = sortedPosts.map((post) => ({
   id: post.id,
   title: post.data.title,
@@ -26,270 +19,240 @@ const postsData = sortedPosts.map((post) => ({
 }));
 ---
 
-<html lang="en">
-  <head>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <Metatags
-      title="Blog - edwrd.dev"
-      description="Practical programming tips, tutorials, and insights from real projects"
-    />
-    <FontConfiguration />
-  </head>
+<PageLayout
+  title="Blog - edwrd.dev"
+  description="Practical programming tips, tutorials, and insights from real projects"
+  mainClass="bg-brand-accent min-h-screen"
+>
+  <div class="container mx-auto px-4 py-12 lg:py-20">
+    <div class="mb-12 lg:mb-16">
+      <h1
+        data-animate
+        class="font-inter text-brand-dark mb-4 text-4xl leading-tight font-black md:text-5xl lg:text-6xl"
+      >
+        Blog
+      </h1>
+      <p
+        data-animate
+        class="text-brand-dark animate-delay-100 max-w-2xl text-lg md:text-xl"
+      >
+        Practical programming tips, tutorials, and insights from real projects.
+        Whether you're just starting out or looking to sharpen your skills!
+      </p>
+      <a
+        data-animate
+        href="/rss.xml"
+        class="text-brand-dark animate-delay-200 decoration-brand-lime mt-4 inline-flex items-center gap-2 text-sm font-semibold underline underline-offset-2 transition-opacity hover:opacity-80"
+      >
+        Subscribe via RSS
+      </a>
+    </div>
 
-  <body class="flex flex-col">
-    <a
-      href="#main-content"
-      class="bg-brand-lime text-brand-dark sr-only z-50 rounded-md px-4 py-2 focus:not-sr-only focus:absolute focus:top-4 focus:left-4"
-    >
-      Skip to main content
-    </a>
-
-    <Header />
-
-    <main id="main-content" class="bg-brand-accent min-h-screen">
-      <div class="container mx-auto px-4 py-12 lg:py-20">
-        <!-- Page Header -->
-        <div class="mb-12 lg:mb-16">
-          <h1
-            data-animate
-            class="font-inter text-brand-dark mb-4 text-4xl leading-tight font-black md:text-5xl lg:text-6xl"
-          >
-            Blog
-          </h1>
-          <p
-            data-animate
-            class="text-brand-dark animate-delay-100 max-w-2xl text-lg md:text-xl"
-          >
-            Practical programming tips, tutorials, and insights from real
-            projects. Whether you're just starting out or looking to sharpen
-            your skills!
-          </p>
-          <a
-            data-animate
-            href="/rss.xml"
-            class="text-brand-dark animate-delay-200 decoration-brand-lime mt-4 inline-flex items-center gap-2 text-sm font-semibold underline underline-offset-2 transition-opacity hover:opacity-80"
-          >
-            Subscribe via RSS
-          </a>
-        </div>
-
-        <!-- Search Input -->
-        <div class="mb-8" data-animate>
-          <div class="relative max-w-2xl">
-            <svg
-              class="text-brand-dark/60 absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              aria-hidden="true"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
-            </svg>
-            <input
-              type="search"
-              id="blog-search"
-              aria-label="Search blog posts by title or tag"
-              placeholder="Search by title or tag..."
-              class="border-brand-dark text-brand-dark placeholder-brand-dark/40 focus:border-brand-lime w-full rounded-lg border-2 bg-white py-3 pr-4 pl-12 shadow-[6px_6px_6px_0px_rgba(0,0,0,0.25)] transition-all duration-300 focus:shadow-[8px_8px_8px_0px_rgba(0,0,0,0.3)] focus:outline-none"
-              data-posts={JSON.stringify(postsData)}
-            />
-          </div>
-        </div>
-
-        <!-- No Results Message -->
-        <div id="no-results" class="hidden py-12 text-center">
-          <p class="text-brand-dark text-lg">
-            No blog posts found matching your search. Try a different term.
-          </p>
-        </div>
-
-        <!-- Blog Posts Grid -->
-        {
-          sortedPosts.length > 0 ? (
-            <div
-              id="blog-posts-grid"
-              class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
-            >
-              {sortedPosts.map((post: BlogEntry, index: number) => {
-                const delayClasses = [
-                  "",
-                  "animate-delay-100",
-                  "animate-delay-200",
-                  "animate-delay-300",
-                  "animate-delay-400",
-                  "animate-delay-500",
-                ];
-                return (
-                  <a
-                    href={`/blog/${post.id}`}
-                    data-animate
-                    data-post-id={post.id}
-                    class={`group block ${delayClasses[index] || ""}`}
-                  >
-                    <article class="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-[6px_6px_6px_0px_rgba(0,0,0,0.25)] transition-all duration-300 hover:shadow-[8px_8px_8px_0px_rgba(0,0,0,0.3)]">
-                      <div class="relative overflow-hidden">
-                        <Image
-                          src={post.data.featuredImage}
-                          alt={post.data.featuredImageAlt}
-                          width={800}
-                          height={400}
-                          class="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
-                          loading="lazy"
-                        />
-                      </div>
-
-                      <div class="flex grow flex-col p-6">
-                        <div class="mb-3 flex flex-wrap gap-2">
-                          {post.data.tags.slice(0, 3).map((tag) => (
-                            <span class="bg-brand-lime text-brand-dark rounded-full px-2 py-1 text-xs font-semibold">
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-
-                        <h2 class="font-inter text-brand-dark group-hover:text-brand-dark/80 mb-2 text-xl font-bold transition-colors">
-                          {post.data.title}
-                        </h2>
-
-                        <p class="text-brand-dark/70 mb-4 line-clamp-3 grow text-sm">
-                          {post.data.description}
-                        </p>
-
-                        <div class="text-brand-dark/60 border-brand-dark/10 mt-auto flex items-center justify-between border-t pt-4 text-xs">
-                          <span>{formatDate(post.data.date)}</span>
-                          <span>{post.data.author}</span>
-                        </div>
-                      </div>
-                    </article>
-                  </a>
-                );
-              })}
-            </div>
-          ) : (
-            <div class="py-12 text-center">
-              <p class="text-brand-dark text-lg">
-                No blog posts yet. Check back soon!
-              </p>
-            </div>
-          )
-        }
+    <div class="mb-8" data-animate>
+      <div class="relative max-w-2xl">
+        <svg
+          class="text-brand-dark/60 absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2"
+          fill="none"
+          stroke="currentColor"
+          viewBox="0 0 24 24"
+          aria-hidden="true"
+        >
+          <path
+            stroke-linecap="round"
+            stroke-linejoin="round"
+            stroke-width="2"
+            d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path>
+        </svg>
+        <input
+          type="search"
+          id="blog-search"
+          aria-label="Search blog posts by title or tag"
+          placeholder="Search by title or tag..."
+          class="border-brand-dark text-brand-dark placeholder-brand-dark/40 focus:border-brand-lime w-full rounded-lg border-2 bg-white py-3 pr-4 pl-12 shadow-[6px_6px_6px_0px_rgba(0,0,0,0.25)] transition-all duration-300 focus:shadow-[8px_8px_8px_0px_rgba(0,0,0,0.3)] focus:outline-none"
+          data-posts={JSON.stringify(postsData)}
+        />
       </div>
-    </main>
+    </div>
 
-    <Footer />
-    <ScrollAnimation />
-  </body><script>
-    // Blog Search Implementation
-    (function () {
-      const searchInput = document.getElementById(
-        "blog-search"
-      ) as HTMLInputElement;
-      const postsGrid = document.getElementById(
-        "blog-posts-grid"
-      ) as HTMLElement;
-      const noResults = document.getElementById("no-results") as HTMLElement;
+    <div id="no-results" class="hidden py-12 text-center">
+      <p class="text-brand-dark text-lg">
+        No blog posts found matching your search. Try a different term.
+      </p>
+    </div>
 
-      if (!searchInput || !postsGrid || !noResults) return;
+    {
+      sortedPosts.length > 0 ? (
+        <div
+          id="blog-posts-grid"
+          class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+        >
+          {sortedPosts.map((post: BlogEntry, index: number) => {
+            const delayClasses = [
+              "",
+              "animate-delay-100",
+              "animate-delay-200",
+              "animate-delay-300",
+              "animate-delay-400",
+              "animate-delay-500",
+            ];
+            return (
+              <a
+                href={`/blog/${post.id}`}
+                data-animate
+                data-post-id={post.id}
+                class={`group block ${delayClasses[index] || ""}`}
+              >
+                <article class="flex h-full flex-col overflow-hidden rounded-lg bg-white shadow-[6px_6px_6px_0px_rgba(0,0,0,0.25)] transition-all duration-300 hover:shadow-[8px_8px_8px_0px_rgba(0,0,0,0.3)]">
+                  <div class="relative overflow-hidden">
+                    <Image
+                      src={post.data.featuredImage}
+                      alt={post.data.featuredImageAlt}
+                      width={800}
+                      height={400}
+                      class="h-48 w-full object-cover transition-transform duration-300 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
 
-      const postsData = JSON.parse(searchInput.dataset.posts || "[]");
-      let debounceTimer: number | null = null;
+                  <div class="flex grow flex-col p-6">
+                    <div class="mb-3 flex flex-wrap gap-2">
+                      {post.data.tags.slice(0, 3).map((tag) => (
+                        <span class="bg-brand-lime text-brand-dark rounded-full px-2 py-1 text-xs font-semibold">
+                          {tag}
+                        </span>
+                      ))}
+                    </div>
 
-      function filterPosts(searchTerm: string): void {
-        const normalizedSearch = searchTerm.toLowerCase().trim();
-        const postCards =
-          postsGrid.querySelectorAll<HTMLAnchorElement>("a[data-post-id]");
+                    <h2 class="font-inter text-brand-dark group-hover:text-brand-dark/80 mb-2 text-xl font-bold transition-colors">
+                      {post.data.title}
+                    </h2>
 
-        let visibleCount = 0;
+                    <p class="text-brand-dark/70 mb-4 line-clamp-3 grow text-sm">
+                      {post.data.description}
+                    </p>
 
-        postCards.forEach((card) => {
-          const postId = card.dataset.postId;
-          const postData = postsData.find(
-            (p: { id: string }) => p.id === postId
-          );
-
-          if (!postData) return;
-
-          const matchesSearch =
-            normalizedSearch === "" ||
-            postData.title.toLowerCase().includes(normalizedSearch) ||
-            postData.tags.some((tag: string) =>
-              tag.toLowerCase().includes(normalizedSearch)
+                    <div class="text-brand-dark/60 border-brand-dark/10 mt-auto flex items-center justify-between border-t pt-4 text-xs">
+                      <span>{formatDate(post.data.date)}</span>
+                      <span>{post.data.author}</span>
+                    </div>
+                  </div>
+                </article>
+              </a>
             );
+          })}
+        </div>
+      ) : (
+        <div class="py-12 text-center">
+          <p class="text-brand-dark text-lg">
+            No blog posts yet. Check back soon!
+          </p>
+        </div>
+      )
+    }
+  </div>
 
-          if (matchesSearch) {
-            card.style.display = "block";
-            card.classList.remove("opacity-0");
-            card.classList.add("opacity-100");
-            visibleCount++;
+  <Fragment slot="scripts">
+    <script>
+      (function () {
+        const searchInput = document.getElementById("blog-search");
+        const postsGrid = document.getElementById("blog-posts-grid");
+        const noResults = document.getElementById("no-results");
+
+        if (!searchInput || !postsGrid || !noResults) return;
+
+        const postsData = JSON.parse(searchInput.dataset.posts || "[]");
+        let debounceTimer = null;
+
+        function filterPosts(searchTerm) {
+          const normalizedSearch = searchTerm.toLowerCase().trim();
+          const postCards = postsGrid.querySelectorAll("a[data-post-id]");
+          let visibleCount = 0;
+
+          postCards.forEach((card) => {
+            const postId = card.dataset.postId;
+            const postData = postsData.find((p) => p.id === postId);
+
+            if (!postData) return;
+
+            const matchesSearch =
+              normalizedSearch === "" ||
+              postData.title.toLowerCase().includes(normalizedSearch) ||
+              postData.tags.some((tag) =>
+                tag.toLowerCase().includes(normalizedSearch)
+              );
+
+            if (matchesSearch) {
+              card.style.display = "block";
+              card.classList.remove("opacity-0");
+              card.classList.add("opacity-100");
+              visibleCount++;
+            } else {
+              card.classList.remove("opacity-100");
+              card.classList.add("opacity-0");
+              setTimeout(() => {
+                if (card.classList.contains("opacity-0")) {
+                  card.style.display = "none";
+                }
+              }, 300);
+            }
+          });
+
+          if (visibleCount === 0 && normalizedSearch !== "") {
+            noResults.classList.remove("hidden");
           } else {
-            card.classList.remove("opacity-100");
-            card.classList.add("opacity-0");
-            setTimeout(() => {
-              if (card.classList.contains("opacity-0")) {
-                card.style.display = "none";
-              }
-            }, 300);
+            noResults.classList.add("hidden");
           }
-        });
-
-        if (visibleCount === 0 && normalizedSearch !== "") {
-          noResults.classList.remove("hidden");
-        } else {
-          noResults.classList.add("hidden");
-        }
-      }
-
-      function updateURL(searchTerm: string): void {
-        const url = new URL(window.location.href);
-        if (searchTerm.trim()) {
-          url.searchParams.set("q", searchTerm.trim());
-        } else {
-          url.searchParams.delete("q");
-        }
-        window.history.replaceState({}, "", url.toString());
-      }
-
-      function handleSearch(event: Event): void {
-        const target = event.target as HTMLInputElement;
-        const searchTerm = target.value;
-
-        if (debounceTimer) {
-          window.clearTimeout(debounceTimer);
         }
 
-        debounceTimer = window.setTimeout(() => {
-          filterPosts(searchTerm);
-          updateURL(searchTerm);
-        }, 300);
-      }
+        function updateURL(searchTerm) {
+          const url = new URL(window.location.href);
+          if (searchTerm.trim()) {
+            url.searchParams.set("q", searchTerm.trim());
+          } else {
+            url.searchParams.delete("q");
+          }
+          window.history.replaceState({}, "", url.toString());
+        }
 
-      searchInput.addEventListener("input", handleSearch);
+        function handleSearch(event) {
+          const target = event.target;
+          if (!(target instanceof HTMLInputElement)) return;
 
-      const urlParams = new URLSearchParams(window.location.search);
-      const searchFromURL = urlParams.get("q");
-      if (searchFromURL) {
-        searchInput.value = searchFromURL;
-        filterPosts(searchFromURL);
-      }
-    })();
+          const searchTerm = target.value;
 
-    // Search transition styles
-    const style = document.createElement("style");
-    style.textContent = `
-      [data-post-id] {
-        transition: opacity 300ms ease-in-out;
-      }
-      .opacity-0 {
-        opacity: 0 !important;
-      }
-      .opacity-100 {
-        opacity: 1 !important;
-      }
-    `;
-    document.head.appendChild(style);
-  </script>
-</html>
+          if (debounceTimer) {
+            window.clearTimeout(debounceTimer);
+          }
+
+          debounceTimer = window.setTimeout(() => {
+            filterPosts(searchTerm);
+            updateURL(searchTerm);
+          }, 300);
+        }
+
+        searchInput.addEventListener("input", handleSearch);
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const searchFromURL = urlParams.get("q");
+        if (searchFromURL) {
+          searchInput.value = searchFromURL;
+          filterPosts(searchFromURL);
+        }
+      })();
+
+      const style = document.createElement("style");
+      style.textContent = `
+        [data-post-id] {
+          transition: opacity 300ms ease-in-out;
+        }
+        .opacity-0 {
+          opacity: 0 !important;
+        }
+        .opacity-100 {
+          opacity: 1 !important;
+        }
+      `;
+      document.head.appendChild(style);
+    </script>
+  </Fragment>
+</PageLayout>

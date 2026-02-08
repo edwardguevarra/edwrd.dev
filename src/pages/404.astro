@@ -1,183 +1,97 @@
 ---
-import Header from "../components/Header.astro";
-import Footer from "../components/Footer.astro";
-import Metatags from "../components/Metatags.astro";
-import FontConfiguration from "../components/FontConfiguration.astro";
 import FilledButton from "../components/buttons/FilledButton.astro";
 import OutlineButton from "../components/buttons/OutlineButton.astro";
-import "../styles/global.css";
+import PageLayout from "../layouts/PageLayout.astro";
 ---
 
-<html lang="en">
-  <head>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <Metatags
-      title="404 - Page Not Found - edwrd.dev"
-      description="The page you're looking for doesn't exist or has been moved."
-      ogTitle="404 - Page Not Found"
-      ogDescription="The page you're looking for doesn't exist or has been moved."
-      twitterTitle="404 - Page Not Found"
-      twitterDescription="The page you're looking for doesn't exist or has been moved."
-    />
-    <FontConfiguration />
-  </head>
-
-  <body class="flex flex-col">
-    <a
-      href="#main-content"
-      class="bg-brand-lime text-brand-dark sr-only z-50 rounded-md px-4 py-2 focus:not-sr-only focus:absolute focus:top-4 focus:left-4"
-    >
-      Skip to main content
-    </a>
-
-    <Header />
-
-    <main id="main-content">
-      <section
-        class="bg-brand-dark relative flex min-h-[calc(100vh-88px)] flex-1 flex-col items-center justify-center py-4 md:min-h-auto md:py-8"
+<PageLayout
+  title="404 - Page Not Found - edwrd.dev"
+  description="The page you're looking for doesn't exist or has been moved."
+  ogTitle="404 - Page Not Found"
+  ogDescription="The page you're looking for doesn't exist or has been moved."
+  twitterTitle="404 - Page Not Found"
+  twitterDescription="The page you're looking for doesn't exist or has been moved."
+>
+  <section
+    class="bg-brand-dark relative flex min-h-[calc(100vh-88px)] flex-1 flex-col items-center justify-center py-4 md:min-h-auto md:py-8"
+  >
+    <div class="absolute right-0 bottom-0 h-96 w-96 opacity-20">
+      <div
+        class="border-brand-accent absolute right-0 bottom-0 h-64 w-64 rounded-full border-2"
       >
-        <!-- Decorative arcs in bottom-right corner -->
-        <div class="absolute right-0 bottom-0 h-96 w-96 opacity-20">
-          <div
-            class="border-brand-accent absolute right-0 bottom-0 h-64 w-64 rounded-full border-2"
-          >
-          </div>
-          <div
-            class="border-brand-accent absolute right-0 bottom-0 h-80 w-80 -translate-x-8 -translate-y-8 rounded-full border-2"
-          >
-          </div>
-          <div
-            class="border-brand-accent absolute right-0 bottom-0 h-96 w-96 -translate-x-16 -translate-y-16 rounded-full border-2"
-          >
-          </div>
+      </div>
+      <div
+        class="border-brand-accent absolute right-0 bottom-0 h-80 w-80 -translate-x-8 -translate-y-8 rounded-full border-2"
+      >
+      </div>
+      <div
+        class="border-brand-accent absolute right-0 bottom-0 h-96 w-96 -translate-x-16 -translate-y-16 rounded-full border-2"
+      >
+      </div>
+    </div>
+
+    <div class="z-10 container">
+      <div class="mx-auto max-w-2xl text-center">
+        <h1
+          data-animate
+          class="text-brand-lime mb-4 text-8xl leading-none font-black tracking-tight sm:text-9xl lg:text-[160px]"
+        >
+          404
+        </h1>
+
+        <h2
+          data-animate
+          class="animate-delay-100 text-brand-accent mb-6 text-3xl leading-tight font-bold sm:text-4xl lg:text-5xl"
+        >
+          Page Not Found
+        </h2>
+
+        <p
+          data-animate
+          class="animate-delay-200 mb-10 text-base leading-relaxed text-white md:text-lg"
+        >
+          Oops! The page you're looking for doesn't exist or has been moved.
+          Don't worry, let's get you back on track.
+        </p>
+
+        <div
+          data-animate
+          class="animate-delay-300 mb-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-center"
+        >
+          <a href="/">
+            <FilledButton text="Back to Home" color="lime" />
+          </a>
+          <a href="/blog">
+            <OutlineButton text="View Blog" color="white" />
+          </a>
         </div>
 
-        <!-- 404 Content -->
-        <div class="z-10 container">
-          <div class="mx-auto max-w-2xl text-center">
-            <!-- Large 404 -->
-            <h1
-              data-animate
-              class="text-brand-lime mb-4 text-8xl leading-none font-black tracking-tight sm:text-9xl lg:text-[160px]"
-            >
-              404
-            </h1>
-
-            <!-- Error Message -->
-            <h2
-              data-animate
-              class="animate-delay-100 text-brand-accent mb-6 text-3xl leading-tight font-bold sm:text-4xl lg:text-5xl"
-            >
-              Page Not Found
-            </h2>
-
-            <!-- Description -->
-            <p
-              data-animate
-              class="animate-delay-200 mb-10 text-base leading-relaxed text-white md:text-lg"
-            >
-              Oops! The page you're looking for doesn't exist or has been moved.
-              Don't worry, let's get you back on track.
-            </p>
-
-            <!-- Action Buttons -->
-            <div
-              data-animate
-              class="animate-delay-300 mb-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-center"
-            >
-              <a href="/">
-                <FilledButton text="Back to Home" color="lime" />
-              </a>
-              <a href="/blog">
-                <OutlineButton text="View Blog" color="white" />
-              </a>
-            </div>
-
-            <!-- Quick Links -->
-            <div
-              data-animate
-              class="animate-delay-400 flex flex-wrap justify-center gap-6 text-sm font-semibold"
-            >
-              <a
-                href="/#about"
-                class="text-brand-accent transition-opacity hover:opacity-80"
-              >
-                About
-              </a>
-              <span class="text-brand-accent/50">•</span>
-              <a
-                href="/#projects"
-                class="text-brand-accent transition-opacity hover:opacity-80"
-              >
-                Projects
-              </a>
-              <span class="text-brand-accent/50">•</span>
-              <a
-                href="/#contact"
-                class="text-brand-accent transition-opacity hover:opacity-80"
-              >
-                Contact
-              </a>
-            </div>
-          </div>
+        <div
+          data-animate
+          class="animate-delay-400 flex flex-wrap justify-center gap-6 text-sm font-semibold"
+        >
+          <a
+            href="/#about"
+            class="text-brand-accent transition-opacity hover:opacity-80"
+          >
+            About
+          </a>
+          <span class="text-brand-accent/50">•</span>
+          <a
+            href="/#projects"
+            class="text-brand-accent transition-opacity hover:opacity-80"
+          >
+            Projects
+          </a>
+          <span class="text-brand-accent/50">•</span>
+          <a
+            href="/#contact"
+            class="text-brand-accent transition-opacity hover:opacity-80"
+          >
+            Contact
+          </a>
         </div>
-      </section>
-    </main>
-
-    <Footer />
-  </body><script>
-    (function () {
-      const prefersReducedMotion = window.matchMedia(
-        "(prefers-reduced-motion: reduce)"
-      ).matches;
-
-      if (prefersReducedMotion) {
-        const animatedElements =
-          document.querySelectorAll<HTMLElement>("[data-animate]");
-        animatedElements.forEach((el) => {
-          el.style.opacity = "1";
-          el.style.transform = "none";
-        });
-        return;
-      }
-
-      const observerOptions = {
-        root: null,
-        rootMargin: "0px 0px -100px 0px",
-        threshold: 0.1,
-      };
-
-      const observer = new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            entry.target.classList.add("animate-on-scroll");
-            observer.unobserve(entry.target);
-          }
-        });
-      }, observerOptions);
-
-      const animatedElements =
-        document.querySelectorAll<HTMLElement>("[data-animate]");
-      animatedElements.forEach((el) => {
-        observer.observe(el);
-      });
-
-      const checkInitialView = () => {
-        animatedElements.forEach((el) => {
-          const rect = el.getBoundingClientRect();
-          const isInViewport = rect.top < window.innerHeight && rect.bottom > 0;
-          if (isInViewport) {
-            el.classList.add("animate-on-scroll");
-            observer.unobserve(el);
-          }
-        });
-      };
-
-      if (document.readyState === "loading") {
-        document.addEventListener("DOMContentLoaded", checkInitialView);
-      } else {
-        checkInitialView();
-      }
-    })();
-  </script>
-</html>
+      </div>
+    </div>
+  </section>
+</PageLayout>

@@ -1,49 +1,16 @@
 ---
-// Local component imports
-import "../styles/global.css";
-import FontConfiguration from "../components/FontConfiguration.astro";
-import Header from "../components/Header.astro";
-import Hero from "../components/Hero.astro";
 import About from "../components/About.astro";
-import Projects from "../components/Projects.astro";
-import Contact from "../components/Contact.astro";
 import Blog from "../components/Blog.astro";
-import Metatags from "../components/Metatags.astro";
-import Footer from "../components/Footer.astro";
-import ScrollAnimation from "../components/ScrollAnimation.astro";
+import Contact from "../components/Contact.astro";
+import Hero from "../components/Hero.astro";
+import Projects from "../components/Projects.astro";
+import PageLayout from "../layouts/PageLayout.astro";
 ---
 
-<html lang="en">
-  <head>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-
-    <!-- Metatags Component -->
-    <Metatags />
-
-    <!-- Font Configuration -->
-    <FontConfiguration />
-  </head>
-
-  <body class="flex flex-col">
-    <!-- Skip Navigation Link for Accessibility -->
-    <a
-      href="#main-content"
-      class="bg-brand-lime text-brand-dark sr-only z-50 rounded-md px-4 py-2 focus:not-sr-only focus:absolute focus:top-4 focus:left-4"
-    >
-      Skip to main content
-    </a>
-
-    <Header />
-
-    <main id="main-content">
-      <Hero />
-      <About />
-      <Projects />
-      <Contact />
-      <Blog />
-    </main>
-
-    <Footer />
-    <ScrollAnimation />
-  </body>
-</html>
+<PageLayout>
+  <Hero />
+  <About />
+  <Projects />
+  <Contact />
+  <Blog />
+</PageLayout>

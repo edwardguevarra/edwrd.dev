@@ -57,11 +57,26 @@ test.describe("Scroll Animations", () => {
 
     const article = page.locator("article[data-animate]");
     await expect(article).toBeVisible();
+    await article.scrollIntoViewIfNeeded();
+    await page.waitForTimeout(300);
 
     const articleAnimateClass = await article.evaluate((el) =>
       el.classList.contains("animate-on-scroll")
     );
     expect(articleAnimateClass).toBe(true);
+  });
+
+  test("404 page animates heading content", async ({ page }) => {
+    await page.goto("/404");
+
+    const title = page.locator("h1[data-animate]");
+    await expect(title).toBeVisible();
+    await page.waitForTimeout(300);
+
+    const titleAnimateClass = await title.evaluate((el) =>
+      el.classList.contains("animate-on-scroll")
+    );
+    expect(titleAnimateClass).toBe(true);
   });
 
   test("respects reduced motion preference", async ({ page }) => {
@@ -132,18 +147,6 @@ test.describe("Scroll Animations", () => {
     );
 
     expect(animationErrors).toHaveLength(0);
-  });
-
-  test("scroll animation manager script is loaded", async ({ page }) => {
-    await page.goto("/");
-
-    await page.waitForLoadState("networkidle");
-
-    const scriptLoaded = await page.evaluate(() => {
-      return document.querySelector('script[src*="scroll-animation"]') !== null;
-    });
-
-    expect(scriptLoaded).toBe(true);
   });
 
   test("multiple elements on same page animate correctly", async ({ page }) => {

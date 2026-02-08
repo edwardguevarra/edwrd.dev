@@ -1,0 +1,65 @@
+---
+import FontConfiguration from "../components/FontConfiguration.astro";
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import Metatags from "../components/Metatags.astro";
+import ScrollAnimation from "../components/ScrollAnimation.astro";
+import "../styles/global.css";
+import type { PageLayoutProps } from "../types/layout.types";
+
+const {
+  title,
+  description,
+  keywords,
+  author,
+  ogTitle,
+  ogDescription,
+  ogUrl,
+  ogImage,
+  twitterTitle,
+  twitterDescription,
+  twitterImage,
+  mainClass = "",
+  enableScrollAnimation = true,
+}: PageLayoutProps = Astro.props;
+---
+
+<html lang="en">
+  <head>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <Metatags
+      title={title}
+      description={description}
+      keywords={keywords}
+      author={author}
+      ogTitle={ogTitle}
+      ogDescription={ogDescription}
+      ogUrl={ogUrl}
+      ogImage={ogImage}
+      twitterTitle={twitterTitle}
+      twitterDescription={twitterDescription}
+      twitterImage={twitterImage}
+    />
+    <FontConfiguration />
+    <slot name="head" />
+  </head>
+
+  <body class="flex flex-col">
+    <a
+      href="#main-content"
+      class="bg-brand-lime text-brand-dark sr-only z-50 rounded-md px-4 py-2 focus:not-sr-only focus:absolute focus:top-4 focus:left-4"
+    >
+      Skip to main content
+    </a>
+
+    <Header />
+
+    <main id="main-content" class={mainClass}>
+      <slot />
+    </main>
+
+    <Footer />
+    {enableScrollAnimation && <ScrollAnimation />}
+    <slot name="scripts" />
+  </body>
+</html>
