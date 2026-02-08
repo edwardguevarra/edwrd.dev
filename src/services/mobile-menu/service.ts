@@ -1,5 +1,6 @@
 import type { MobileMenuElements } from "./types";
 import type { MobileMenuService } from "../../types/shared.types";
+import { MOBILE_MENU_CLOSE_DELAY_MS } from "./config";
 import { createLogger } from "../../utils/logger";
 import {
   ServiceInitializationError,
@@ -116,7 +117,7 @@ export function createMobileMenuService(
       menuIcon.classList.remove("hidden");
       closeIcon.classList.add("hidden");
       document.body.style.overflow = "";
-    }, 300);
+    }, MOBILE_MENU_CLOSE_DELAY_MS);
   };
 
   const initialize = () => {

@@ -1,0 +1,1 @@
+export const MOBILE_MENU_CLOSE_DELAY_MS = 300;

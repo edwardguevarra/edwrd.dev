@@ -1,7 +1,9 @@
 import { describe, it, expect, vi } from "vitest";
 import { createNavigationService } from "../index";
 import type { NavigationElements, NavigationServiceConfig } from "../types";
-import { SECTION_IDS } from "../config";
+import { SECTION_IDS, NAVIGATION_SCROLL_TOP_THRESHOLD_PX } from "../config";
+
+const CUSTOM_NAVIGATION_ROOT_MARGIN = "0px -50% 0px";
 
 describe("createNavigationService", () => {
   it("initializes without errors", () => {
@@ -431,7 +433,7 @@ describe("createNavigationService", () => {
       };
       const config: NavigationServiceConfig = {
         elements,
-        rootMargin: "0px -50% 0px",
+        rootMargin: CUSTOM_NAVIGATION_ROOT_MARGIN,
       };
 
       const service = createNavigationService(config);
@@ -460,7 +462,7 @@ describe("createNavigationService", () => {
       };
       const config: NavigationServiceConfig = {
         elements,
-        rootMargin: "0px -50% 0px",
+        rootMargin: CUSTOM_NAVIGATION_ROOT_MARGIN,
       };
 
       const service = createNavigationService(config);
@@ -1098,7 +1100,7 @@ describe("createNavigationService", () => {
       service.destroy();
     });
 
-    it("handles scroll position at exactly 100 pixels", () => {
+    it("handles scroll position at exactly the scroll top threshold", () => {
       const mockSection = document.createElement("section");
       mockSection.id = SECTION_IDS.ABOUT;
       const mockLink = document.createElement("a");
@@ -1111,7 +1113,10 @@ describe("createNavigationService", () => {
       vi.spyOn(window, "location", "get").mockReturnValue({
         pathname: "/",
       } as Location);
-      Object.defineProperty(window, "scrollY", { value: 100, writable: true });
+      Object.defineProperty(window, "scrollY", {
+        value: NAVIGATION_SCROLL_TOP_THRESHOLD_PX,
+        writable: true,
+      });
 
       const elements: NavigationElements = {
         sections: mockSections,

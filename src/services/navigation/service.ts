@@ -6,6 +6,10 @@ import {
   getActiveLinkClasses,
   shouldSkipBlogHighlight,
   SECTION_IDS,
+  NAVIGATION_DEFAULT_ROOT_MARGIN,
+  NAVIGATION_DEFAULT_THRESHOLD,
+  NAVIGATION_SCROLL_TOP_THRESHOLD_PX,
+  NAVIGATION_INITIAL_VIEWPORT_RATIO,
 } from "./config";
 import { createLogger } from "../../utils/logger";
 import { ServiceInitializationError, ObserverError } from "../../errors/types";
@@ -37,8 +41,8 @@ export function createNavigationService(
   });
 
   const defaultConfig = {
-    rootMargin: "-20% 0px -60% 0px",
-    threshold: 0,
+    rootMargin: NAVIGATION_DEFAULT_ROOT_MARGIN,
+    threshold: NAVIGATION_DEFAULT_THRESHOLD,
   };
 
   const finalConfig = { ...defaultConfig, ...config };
@@ -82,7 +86,7 @@ export function createNavigationService(
       }
     } else {
       const scrollPosition = window.scrollY;
-      if (scrollPosition < 100) {
+      if (scrollPosition < NAVIGATION_SCROLL_TOP_THRESHOLD_PX) {
         updateActiveNav(getDefaultActiveSection());
       }
     }
@@ -111,12 +115,15 @@ export function createNavigationService(
     }
 
     const scrollPosition = window.scrollY;
-    if (scrollPosition < 100) {
+    if (scrollPosition < NAVIGATION_SCROLL_TOP_THRESHOLD_PX) {
       updateActiveNav(getDefaultActiveSection());
     } else {
       sections.forEach((section) => {
         const rect = section.getBoundingClientRect();
-        if (rect.top <= window.innerHeight * 0.3 && rect.bottom >= 0) {
+        if (
+          rect.top <= window.innerHeight * NAVIGATION_INITIAL_VIEWPORT_RATIO &&
+          rect.bottom >= 0
+        ) {
           const sectionId = (section as HTMLElement).id;
           if (sectionId) {
             updateActiveNav(sectionId);

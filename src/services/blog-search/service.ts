@@ -1,5 +1,9 @@
 import type { BlogSearchService } from "../../types/shared.types";
 import type { BlogSearchPostData, BlogSearchServiceConfig } from "./types";
+import {
+  BLOG_SEARCH_DEFAULT_DEBOUNCE_MS,
+  BLOG_SEARCH_HIDE_TRANSITION_MS,
+} from "./config";
 import { createLogger } from "../../utils/logger";
 import {
   ConfigurationError,
@@ -7,8 +11,6 @@ import {
   ServiceInitializationError,
 } from "../../errors/types";
 
-const DEFAULT_DEBOUNCE_MS = 300;
-const HIDE_TRANSITION_MS = 300;
 const STYLE_ELEMENT_ID = "blog-search-service-style";
 const HIDDEN_CLASS = "blog-search-hidden";
 const VISIBLE_CLASS = "blog-search-visible";
@@ -37,7 +39,7 @@ export function createBlogSearchService(
 ): BlogSearchService {
   const logger = createLogger("BlogSearchService");
   const { searchInput, postsGrid, noResults } = config.elements;
-  const debounceMs = config.debounceMs ?? DEFAULT_DEBOUNCE_MS;
+  const debounceMs = config.debounceMs ?? BLOG_SEARCH_DEFAULT_DEBOUNCE_MS;
 
   let debounceTimer: number | null = null;
   let createdStyleElement = false;
@@ -96,7 +98,7 @@ export function createBlogSearchService(
     styleElement.id = STYLE_ELEMENT_ID;
     styleElement.textContent = `
       [data-post-id] {
-        transition: opacity ${HIDE_TRANSITION_MS}ms ease-in-out;
+        transition: opacity ${BLOG_SEARCH_HIDE_TRANSITION_MS}ms ease-in-out;
       }
       .${HIDDEN_CLASS} {
         opacity: 0 !important;
@@ -123,7 +125,7 @@ export function createBlogSearchService(
       if (card.classList.contains(HIDDEN_CLASS)) {
         card.style.display = "none";
       }
-    }, HIDE_TRANSITION_MS);
+    }, BLOG_SEARCH_HIDE_TRANSITION_MS);
   };
 
   const matchesSearch = (

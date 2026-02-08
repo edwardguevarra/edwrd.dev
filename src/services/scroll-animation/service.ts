@@ -1,5 +1,10 @@
 import type { ScrollAnimationServiceConfig } from "./types";
 import type { ScrollAnimationService } from "../../types/shared.types";
+import {
+  SCROLL_ANIMATION_DEFAULT_ROOT_MARGIN,
+  SCROLL_ANIMATION_DEFAULT_THRESHOLD,
+  SCROLL_ANIMATION_DEFAULT_CLASS,
+} from "./config";
 import { createLogger } from "../../utils/logger";
 import { ServiceInitializationError, ObserverError } from "../../errors/types";
 
@@ -21,9 +26,9 @@ export function createScrollAnimationService(
   }
 
   const defaultConfig = {
-    rootMargin: "0px 0px -100px 0px",
-    threshold: 0.1,
-    animateClass: "animate-on-scroll",
+    rootMargin: SCROLL_ANIMATION_DEFAULT_ROOT_MARGIN,
+    threshold: SCROLL_ANIMATION_DEFAULT_THRESHOLD,
+    animateClass: SCROLL_ANIMATION_DEFAULT_CLASS,
   };
 
   const finalConfig = { ...defaultConfig, ...config };

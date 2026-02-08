@@ -4,6 +4,11 @@ import type {
   ScrollAnimationElements,
   ScrollAnimationServiceConfig,
 } from "../types";
+import {
+  SCROLL_ANIMATION_DEFAULT_ROOT_MARGIN,
+  SCROLL_ANIMATION_DEFAULT_THRESHOLD,
+  SCROLL_ANIMATION_DEFAULT_CLASS,
+} from "../config";
 
 describe("createScrollAnimationService", () => {
   let service: ReturnType<typeof createScrollAnimationService>;
@@ -315,7 +320,9 @@ describe("createScrollAnimationService", () => {
       const testService = createScrollAnimationService(config);
       testService.initialize();
 
-      expect(mockElement.classList.contains("animate-on-scroll")).toBe(true);
+      expect(
+        mockElement.classList.contains(SCROLL_ANIMATION_DEFAULT_CLASS)
+      ).toBe(true);
 
       testService.destroy();
     });
@@ -381,19 +388,21 @@ describe("createScrollAnimationService", () => {
 
       const observerCallback = vi.fn();
       const mockObserver = new IntersectionObserver(observerCallback, {
-        rootMargin: "0px 0px -100px 0px",
-        threshold: 0.1,
+        rootMargin: SCROLL_ANIMATION_DEFAULT_ROOT_MARGIN,
+        threshold: SCROLL_ANIMATION_DEFAULT_THRESHOLD,
       });
 
       mockObserver.observe(mockElement);
 
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          mockElement.classList.add("animate-on-scroll");
+          mockElement.classList.add(SCROLL_ANIMATION_DEFAULT_CLASS);
         }
       });
 
-      expect(mockElement.classList.contains("animate-on-scroll")).toBe(true);
+      expect(
+        mockElement.classList.contains(SCROLL_ANIMATION_DEFAULT_CLASS)
+      ).toBe(true);
 
       testService.destroy();
     });
@@ -451,7 +460,9 @@ describe("createScrollAnimationService", () => {
 
       observerCallback!([entry]);
 
-      expect(mockElement.classList.contains("animate-on-scroll")).toBe(true);
+      expect(
+        mockElement.classList.contains(SCROLL_ANIMATION_DEFAULT_CLASS)
+      ).toBe(true);
 
       vi.unstubAllGlobals();
       testService.destroy();

@@ -1,5 +1,9 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { createBlogSearchService } from "../index";
+import {
+  BLOG_SEARCH_DEFAULT_DEBOUNCE_MS,
+  BLOG_SEARCH_HIDE_TRANSITION_MS,
+} from "../config";
 import type { BlogSearchElements } from "../types";
 import {
   DOMElementNotFoundError,
@@ -7,6 +11,7 @@ import {
 } from "../../../errors/types";
 
 const STYLE_ELEMENT_ID = "blog-search-service-style";
+const CUSTOM_BLOG_SEARCH_DEBOUNCE_MS = 500;
 
 interface BlogSearchTestSetup {
   elements: BlogSearchElements;
@@ -104,8 +109,8 @@ describe("createBlogSearchService", () => {
     searchInput.value = "testing";
     searchInput.dispatchEvent(new Event("input"));
 
-    vi.advanceTimersByTime(300);
-    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(BLOG_SEARCH_DEFAULT_DEBOUNCE_MS);
+    vi.advanceTimersByTime(BLOG_SEARCH_HIDE_TRANSITION_MS);
 
     expect(firstCard.style.display).toBe("none");
     expect(secondCard.style.display).toBe("block");
@@ -125,8 +130,8 @@ describe("createBlogSearchService", () => {
     searchInput.value = "ASTRO";
     searchInput.dispatchEvent(new Event("input"));
 
-    vi.advanceTimersByTime(300);
-    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(BLOG_SEARCH_DEFAULT_DEBOUNCE_MS);
+    vi.advanceTimersByTime(BLOG_SEARCH_HIDE_TRANSITION_MS);
 
     expect(firstCard.style.display).toBe("block");
     expect(secondCard.style.display).toBe("none");
@@ -145,8 +150,8 @@ describe("createBlogSearchService", () => {
     searchInput.value = "no-match";
     searchInput.dispatchEvent(new Event("input"));
 
-    vi.advanceTimersByTime(300);
-    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(BLOG_SEARCH_DEFAULT_DEBOUNCE_MS);
+    vi.advanceTimersByTime(BLOG_SEARCH_HIDE_TRANSITION_MS);
 
     expect(firstCard.style.display).toBe("none");
     expect(secondCard.style.display).toBe("none");
@@ -165,8 +170,8 @@ describe("createBlogSearchService", () => {
     searchInput.value = "no-match";
     searchInput.dispatchEvent(new Event("input"));
 
-    vi.advanceTimersByTime(300);
-    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(BLOG_SEARCH_DEFAULT_DEBOUNCE_MS);
+    vi.advanceTimersByTime(BLOG_SEARCH_HIDE_TRANSITION_MS);
 
     expect(noResults.classList.contains("hidden")).toBe(false);
     expect(firstCard.style.display).toBe("none");
@@ -175,8 +180,8 @@ describe("createBlogSearchService", () => {
     searchInput.value = "Astro";
     searchInput.dispatchEvent(new Event("input"));
 
-    vi.advanceTimersByTime(300);
-    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(BLOG_SEARCH_DEFAULT_DEBOUNCE_MS);
+    vi.advanceTimersByTime(BLOG_SEARCH_HIDE_TRANSITION_MS);
 
     expect(noResults.classList.contains("hidden")).toBe(true);
     expect(firstCard.style.display).toBe("block");
@@ -192,7 +197,7 @@ describe("createBlogSearchService", () => {
     const service = createBlogSearchService({ elements });
     service.initialize();
 
-    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(BLOG_SEARCH_HIDE_TRANSITION_MS);
 
     expect(searchInput.value).toBe("astro");
     expect(firstCard.style.display).toBe("block");
@@ -203,7 +208,10 @@ describe("createBlogSearchService", () => {
 
   it("syncs the search term to URL only after debounce", () => {
     const { elements, searchInput } = createSearchDom();
-    const service = createBlogSearchService({ elements, debounceMs: 500 });
+    const service = createBlogSearchService({
+      elements,
+      debounceMs: CUSTOM_BLOG_SEARCH_DEBOUNCE_MS,
+    });
 
     service.initialize();
 
@@ -212,7 +220,7 @@ describe("createBlogSearchService", () => {
 
     expect(new URL(window.location.href).searchParams.get("q")).toBeNull();
 
-    vi.advanceTimersByTime(499);
+    vi.advanceTimersByTime(CUSTOM_BLOG_SEARCH_DEBOUNCE_MS - 1);
     expect(new URL(window.location.href).searchParams.get("q")).toBeNull();
 
     vi.advanceTimersByTime(1);
@@ -223,7 +231,10 @@ describe("createBlogSearchService", () => {
 
   it("applies only the latest input when events fire before debounce", () => {
     const { elements, searchInput, firstCard, secondCard } = createSearchDom();
-    const service = createBlogSearchService({ elements, debounceMs: 300 });
+    const service = createBlogSearchService({
+      elements,
+      debounceMs: BLOG_SEARCH_DEFAULT_DEBOUNCE_MS,
+    });
 
     service.initialize();
 
@@ -234,8 +245,8 @@ describe("createBlogSearchService", () => {
     searchInput.value = "testing";
     searchInput.dispatchEvent(new Event("input"));
 
-    vi.advanceTimersByTime(300);
-    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(BLOG_SEARCH_DEFAULT_DEBOUNCE_MS);
+    vi.advanceTimersByTime(BLOG_SEARCH_HIDE_TRANSITION_MS);
 
     expect(firstCard.style.display).toBe("none");
     expect(secondCard.style.display).toBe("block");
@@ -248,13 +259,16 @@ describe("createBlogSearchService", () => {
     const { elements, searchInput } = createSearchDom();
     window.history.replaceState({}, "", "/blog?q=existing");
 
-    const service = createBlogSearchService({ elements, debounceMs: 300 });
+    const service = createBlogSearchService({
+      elements,
+      debounceMs: BLOG_SEARCH_DEFAULT_DEBOUNCE_MS,
+    });
     service.initialize();
 
     searchInput.value = "   ";
     searchInput.dispatchEvent(new Event("input"));
 
-    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(BLOG_SEARCH_DEFAULT_DEBOUNCE_MS);
 
     expect(new URL(window.location.href).searchParams.get("q")).toBeNull();
 

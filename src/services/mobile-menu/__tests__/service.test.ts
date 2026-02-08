@@ -1,5 +1,6 @@
 import { describe, it, expect, vi } from "vitest";
 import { createMobileMenuService } from "../index";
+import { MOBILE_MENU_CLOSE_DELAY_MS } from "../config";
 import type { MobileMenuElements } from "../types";
 
 describe("createMobileMenuService", () => {
@@ -96,7 +97,7 @@ describe("createMobileMenuService", () => {
     service.close();
 
     vi.useFakeTimers();
-    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(MOBILE_MENU_CLOSE_DELAY_MS);
     vi.useRealTimers();
 
     expect(backdrop.classList.contains("hidden")).toBe(true);
@@ -139,7 +140,7 @@ describe("createMobileMenuService", () => {
     expect(mobileMenu.classList.contains("mobile-menu-open")).toBe(false);
 
     vi.useFakeTimers();
-    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(MOBILE_MENU_CLOSE_DELAY_MS);
     vi.useRealTimers();
 
     service.destroy();
@@ -315,7 +316,7 @@ describe("createMobileMenuService", () => {
     service.close();
 
     vi.useFakeTimers();
-    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(MOBILE_MENU_CLOSE_DELAY_MS);
     vi.useRealTimers();
 
     expect(menuButton.getAttribute("aria-expanded")).toBe("false");
@@ -404,7 +405,7 @@ describe("createMobileMenuService", () => {
     talkButton.click();
 
     vi.useFakeTimers();
-    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(MOBILE_MENU_CLOSE_DELAY_MS);
     vi.useRealTimers();
 
     expect(backdrop.classList.contains("hidden")).toBe(true);
@@ -444,7 +445,7 @@ describe("createMobileMenuService", () => {
 
     service.close();
 
-    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(MOBILE_MENU_CLOSE_DELAY_MS);
 
     expect(backdrop.classList.contains("hidden")).toBe(true);
     expect(mobileMenu.classList.contains("hidden")).toBe(true);
@@ -499,7 +500,7 @@ describe("createMobileMenuService", () => {
 
     expect(mobileMenu.classList.contains("hidden")).toBe(false);
 
-    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(MOBILE_MENU_CLOSE_DELAY_MS);
 
     expect(mobileMenu.classList.contains("hidden")).toBe(true);
 
@@ -531,7 +532,7 @@ describe("createMobileMenuService", () => {
     testService.initialize();
     testService.open();
 
-    vi.advanceTimersByTime(300);
+    vi.advanceTimersByTime(MOBILE_MENU_CLOSE_DELAY_MS);
 
     expect(backdrop.classList.contains("hidden")).toBe(false);
     expect(mobileMenu.classList.contains("hidden")).toBe(false);
