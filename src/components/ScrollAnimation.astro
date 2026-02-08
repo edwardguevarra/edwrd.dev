@@ -1,30 +1,34 @@
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    import("../services/scroll-animation/index.js")
-      .then(({ createScrollAnimationService }) => {
-        // Query animated elements
-        const animatedElements =
-          document.querySelectorAll<HTMLElement>("[data-animate]");
+  const initScrollAnimation = async () => {
+    try {
+      const { createScrollAnimationService } =
+        await import("../services/scroll-animation/index.js");
 
-        // Initialize scroll animation service
-        const scrollAnimationService = createScrollAnimationService({
-          elements: { animatedElements },
-        });
-        scrollAnimationService.initialize();
+      const animatedElements =
+        document.querySelectorAll<HTMLElement>("[data-animate]");
 
-        // Cleanup on page unload
-        window.addEventListener("beforeunload", () => {
-          scrollAnimationService.destroy();
-        });
-      })
-      .catch((error) => {
-        console.warn(
-          "[ScrollAnimation] Failed to load scroll animation service:",
-          {
-            error: error instanceof Error ? error.message : String(error),
-            stack: error instanceof Error ? error.stack : undefined,
-          }
-        );
+      const scrollAnimationService = createScrollAnimationService({
+        elements: { animatedElements },
       });
-  });
+      scrollAnimationService.initialize();
+
+      window.addEventListener("beforeunload", () => {
+        scrollAnimationService.destroy();
+      });
+    } catch (error) {
+      console.warn(
+        "[ScrollAnimation] Failed to load scroll animation service:",
+        {
+          error: error instanceof Error ? error.message : String(error),
+          stack: error instanceof Error ? error.stack : undefined,
+        }
+      );
+    }
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initScrollAnimation);
+  } else {
+    initScrollAnimation();
+  }
 </script>

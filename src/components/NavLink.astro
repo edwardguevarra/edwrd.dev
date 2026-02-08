@@ -8,9 +8,12 @@ const {
   isActive = false,
   isMobile = false,
   prefetch = false,
+  isRSS = false,
 } = Astro.props as NavLinkProps;
 
-const baseClasses = "nav-link hover:opacity-80 transition-all cursor-pointer";
+const baseClasses = isRSS
+  ? "hover:opacity-80 transition-all cursor-pointer"
+  : "nav-link hover:opacity-80 transition-all cursor-pointer";
 const sizeClasses = isMobile
   ? "py-2"
   : "font-semibold text-sm leading-[22px] tracking-normal text-center";

@@ -13,6 +13,7 @@ export function createScrollAnimationService(
 ): ScrollAnimationService {
   const logger = createLogger("ScrollAnimationService");
   let observer: IntersectionObserver | null = null;
+  let domContentLoadedListener: (() => void) | null = null;
   const { animatedElements } = config.elements;
 
   if (!animatedElements || animatedElements.length === 0) {
@@ -115,6 +116,7 @@ export function createScrollAnimationService(
 
       if (document.readyState === "loading") {
         document.addEventListener("DOMContentLoaded", checkInitialView);
+        domContentLoadedListener = checkInitialView;
       } else {
         checkInitialView();
       }
@@ -134,6 +136,12 @@ export function createScrollAnimationService(
     try {
       if (observer) {
         observer.disconnect();
+      }
+      if (domContentLoadedListener) {
+        document.removeEventListener(
+          "DOMContentLoaded",
+          domContentLoadedListener
+        );
       }
       logger.info("Service destroyed");
     } catch (error) {

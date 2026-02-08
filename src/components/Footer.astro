@@ -1,10 +1,10 @@
 ---
 import FilledButton from "./buttons/FilledButton.astro";
+import NavLink from "./NavLink.astro";
 import { Image } from "astro:assets";
 import bgCircle from "../assets/bg-circle.png";
 import { getNavigationItems } from "../services/navigation/config";
 
-// Footer links should work from any page, so use full paths
 const navItems = getNavigationItems(false);
 ---
 
@@ -43,20 +43,15 @@ const navItems = getNavigationItems(false);
       >
         {
           navItems.map((item) => (
-            <a
+            <NavLink
               href={item.href}
-              class="cursor-pointer text-center text-sm leading-[22px] font-semibold tracking-normal text-white transition-opacity hover:opacity-80"
-            >
-              {item.label}
-            </a>
+              label={item.label}
+              section={item.section}
+              isMobile={false}
+            />
           ))
         }
-        <a
-          href="/rss.xml"
-          class="cursor-pointer text-center text-sm leading-[22px] font-semibold tracking-normal text-white transition-opacity hover:opacity-80"
-        >
-          RSS
-        </a>
+        <NavLink href="/rss.xml" label="RSS" section="rss" isMobile={false} />
       </nav>
 
       <!-- CTA Button -->

@@ -11,6 +11,7 @@ export interface NavLinkProps {
   isActive?: boolean;
   isMobile?: boolean;
   prefetch?: boolean;
+  isRSS?: boolean;
 }
 
 export interface MobileMenuProps {

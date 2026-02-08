@@ -1,43 +1,188 @@
-# Astro Starter Kit: Minimal
+# edwrd.dev
 
-```sh
-npm create astro@latest -- --template minimal
+Personal portfolio website built with Astro, featuring a modern dark theme, smooth scroll animations, and responsive design.
+
+## Tech Stack
+
+- **Framework**: Astro 5.x - Static site generator with component islands
+- **Language**: TypeScript - Type-safe development
+- **Styling**: Tailwind CSS 4.x - Utility-first CSS framework
+- **Testing**:
+  - Vitest - Unit testing with happy-dom
+  - Playwright - End-to-end testing
+- **Icons**: astro-icon - Icon component system
+- **Fonts**: astro-font - Font optimization and loading
+
+## Project Structure
+
+```
+src/
+├── components/       # Reusable Astro components
+│   ├── buttons/     # Button components (FilledButton, OutlineButton)
+│   └── *.astro      # Page sections (Header, Footer, Hero, etc.)
+├── services/        # Business logic layer
+│   ├── navigation/    # Active section tracking
+│   ├── mobile-menu/  # Mobile menu interactions
+│   ├── scroll-animation/  # IntersectionObserver animations
+│   └── blog-search/      # Blog post search/filter
+├── types/           # TypeScript type definitions
+├── utils/           # Utility functions (logger, date helpers)
+├── content/         # Markdown content (blog posts, projects)
+└── pages/           # Route definitions
 ```
 
-> 🧑‍🚀 **Seasoned astronaut?** Delete this file. Have fun!
+## Development
 
-## 🚀 Project Structure
+### Install Dependencies
 
-Inside of your Astro project, you'll see the following folders and files:
-
-```text
-/
-├── public/
-├── src/
-│   └── pages/
-│       └── index.astro
-└── package.json
+```bash
+npm install
 ```
 
-Astro looks for `.astro` or `.md` files in the `src/pages/` directory. Each page is exposed as a route based on its file name.
+### Start Development Server
 
-There's nothing special about `src/components/`, but that's where we like to put any Astro/React/Vue/Svelte/Preact components.
+```bash
+npm run dev
+```
 
-Any static assets, like images, can be placed in the `public/` directory.
+The site will be available at `http://localhost:4321`
 
-## 🧞 Commands
+### Build for Production
 
-All commands are run from the root of the project, from a terminal:
+```bash
+npm run build
+```
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+Build artifacts are output to `./dist/`
 
-## 👀 Want to learn more?
+### Preview Production Build
 
-Feel free to check [our documentation](https://docs.astro.build) or jump into our [Discord server](https://astro.build/chat).
+```bash
+npm run preview
+```
+
+## Testing
+
+### Run Unit Tests (Watch Mode)
+
+```bash
+npm run test
+```
+
+### Run Unit Tests Once
+
+```bash
+npm run test:run
+```
+
+### Run E2E Tests
+
+```bash
+npm run test:e2e
+```
+
+### Run All Checks
+
+```bash
+npm run test:all
+```
+
+This runs lint, format, unit tests, and E2E tests.
+
+## Code Quality
+
+### Lint Code
+
+```bash
+npm run lint
+```
+
+### Auto-fix Lint Issues
+
+```bash
+npm run lint:fix
+```
+
+### Format Code
+
+```bash
+npm run format
+```
+
+### Check Formatting
+
+```bash
+npm run format:check
+```
+
+## Content Management
+
+### Blog Posts
+
+Blog posts are Markdown files in `src/content/blog/`. Each post requires frontmatter:
+
+```yaml
+---
+title: "Post Title"
+description: "Post description"
+publishDate: 2024-01-01
+tags: ["tag1", "tag2"]
+---
+```
+
+### Projects
+
+Projects are Markdown files in `src/content/projects/`. Each project requires frontmatter:
+
+```yaml
+---
+title: "Project Name"
+description: "Project description"
+tech: ["Tech1", "Tech2"]
+link: "https://github.com/user/repo"
+---
+```
+
+## Architecture
+
+The codebase follows a layered architecture:
+
+- **Components**: Presentation logic and UI structure
+- **Services**: Business logic and DOM interaction (factory pattern)
+- **Types**: Shared TypeScript interfaces and contracts
+- **Utils**: Reusable helper functions
+
+For detailed architecture documentation, see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+
+## Key Features
+
+- **Smooth Scroll Animations**: Elements animate as they enter viewport
+- **Active Navigation**: Navigation highlights current section
+- **Mobile Menu**: Responsive hamburger menu for mobile devices
+- **Dark Theme**: Modern dark color scheme with brand accents
+- **Blog Search**: Search and filter blog posts
+- **Accessibility**: ARIA attributes and keyboard navigation support
+- **Performance**: Optimized fonts, lazy loading, and static generation
+
+## Deployment
+
+The site is designed for static hosting. After building:
+
+```bash
+npm run build
+```
+
+Deploy the `dist/` directory to any static hosting service (Netlify, Vercel, GitHub Pages, etc.).
+
+## Browser Support
+
+Modern browsers with ES6 support:
+
+- Chrome (latest)
+- Firefox (latest)
+- Safari (latest)
+- Edge (latest)
+
+## License
+
+MIT
