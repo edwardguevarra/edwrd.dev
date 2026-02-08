@@ -23,9 +23,7 @@ test.describe("Button Link Behavior", () => {
     await page.goto("/");
 
     const header = page.locator("header");
-    const button = header
-      .getByTestId("filled-button")
-      .filter({ hasText: "Let's Talk" });
+    const button = header.getByRole("link", { name: "Let's Talk" });
     await button.click();
 
     expect(page.url()).toContain("/#contact");

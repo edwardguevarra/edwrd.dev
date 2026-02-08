@@ -6,39 +6,52 @@ test.describe("Contact Section External Links", () => {
   });
 
   test("LinkedIn button opens in new tab", async ({ page, context }) => {
+    const link = page.getByRole("link", { name: "LinkedIn" });
+    await expect(link).toHaveAttribute("href", /linkedin\.com/);
+
+    const initialPageCount = context.pages().length;
     const pagePromise = context.waitForEvent("page");
-    await page.getByRole("link", { name: "LinkedIn" }).click();
+    await link.click();
     const newPage = await pagePromise;
 
-    await newPage.waitForLoadState("networkidle");
-    expect(newPage.url()).toContain("linkedin.com");
+    expect(newPage).toBeTruthy();
+    expect(context.pages()).toHaveLength(initialPageCount + 1);
   });
 
   test("GitHub button opens in new tab", async ({ page, context }) => {
+    const link = page.getByRole("link", { name: "GitHub" });
+    await expect(link).toHaveAttribute("href", /github\.com/);
+
+    const initialPageCount = context.pages().length;
     const pagePromise = context.waitForEvent("page");
-    await page.getByRole("link", { name: "GitHub" }).click();
+    await link.click();
     const newPage = await pagePromise;
 
-    await newPage.waitForLoadState("networkidle");
-    expect(newPage.url()).toContain("github.com");
+    expect(newPage).toBeTruthy();
+    expect(context.pages()).toHaveLength(initialPageCount + 1);
   });
 
   test("Discord button opens in new tab", async ({ page, context }) => {
+    const link = page.getByRole("link", { name: "Discord" });
+    await expect(link).toHaveAttribute("href", /discord\.com/);
+
+    const initialPageCount = context.pages().length;
     const pagePromise = context.waitForEvent("page");
-    await page.getByRole("link", { name: "Discord" }).click();
+    await link.click();
     const newPage = await pagePromise;
 
-    await newPage.waitForLoadState("networkidle");
-    expect(newPage.url()).toContain("discord.com");
+    expect(newPage).toBeTruthy();
+    expect(context.pages()).toHaveLength(initialPageCount + 1);
   });
 
-  test("Email button opens mail client popup", async ({ page }) => {
-    const [popup] = await Promise.all([
-      page.waitForEvent("popup"),
-      page.getByRole("link", { name: "edwardguevarra2003@gmail.com" }).click(),
-    ]);
-
-    expect(popup).toBeTruthy();
+  test("Email button uses mailto protocol", async ({ page }) => {
+    const emailLink = page.getByRole("link", {
+      name: "edwardguevarra2003@gmail.com",
+    });
+    await expect(emailLink).toHaveAttribute(
+      "href",
+      "mailto:edwardguevarra2003@gmail.com"
+    );
   });
 
   test("External links have target='_blank' attribute", async ({ page }) => {

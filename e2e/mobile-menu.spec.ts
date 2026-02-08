@@ -74,7 +74,7 @@ test.describe("Mobile Menu", () => {
     await menuButton.click();
     await expect(mobileMenu).toBeVisible();
 
-    const aboutLink = page.getByRole("link", { name: "About" });
+    const aboutLink = mobileMenu.getByRole("menuitem", { name: "About" });
     await aboutLink.click();
 
     await expect(mobileMenu).toBeHidden();

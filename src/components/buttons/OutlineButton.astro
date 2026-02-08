@@ -8,6 +8,7 @@ export interface Props {
   class?: string;
   color?: "dark" | "white";
   target?: string;
+  "data-testid"?: string;
 }
 
 const {
@@ -17,7 +18,8 @@ const {
   icon,
   color = "dark",
   target,
-} = Astro.props;
+  "data-testid": dataTestId = "outline-button",
+} = Astro.props as Props;
 
 const baseClasses =
   "w-fit px-[54px] py-[9px] rounded-[50px] border font-semibold text-[14px] leading-[22px] tracking-normal text-center hover:opacity-80 transition-opacity flex items-center justify-center gap-2 cursor-pointer";
@@ -35,7 +37,7 @@ const colorClasses =
       {...(target && { target })}
       {...(target === "_blank" && { rel: "noopener noreferrer" })}
       class={`${baseClasses} ${colorClasses} ${className}`}
-      data-testid="outline-button"
+      data-testid={dataTestId}
     >
       {text}
       {icon && <Icon name={icon} width="16" height="16" />}
@@ -43,7 +45,7 @@ const colorClasses =
   ) : (
     <button
       class={`${baseClasses} ${colorClasses} ${className}`}
-      data-testid="outline-button"
+      data-testid={dataTestId}
     >
       {text}
       {icon && <Icon name={icon} width="16" height="16" />}
