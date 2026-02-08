@@ -38,7 +38,7 @@ export function computeHref(section: string, isHomePage: boolean): string {
   if (section === SECTION_IDS.BLOG) {
     return isHomePage ? `#${SECTION_IDS.BLOG}` : `/blog`;
   }
-  return isHomePage ? `#${section}` : `/#${section}`;
+  return `#${section}`;
 }
 
 export function isBlogPage(pathname: string): boolean {

@@ -6,7 +6,13 @@ import eslintConfigPrettier from "eslint-config-prettier";
 
 export default [
   {
-    ignores: ["dist/", ".astro/", "node_modules/", "coverage/"],
+    ignores: [
+      "dist/",
+      ".astro/",
+      "node_modules/",
+      "coverage/",
+      "test-results/",
+    ],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,

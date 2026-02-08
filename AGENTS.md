@@ -20,6 +20,7 @@ This file provides guidance to agentic coding agents working in this repository.
 - `npm run test -- <path>` - Run single test file (e.g., `npm run test src/services/navigation/__tests__/service.test.ts`)
 - `npm run test:e2e` - Run Playwright E2E tests
 - `npm run test:e2e:ui` - Run Playwright with UI
+- `npm run test:all` - Run all checks: lint, format, test:run, test:e2e
 
 ### Development
 
