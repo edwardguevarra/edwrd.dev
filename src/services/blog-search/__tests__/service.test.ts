@@ -12,6 +12,9 @@ import {
 
 const STYLE_ELEMENT_ID = "blog-search-service-style";
 const CUSTOM_BLOG_SEARCH_DEBOUNCE_MS = 500;
+const HIDDEN_CLASS = "blog-search-hidden";
+const VISIBLE_CLASS = "blog-search-visible";
+const COLLAPSED_CLASS = "blog-search-collapsed";
 
 interface BlogSearchTestSetup {
   elements: BlogSearchElements;
@@ -91,9 +94,7 @@ describe("createBlogSearchService", () => {
     expect(service.destroy).toBeInstanceOf(Function);
 
     service.initialize();
-    expect(document.getElementById(STYLE_ELEMENT_ID)).toBeInstanceOf(
-      HTMLStyleElement
-    );
+    expect(document.getElementById(STYLE_ELEMENT_ID)).toBeNull();
 
     service.destroy();
     expect(document.getElementById(STYLE_ELEMENT_ID)).toBeNull();
@@ -112,8 +113,10 @@ describe("createBlogSearchService", () => {
     vi.advanceTimersByTime(BLOG_SEARCH_DEFAULT_DEBOUNCE_MS);
     vi.advanceTimersByTime(BLOG_SEARCH_HIDE_TRANSITION_MS);
 
-    expect(firstCard.style.display).toBe("none");
-    expect(secondCard.style.display).toBe("block");
+    expect(firstCard.classList.contains(HIDDEN_CLASS)).toBe(true);
+    expect(firstCard.classList.contains(COLLAPSED_CLASS)).toBe(true);
+    expect(secondCard.classList.contains(VISIBLE_CLASS)).toBe(true);
+    expect(secondCard.classList.contains(COLLAPSED_CLASS)).toBe(false);
     expect(noResults.classList.contains("hidden")).toBe(true);
     expect(new URL(window.location.href).searchParams.get("q")).toBe("testing");
 
@@ -133,8 +136,10 @@ describe("createBlogSearchService", () => {
     vi.advanceTimersByTime(BLOG_SEARCH_DEFAULT_DEBOUNCE_MS);
     vi.advanceTimersByTime(BLOG_SEARCH_HIDE_TRANSITION_MS);
 
-    expect(firstCard.style.display).toBe("block");
-    expect(secondCard.style.display).toBe("none");
+    expect(firstCard.classList.contains(VISIBLE_CLASS)).toBe(true);
+    expect(firstCard.classList.contains(COLLAPSED_CLASS)).toBe(false);
+    expect(secondCard.classList.contains(HIDDEN_CLASS)).toBe(true);
+    expect(secondCard.classList.contains(COLLAPSED_CLASS)).toBe(true);
     expect(noResults.classList.contains("hidden")).toBe(true);
 
     service.destroy();
@@ -153,8 +158,8 @@ describe("createBlogSearchService", () => {
     vi.advanceTimersByTime(BLOG_SEARCH_DEFAULT_DEBOUNCE_MS);
     vi.advanceTimersByTime(BLOG_SEARCH_HIDE_TRANSITION_MS);
 
-    expect(firstCard.style.display).toBe("none");
-    expect(secondCard.style.display).toBe("none");
+    expect(firstCard.classList.contains(COLLAPSED_CLASS)).toBe(true);
+    expect(secondCard.classList.contains(COLLAPSED_CLASS)).toBe(true);
     expect(noResults.classList.contains("hidden")).toBe(false);
 
     service.destroy();
@@ -174,8 +179,8 @@ describe("createBlogSearchService", () => {
     vi.advanceTimersByTime(BLOG_SEARCH_HIDE_TRANSITION_MS);
 
     expect(noResults.classList.contains("hidden")).toBe(false);
-    expect(firstCard.style.display).toBe("none");
-    expect(secondCard.style.display).toBe("none");
+    expect(firstCard.classList.contains(COLLAPSED_CLASS)).toBe(true);
+    expect(secondCard.classList.contains(COLLAPSED_CLASS)).toBe(true);
 
     searchInput.value = "Astro";
     searchInput.dispatchEvent(new Event("input"));
@@ -184,8 +189,9 @@ describe("createBlogSearchService", () => {
     vi.advanceTimersByTime(BLOG_SEARCH_HIDE_TRANSITION_MS);
 
     expect(noResults.classList.contains("hidden")).toBe(true);
-    expect(firstCard.style.display).toBe("block");
-    expect(secondCard.style.display).toBe("none");
+    expect(firstCard.classList.contains(VISIBLE_CLASS)).toBe(true);
+    expect(firstCard.classList.contains(COLLAPSED_CLASS)).toBe(false);
+    expect(secondCard.classList.contains(COLLAPSED_CLASS)).toBe(true);
 
     service.destroy();
   });
@@ -200,8 +206,9 @@ describe("createBlogSearchService", () => {
     vi.advanceTimersByTime(BLOG_SEARCH_HIDE_TRANSITION_MS);
 
     expect(searchInput.value).toBe("astro");
-    expect(firstCard.style.display).toBe("block");
-    expect(secondCard.style.display).toBe("none");
+    expect(firstCard.classList.contains(VISIBLE_CLASS)).toBe(true);
+    expect(firstCard.classList.contains(COLLAPSED_CLASS)).toBe(false);
+    expect(secondCard.classList.contains(COLLAPSED_CLASS)).toBe(true);
 
     service.destroy();
   });
@@ -248,8 +255,9 @@ describe("createBlogSearchService", () => {
     vi.advanceTimersByTime(BLOG_SEARCH_DEFAULT_DEBOUNCE_MS);
     vi.advanceTimersByTime(BLOG_SEARCH_HIDE_TRANSITION_MS);
 
-    expect(firstCard.style.display).toBe("none");
-    expect(secondCard.style.display).toBe("block");
+    expect(firstCard.classList.contains(COLLAPSED_CLASS)).toBe(true);
+    expect(secondCard.classList.contains(VISIBLE_CLASS)).toBe(true);
+    expect(secondCard.classList.contains(COLLAPSED_CLASS)).toBe(false);
     expect(new URL(window.location.href).searchParams.get("q")).toBe("testing");
 
     service.destroy();

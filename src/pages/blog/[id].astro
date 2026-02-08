@@ -37,38 +37,6 @@ const { Content } = await render(post);
   twitterImage={post.data.featuredImage.src}
   mainClass="bg-brand-accent min-h-screen"
 >
-  <style slot="head">
-    .bg-white {
-      background-color: white;
-    }
-
-    .shadow-lg {
-      box-shadow:
-        0 10px 15px -3px rgba(0, 0, 0, 0.1),
-        0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    }
-
-    .rounded-lg {
-      border-radius: 0.5rem;
-    }
-
-    .p-6 {
-      padding: 1.5rem;
-    }
-
-    @media (min-width: 768px) {
-      .md\:p-8 {
-        padding: 2rem;
-      }
-    }
-
-    @media (min-width: 1024px) {
-      .lg\:p-12 {
-        padding: 3rem;
-      }
-    }
-  </style>
-
   <div class="container mx-auto px-4 py-12 lg:py-20">
     <div class="mb-8" data-animate>
       <a

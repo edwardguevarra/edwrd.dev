@@ -11,9 +11,9 @@ import {
   ServiceInitializationError,
 } from "../../errors/types";
 
-const STYLE_ELEMENT_ID = "blog-search-service-style";
 const HIDDEN_CLASS = "blog-search-hidden";
 const VISIBLE_CLASS = "blog-search-visible";
+const COLLAPSED_CLASS = "blog-search-collapsed";
 
 function isBlogSearchPostData(value: unknown): value is BlogSearchPostData {
   if (!value || typeof value !== "object") {
@@ -42,8 +42,6 @@ export function createBlogSearchService(
   const debounceMs = config.debounceMs ?? BLOG_SEARCH_DEFAULT_DEBOUNCE_MS;
 
   let debounceTimer: number | null = null;
-  let createdStyleElement = false;
-  let styleElement: HTMLStyleElement | null = null;
   let postsById = new Map<string, BlogSearchPostData>();
 
   if (!searchInput) {
@@ -86,44 +84,20 @@ export function createBlogSearchService(
     }
   };
 
-  const ensureStyles = (): void => {
-    const existingStyleElement = document.getElementById(STYLE_ELEMENT_ID);
-
-    if (existingStyleElement instanceof HTMLStyleElement) {
-      styleElement = existingStyleElement;
-      return;
-    }
-
-    styleElement = document.createElement("style");
-    styleElement.id = STYLE_ELEMENT_ID;
-    styleElement.textContent = `
-      [data-post-id] {
-        transition: opacity ${BLOG_SEARCH_HIDE_TRANSITION_MS}ms ease-in-out;
-      }
-      .${HIDDEN_CLASS} {
-        opacity: 0 !important;
-      }
-      .${VISIBLE_CLASS} {
-        opacity: 1 !important;
-      }
-    `;
-    document.head.appendChild(styleElement);
-    createdStyleElement = true;
-  };
-
   const setCardVisible = (card: HTMLElement): void => {
-    card.style.display = "block";
+    card.classList.remove(COLLAPSED_CLASS);
     card.classList.remove(HIDDEN_CLASS);
     card.classList.add(VISIBLE_CLASS);
   };
 
   const setCardHidden = (card: HTMLElement): void => {
+    card.classList.remove(COLLAPSED_CLASS);
     card.classList.remove(VISIBLE_CLASS);
     card.classList.add(HIDDEN_CLASS);
 
     window.setTimeout(() => {
       if (card.classList.contains(HIDDEN_CLASS)) {
-        card.style.display = "none";
+        card.classList.add(COLLAPSED_CLASS);
       }
     }, BLOG_SEARCH_HIDE_TRANSITION_MS);
   };
@@ -231,7 +205,6 @@ export function createBlogSearchService(
         postsData.map((post: BlogSearchPostData) => [post.id, post])
       );
 
-      ensureStyles();
       searchInput.addEventListener("input", handleSearch);
       initializeFromUrl();
 
@@ -255,10 +228,6 @@ export function createBlogSearchService(
       if (debounceTimer !== null) {
         window.clearTimeout(debounceTimer);
         debounceTimer = null;
-      }
-
-      if (createdStyleElement) {
-        styleElement?.remove();
       }
 
       postsById.clear();

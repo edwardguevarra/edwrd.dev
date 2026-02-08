@@ -190,4 +190,22 @@ const postsData = sortedPosts.map((post) => ({
       });
     </script>
   </Fragment>
+
+  <style>
+    a[data-post-id] {
+      transition: opacity 300ms ease-in-out;
+    }
+
+    .blog-search-hidden {
+      opacity: 0;
+    }
+
+    .blog-search-visible {
+      opacity: 1;
+    }
+
+    .blog-search-collapsed {
+      display: none;
+    }
+  </style>
 </PageLayout>
