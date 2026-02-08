@@ -397,5 +397,64 @@ describe("createScrollAnimationService", () => {
 
       testService.destroy();
     });
+
+    it("handles IntersectionObserver callback with intersecting element", () => {
+      const mockElement = document.createElement("div");
+      mockElement.setAttribute("data-animate", "");
+      mockElement.style.position = "absolute";
+      mockElement.style.top = "1000px";
+      mockElement.style.height = "100px";
+
+      const mockElements = [mockElement] as unknown as NodeListOf<HTMLElement>;
+
+      vi.spyOn(window, "matchMedia").mockReturnValue({
+        matches: false,
+      } as MediaQueryList);
+
+      const elements: ScrollAnimationElements = {
+        animatedElements: mockElements,
+      };
+      const config: ScrollAnimationServiceConfig = {
+        elements,
+      };
+
+      let observerCallback:
+        | ((entries: IntersectionObserverEntry[]) => void)
+        | null = null;
+
+      vi.stubGlobal(
+        "IntersectionObserver",
+        vi.fn().mockImplementation((callback) => {
+          observerCallback = callback as (
+            entries: IntersectionObserverEntry[]
+          ) => void;
+          return {
+            observe: vi.fn(),
+            disconnect: vi.fn(),
+            unobserve: vi.fn(),
+          } as unknown as IntersectionObserver;
+        })
+      );
+
+      const testService = createScrollAnimationService(config);
+      testService.initialize();
+
+      const entry = {
+        target: mockElement,
+        isIntersecting: true,
+        intersectionRatio: 1,
+        boundingClientRect: mockElement.getBoundingClientRect(),
+        intersectionRect: mockElement.getBoundingClientRect(),
+        rootBounds: null,
+        time: Date.now(),
+      } as unknown as IntersectionObserverEntry;
+
+      observerCallback!([entry]);
+
+      expect(mockElement.classList.contains("animate-on-scroll")).toBe(true);
+
+      vi.unstubAllGlobals();
+      testService.destroy();
+    });
   });
 });

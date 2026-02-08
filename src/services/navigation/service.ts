@@ -52,7 +52,6 @@ export function createNavigationService(
   };
 
   const handleIntersection = (entries: IntersectionObserverEntry[]) => {
-    /* v8 ignore start */
     if (!sections || sections.length === 0) return;
 
     entries.forEach((entry) => {
@@ -64,11 +63,9 @@ export function createNavigationService(
     });
 
     updateActiveSection();
-    /* v8 ignore end */
   };
 
   const updateActiveSection = () => {
-    /* v8 ignore start */
     if (intersectingSections.size > 0) {
       let maxRatio = 0;
       let activeSection: Element | null = null;
@@ -89,11 +86,9 @@ export function createNavigationService(
         updateActiveNav(getDefaultActiveSection());
       }
     }
-    /* v8 ignore end */
   };
 
   const updateActiveNav = (activeSectionId: string) => {
-    /* v8 ignore start */
     const isCurrentPageBlog = isBlogPage(window.location.pathname);
     navLinks.forEach((link) => {
       const linkSection = link.getAttribute("data-section");
@@ -108,11 +103,9 @@ export function createNavigationService(
         link.classList.add(getActiveLinkClasses(false));
       }
     });
-    /* v8 ignore end */
   };
 
   const checkInitialActiveSection = () => {
-    /* v8 ignore start */
     if (isBlogPage(window.location.pathname)) {
       return;
     }
@@ -135,7 +128,6 @@ export function createNavigationService(
         }
       });
     }
-    /* v8 ignore end */
   };
 
   const initialize = () => {
