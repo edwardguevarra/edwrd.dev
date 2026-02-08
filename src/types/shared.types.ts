@@ -26,6 +26,10 @@ export interface ScrollAnimationConfig {
   animateClass?: string;
 }
 
+export interface BlogSearchConfig {
+  debounceMs?: number;
+}
+
 export interface NavigationService extends Service {
   initialize(): void;
   destroy(): void;
@@ -39,6 +43,11 @@ export interface MobileMenuService extends Service {
 }
 
 export interface ScrollAnimationService extends Service {
+  initialize(): void;
+  destroy(): void;
+}
+
+export interface BlogSearchService extends Service {
   initialize(): void;
   destroy(): void;
 }

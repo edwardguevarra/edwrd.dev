@@ -153,106 +153,41 @@ const postsData = sortedPosts.map((post) => ({
 
   <Fragment slot="scripts">
     <script>
-      (function () {
-        const searchInput = document.getElementById("blog-search");
-        const postsGrid = document.getElementById("blog-posts-grid");
-        const noResults = document.getElementById("no-results");
+      document.addEventListener("DOMContentLoaded", () => {
+        import("../../services/blog-search/index.js")
+          .then(({ createBlogSearchService }) => {
+            const searchInput = document.getElementById("blog-search");
+            const postsGrid = document.getElementById("blog-posts-grid");
+            const noResults = document.getElementById("no-results");
 
-        if (!searchInput || !postsGrid || !noResults) return;
-
-        const postsData = JSON.parse(searchInput.dataset.posts || "[]");
-        let debounceTimer = null;
-
-        function filterPosts(searchTerm) {
-          const normalizedSearch = searchTerm.toLowerCase().trim();
-          const postCards = postsGrid.querySelectorAll("a[data-post-id]");
-          let visibleCount = 0;
-
-          postCards.forEach((card) => {
-            const postId = card.dataset.postId;
-            const postData = postsData.find((p) => p.id === postId);
-
-            if (!postData) return;
-
-            const matchesSearch =
-              normalizedSearch === "" ||
-              postData.title.toLowerCase().includes(normalizedSearch) ||
-              postData.tags.some((tag) =>
-                tag.toLowerCase().includes(normalizedSearch)
-              );
-
-            if (matchesSearch) {
-              card.style.display = "block";
-              card.classList.remove("opacity-0");
-              card.classList.add("opacity-100");
-              visibleCount++;
-            } else {
-              card.classList.remove("opacity-100");
-              card.classList.add("opacity-0");
-              setTimeout(() => {
-                if (card.classList.contains("opacity-0")) {
-                  card.style.display = "none";
-                }
-              }, 300);
+            if (!(searchInput instanceof HTMLInputElement)) {
+              return;
             }
+
+            if (!postsGrid || !noResults) {
+              return;
+            }
+
+            const blogSearchService = createBlogSearchService({
+              elements: {
+                searchInput,
+                postsGrid,
+                noResults,
+              },
+            });
+            blogSearchService.initialize();
+
+            window.addEventListener("beforeunload", () => {
+              blogSearchService.destroy();
+            });
+          })
+          .catch((error) => {
+            console.error("[BlogSearch] Failed to load blog search service:", {
+              error: error instanceof Error ? error.message : String(error),
+              stack: error instanceof Error ? error.stack : undefined,
+            });
           });
-
-          if (visibleCount === 0 && normalizedSearch !== "") {
-            noResults.classList.remove("hidden");
-          } else {
-            noResults.classList.add("hidden");
-          }
-        }
-
-        function updateURL(searchTerm) {
-          const url = new URL(window.location.href);
-          if (searchTerm.trim()) {
-            url.searchParams.set("q", searchTerm.trim());
-          } else {
-            url.searchParams.delete("q");
-          }
-          window.history.replaceState({}, "", url.toString());
-        }
-
-        function handleSearch(event) {
-          const target = event.target;
-          if (!(target instanceof HTMLInputElement)) return;
-
-          const searchTerm = target.value;
-
-          if (debounceTimer) {
-            window.clearTimeout(debounceTimer);
-          }
-
-          debounceTimer = window.setTimeout(() => {
-            filterPosts(searchTerm);
-            updateURL(searchTerm);
-          }, 300);
-        }
-
-        searchInput.addEventListener("input", handleSearch);
-
-        const urlParams = new URLSearchParams(window.location.search);
-        const searchFromURL = urlParams.get("q");
-        if (searchFromURL) {
-          searchInput.value = searchFromURL;
-          filterPosts(searchFromURL);
-        }
-      })();
-
-      const style = document.createElement("style");
-      style.textContent = `
-        [data-post-id] {
-          transition: opacity 300ms ease-in-out;
-        }
-        .opacity-0 {
-          opacity: 0 !important;
-        }
-        .opacity-100 {
-          opacity: 1 !important;
-        }
-      `;
-      document.head.appendChild(style);
+      });
     </script>
   </Fragment>
 </PageLayout>
