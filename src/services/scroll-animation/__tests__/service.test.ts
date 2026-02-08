@@ -1,5 +1,5 @@
 import { describe, it, expect, afterEach, vi } from "vitest";
-import { createScrollAnimationService } from "../service";
+import { createScrollAnimationService } from "../index";
 import type {
   ScrollAnimationElements,
   ScrollAnimationServiceConfig,

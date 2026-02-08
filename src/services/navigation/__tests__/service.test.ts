@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { createNavigationService } from "../service";
+import { createNavigationService } from "../index";
 import type { NavigationElements, NavigationServiceConfig } from "../types";
 import { SECTION_IDS } from "../config";
 
@@ -202,6 +202,75 @@ describe("createNavigationService", () => {
 
       expect(mockLink.classList.contains("text-brand-lime")).toBe(true);
 
+      service.destroy();
+    });
+
+    it("handles nav links without data-section attributes", () => {
+      const mockSection = document.createElement("section");
+      mockSection.id = SECTION_IDS.ABOUT;
+
+      const mockActiveLink = document.createElement("a");
+      mockActiveLink.setAttribute("data-section", SECTION_IDS.ABOUT);
+      mockActiveLink.classList.add("nav-link", "text-white");
+
+      const mockUnknownLink = document.createElement("a");
+      mockUnknownLink.classList.add("nav-link", "text-brand-lime");
+
+      const mockSections = [mockSection] as unknown as NodeListOf<Element>;
+      const mockNavLinks = [
+        mockActiveLink,
+        mockUnknownLink,
+      ] as unknown as NodeListOf<Element>;
+
+      vi.spyOn(window, "location", "get").mockReturnValue({
+        pathname: "/",
+      } as Location);
+
+      const elements: NavigationElements = {
+        sections: mockSections,
+        navLinks: mockNavLinks,
+      };
+      const config: NavigationServiceConfig = {
+        elements,
+      };
+
+      let observerCallback:
+        | ((entries: IntersectionObserverEntry[]) => void)
+        | null = null;
+
+      vi.stubGlobal(
+        "IntersectionObserver",
+        vi.fn().mockImplementation((callback) => {
+          observerCallback = callback as (
+            entries: IntersectionObserverEntry[]
+          ) => void;
+          return {
+            observe: vi.fn(),
+            disconnect: vi.fn(),
+            unobserve: vi.fn(),
+          } as unknown as IntersectionObserver;
+        })
+      );
+
+      const service = createNavigationService(config);
+      service.initialize();
+
+      const entry = {
+        target: mockSection,
+        isIntersecting: true,
+        intersectionRatio: 1,
+        boundingClientRect: mockSection.getBoundingClientRect(),
+        intersectionRect: mockSection.getBoundingClientRect(),
+        rootBounds: null,
+        time: Date.now(),
+      } as unknown as IntersectionObserverEntry;
+
+      observerCallback!([entry]);
+
+      expect(mockUnknownLink.classList.contains("text-brand-lime")).toBe(false);
+      expect(mockUnknownLink.classList.contains("text-white")).toBe(true);
+
+      vi.unstubAllGlobals();
       service.destroy();
     });
   });

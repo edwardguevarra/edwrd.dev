@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from "vitest";
-import { createMobileMenuService } from "../service";
+import { createMobileMenuService } from "../index";
 import type { MobileMenuElements } from "../types";
 
 describe("createMobileMenuService", () => {
