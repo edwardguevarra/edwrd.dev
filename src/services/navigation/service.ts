@@ -106,10 +106,6 @@ export function createNavigationService(
   };
 
   const checkInitialActiveSection = () => {
-    if (isBlogPage(window.location.pathname)) {
-      return;
-    }
-
     if (!sections || sections.length === 0) {
       return;
     }

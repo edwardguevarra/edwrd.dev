@@ -19,10 +19,10 @@ export default getViteConfig({
       ],
       reporter: ["text", "html", "json", "lcov"],
       thresholds: {
-        statements: 98,
+        statements: 99,
         branches: 97,
-        functions: 85,
-        lines: 98,
+        functions: 92,
+        lines: 99,
       },
     },
   },

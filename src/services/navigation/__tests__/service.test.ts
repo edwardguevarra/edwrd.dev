@@ -238,32 +238,6 @@ describe("createNavigationService", () => {
       service.destroy();
     });
 
-    it("returns early on blog page", () => {
-      const mockLink = document.createElement("a");
-      mockLink.setAttribute("data-section", SECTION_IDS.BLOG);
-      mockLink.classList.add("nav-link", "text-white");
-
-      const mockSections = [] as unknown as NodeListOf<Element>;
-      const mockNavLinks = [mockLink] as unknown as NodeListOf<Element>;
-
-      vi.spyOn(window, "location", "get").mockReturnValue({
-        pathname: "/blog",
-      } as Location);
-
-      const elements: NavigationElements = {
-        sections: mockSections,
-        navLinks: mockNavLinks,
-      };
-      const config: NavigationServiceConfig = {
-        elements,
-      };
-
-      const service = createNavigationService(config);
-      expect(() => service.initialize()).not.toThrow();
-
-      service.destroy();
-    });
-
     it("returns early when no sections provided", () => {
       const mockLink = document.createElement("a");
       mockLink.setAttribute("data-section", SECTION_IDS.ABOUT);
@@ -528,6 +502,63 @@ describe("createNavigationService", () => {
       service.destroy();
     });
 
+    it("handles IntersectionObserver callback with empty sections", () => {
+      const mockLink = document.createElement("a");
+      mockLink.setAttribute("data-section", SECTION_IDS.ABOUT);
+      mockLink.classList.add("nav-link", "text-white");
+
+      const mockSections = [] as unknown as NodeListOf<Element>;
+      const mockNavLinks = [mockLink] as unknown as NodeListOf<Element>;
+
+      vi.spyOn(window, "location", "get").mockReturnValue({
+        pathname: "/",
+      } as Location);
+
+      const elements: NavigationElements = {
+        sections: mockSections,
+        navLinks: mockNavLinks,
+      };
+      const config: NavigationServiceConfig = {
+        elements,
+      };
+
+      let observerCallback:
+        | ((entries: IntersectionObserverEntry[]) => void)
+        | null = null;
+
+      vi.stubGlobal(
+        "IntersectionObserver",
+        vi.fn().mockImplementation((callback) => {
+          observerCallback = callback as (
+            entries: IntersectionObserverEntry[]
+          ) => void;
+          return {
+            observe: vi.fn(),
+            disconnect: vi.fn(),
+            unobserve: vi.fn(),
+          } as unknown as IntersectionObserver;
+        })
+      );
+
+      const service = createNavigationService(config);
+      service.initialize();
+
+      const entry = {
+        target: document.createElement("section"),
+        isIntersecting: true,
+        intersectionRatio: 1,
+        boundingClientRect: new DOMRect(),
+        intersectionRect: new DOMRect(),
+        rootBounds: null,
+        time: Date.now(),
+      } as unknown as IntersectionObserverEntry;
+
+      expect(() => observerCallback!([entry])).not.toThrow();
+
+      vi.unstubAllGlobals();
+      service.destroy();
+    });
+
     it("handles IntersectionObserver callback when no sections intersecting", () => {
       const mockSection = document.createElement("section");
       mockSection.id = SECTION_IDS.ABOUT;
@@ -645,6 +676,547 @@ describe("createNavigationService", () => {
       expect(mockLink1.classList.contains("text-brand-lime")).toBe(false);
       expect(mockLink1.classList.contains("text-white")).toBe(true);
 
+      service.destroy();
+    });
+
+    it("skips blog link highlight on blog page when section intersects", () => {
+      const mockSection = document.createElement("section");
+      mockSection.id = SECTION_IDS.BLOG;
+      const mockBlogLink = document.createElement("a");
+      mockBlogLink.setAttribute("data-section", SECTION_IDS.BLOG);
+      mockBlogLink.classList.add("nav-link", "text-white");
+
+      const mockSections = [mockSection] as unknown as NodeListOf<Element>;
+      const mockNavLinks = [mockBlogLink] as unknown as NodeListOf<Element>;
+
+      vi.spyOn(window, "location", "get").mockReturnValue({
+        pathname: "/blog",
+      } as Location);
+
+      const elements: NavigationElements = {
+        sections: mockSections,
+        navLinks: mockNavLinks,
+      };
+      const config: NavigationServiceConfig = {
+        elements,
+      };
+
+      const service = createNavigationService(config);
+      service.initialize();
+
+      expect(mockBlogLink.classList.contains("text-brand-lime")).toBe(true);
+
+      service.destroy();
+    });
+
+    it("keeps blog link active on blog page when other section becomes active", () => {
+      const mockSection = document.createElement("section");
+      mockSection.id = SECTION_IDS.ABOUT;
+      const mockBlogLink = document.createElement("a");
+      mockBlogLink.setAttribute("data-section", SECTION_IDS.BLOG);
+      mockBlogLink.classList.add("nav-link", "text-white");
+
+      const mockAboutLink = document.createElement("a");
+      mockAboutLink.setAttribute("data-section", SECTION_IDS.ABOUT);
+      mockAboutLink.classList.add("nav-link", "text-white");
+
+      const mockSections = [mockSection] as unknown as NodeListOf<Element>;
+      const mockNavLinks = [
+        mockBlogLink,
+        mockAboutLink,
+      ] as unknown as NodeListOf<Element>;
+
+      vi.spyOn(window, "location", "get").mockReturnValue({
+        pathname: "/",
+      } as Location);
+
+      const elements: NavigationElements = {
+        sections: mockSections,
+        navLinks: mockNavLinks,
+      };
+      const config: NavigationServiceConfig = {
+        elements,
+      };
+
+      let observerCallback:
+        | ((entries: IntersectionObserverEntry[]) => void)
+        | null = null;
+
+      vi.stubGlobal(
+        "IntersectionObserver",
+        vi.fn().mockImplementation((callback) => {
+          observerCallback = callback as (
+            entries: IntersectionObserverEntry[]
+          ) => void;
+          return {
+            observe: vi.fn(),
+            disconnect: vi.fn(),
+            unobserve: vi.fn(),
+          } as unknown as IntersectionObserver;
+        })
+      );
+
+      const service = createNavigationService(config);
+      service.initialize();
+
+      const entry = {
+        target: mockSection,
+        isIntersecting: true,
+        intersectionRatio: 1,
+        boundingClientRect: mockSection.getBoundingClientRect(),
+        intersectionRect: mockSection.getBoundingClientRect(),
+        rootBounds: null,
+        time: Date.now(),
+      } as unknown as IntersectionObserverEntry;
+
+      observerCallback!([entry]);
+
+      expect(mockAboutLink.classList.contains("text-brand-lime")).toBe(true);
+
+      vi.spyOn(window, "location", "get").mockReturnValue({
+        pathname: "/blog",
+      } as Location);
+
+      observerCallback!([entry]);
+
+      expect(mockBlogLink.classList.contains("text-brand-lime")).toBe(false);
+      expect(mockAboutLink.classList.contains("text-brand-lime")).toBe(true);
+
+      vi.unstubAllGlobals();
+      service.destroy();
+    });
+
+    it("preserves blog link active class when non-blog section intersects on blog page", () => {
+      const mockSection = document.createElement("section");
+      mockSection.id = SECTION_IDS.ABOUT;
+
+      const mockBlogLink = document.createElement("a");
+      mockBlogLink.setAttribute("data-section", SECTION_IDS.BLOG);
+      mockBlogLink.classList.add("nav-link");
+
+      const mockAboutLink = document.createElement("a");
+      mockAboutLink.setAttribute("data-section", SECTION_IDS.ABOUT);
+      mockAboutLink.classList.add("nav-link");
+
+      const mockSections = [mockSection] as unknown as NodeListOf<Element>;
+      const mockNavLinks = [
+        mockBlogLink,
+        mockAboutLink,
+      ] as unknown as NodeListOf<Element>;
+
+      vi.spyOn(window, "location", "get").mockReturnValue({
+        pathname: "/blog",
+      } as Location);
+      Object.defineProperty(window, "scrollY", { value: 150, writable: true });
+
+      const elements: NavigationElements = {
+        sections: mockSections,
+        navLinks: mockNavLinks,
+      };
+      const config: NavigationServiceConfig = {
+        elements,
+      };
+
+      const service = createNavigationService(config);
+      service.initialize();
+
+      expect(mockBlogLink.classList.contains("text-brand-lime")).toBe(true);
+      expect(mockAboutLink.classList.contains("text-white")).toBe(true);
+
+      service.destroy();
+    });
+
+    it("handles blog link skip on blog page with non-blog active section", () => {
+      const mockSection = document.createElement("section");
+      mockSection.id = SECTION_IDS.ABOUT;
+
+      const mockBlogLink = document.createElement("a");
+      mockBlogLink.setAttribute("data-section", SECTION_IDS.BLOG);
+      mockBlogLink.classList.add("nav-link", "text-white");
+
+      const mockAboutLink = document.createElement("a");
+      mockAboutLink.setAttribute("data-section", SECTION_IDS.ABOUT);
+      mockAboutLink.classList.add("nav-link", "text-white");
+
+      const mockSections = [mockSection] as unknown as NodeListOf<Element>;
+      const mockNavLinks = [
+        mockBlogLink,
+        mockAboutLink,
+      ] as unknown as NodeListOf<Element>;
+
+      vi.spyOn(window, "location", "get").mockReturnValue({
+        pathname: "/",
+      } as Location);
+
+      const elements: NavigationElements = {
+        sections: mockSections,
+        navLinks: mockNavLinks,
+      };
+      const config: NavigationServiceConfig = {
+        elements,
+      };
+
+      let observerCallback:
+        | ((entries: IntersectionObserverEntry[]) => void)
+        | null = null;
+
+      vi.stubGlobal(
+        "IntersectionObserver",
+        vi.fn().mockImplementation((callback) => {
+          observerCallback = callback as (
+            entries: IntersectionObserverEntry[]
+          ) => void;
+          return {
+            observe: vi.fn(),
+            disconnect: vi.fn(),
+            unobserve: vi.fn(),
+          } as unknown as IntersectionObserver;
+        })
+      );
+
+      const service = createNavigationService(config);
+      service.initialize();
+
+      const entry = {
+        target: mockSection,
+        isIntersecting: true,
+        intersectionRatio: 1,
+        boundingClientRect: mockSection.getBoundingClientRect(),
+        intersectionRect: mockSection.getBoundingClientRect(),
+        rootBounds: null,
+        time: Date.now(),
+      } as unknown as IntersectionObserverEntry;
+
+      observerCallback!([entry]);
+
+      expect(mockAboutLink.classList.contains("text-brand-lime")).toBe(true);
+      expect(mockBlogLink.classList.contains("text-white")).toBe(true);
+
+      vi.unstubAllGlobals();
+      service.destroy();
+    });
+
+    it("updates nav links when location changes between initialization and intersection", () => {
+      const mockSection = document.createElement("section");
+      mockSection.id = SECTION_IDS.ABOUT;
+
+      const mockBlogLink = document.createElement("a");
+      mockBlogLink.setAttribute("data-section", SECTION_IDS.BLOG);
+      mockBlogLink.classList.add("nav-link", "text-white");
+
+      const mockAboutLink = document.createElement("a");
+      mockAboutLink.setAttribute("data-section", SECTION_IDS.ABOUT);
+      mockAboutLink.classList.add("nav-link", "text-white");
+
+      const mockSections = [mockSection] as unknown as NodeListOf<Element>;
+      const mockNavLinks = [
+        mockBlogLink,
+        mockAboutLink,
+      ] as unknown as NodeListOf<Element>;
+
+      const locationMock = vi
+        .spyOn(window, "location", "get")
+        .mockReturnValue({ pathname: "/" } as Location);
+
+      const elements: NavigationElements = {
+        sections: mockSections,
+        navLinks: mockNavLinks,
+      };
+      const config: NavigationServiceConfig = {
+        elements,
+      };
+
+      let observerCallback:
+        | ((entries: IntersectionObserverEntry[]) => void)
+        | null = null;
+
+      vi.stubGlobal(
+        "IntersectionObserver",
+        vi.fn().mockImplementation((callback) => {
+          observerCallback = callback as (
+            entries: IntersectionObserverEntry[]
+          ) => void;
+          return {
+            observe: vi.fn(),
+            disconnect: vi.fn(),
+            unobserve: vi.fn(),
+          } as unknown as IntersectionObserver;
+        })
+      );
+
+      const service = createNavigationService(config);
+      service.initialize();
+
+      locationMock.mockReturnValue({ pathname: "/blog" } as Location);
+
+      const entry = {
+        target: mockSection,
+        isIntersecting: true,
+        intersectionRatio: 1,
+        boundingClientRect: mockSection.getBoundingClientRect(),
+        intersectionRect: mockSection.getBoundingClientRect(),
+        rootBounds: null,
+        time: Date.now(),
+      } as unknown as IntersectionObserverEntry;
+
+      observerCallback!([entry]);
+
+      expect(mockAboutLink.classList.contains("text-brand-lime")).toBe(true);
+      expect(mockBlogLink.classList.contains("text-brand-lime")).toBe(false);
+
+      vi.unstubAllGlobals();
+      service.destroy();
+    });
+
+    it("handles section without ID in intersection callback", () => {
+      const mockSection = document.createElement("section");
+      const mockLink = document.createElement("a");
+      mockLink.setAttribute("data-section", SECTION_IDS.ABOUT);
+      mockLink.classList.add("nav-link", "text-white");
+
+      const mockSections = [mockSection] as unknown as NodeListOf<Element>;
+      const mockNavLinks = [mockLink] as unknown as NodeListOf<Element>;
+
+      vi.spyOn(window, "location", "get").mockReturnValue({
+        pathname: "/",
+      } as Location);
+
+      const elements: NavigationElements = {
+        sections: mockSections,
+        navLinks: mockNavLinks,
+      };
+      const config: NavigationServiceConfig = {
+        elements,
+      };
+
+      let observerCallback:
+        | ((entries: IntersectionObserverEntry[]) => void)
+        | null = null;
+
+      vi.stubGlobal(
+        "IntersectionObserver",
+        vi.fn().mockImplementation((callback) => {
+          observerCallback = callback as (
+            entries: IntersectionObserverEntry[]
+          ) => void;
+          return {
+            observe: vi.fn(),
+            disconnect: vi.fn(),
+            unobserve: vi.fn(),
+          } as unknown as IntersectionObserver;
+        })
+      );
+
+      const service = createNavigationService(config);
+      service.initialize();
+
+      const entry = {
+        target: mockSection,
+        isIntersecting: true,
+        intersectionRatio: 1,
+        boundingClientRect: mockSection.getBoundingClientRect(),
+        intersectionRect: mockSection.getBoundingClientRect(),
+        rootBounds: null,
+        time: Date.now(),
+      } as unknown as IntersectionObserverEntry;
+
+      observerCallback!([entry]);
+
+      expect(mockLink.classList.contains("text-brand-lime")).toBe(false);
+      expect(mockLink.classList.contains("text-white")).toBe(true);
+
+      vi.unstubAllGlobals();
+      service.destroy();
+    });
+
+    it("handles scroll position at exactly 100 pixels", () => {
+      const mockSection = document.createElement("section");
+      mockSection.id = SECTION_IDS.ABOUT;
+      const mockLink = document.createElement("a");
+      mockLink.setAttribute("data-section", SECTION_IDS.ABOUT);
+      mockLink.classList.add("nav-link", "text-white");
+
+      const mockSections = [mockSection] as unknown as NodeListOf<Element>;
+      const mockNavLinks = [mockLink] as unknown as NodeListOf<Element>;
+
+      vi.spyOn(window, "location", "get").mockReturnValue({
+        pathname: "/",
+      } as Location);
+      Object.defineProperty(window, "scrollY", { value: 100, writable: true });
+
+      const elements: NavigationElements = {
+        sections: mockSections,
+        navLinks: mockNavLinks,
+      };
+      const config: NavigationServiceConfig = {
+        elements,
+      };
+
+      const service = createNavigationService(config);
+      service.initialize();
+
+      expect(mockLink.classList.contains("text-brand-lime")).toBe(true);
+
+      service.destroy();
+    });
+
+    it("handles section without ID in initial check", () => {
+      const mockSection = document.createElement("section");
+      mockSection.style.position = "absolute";
+      mockSection.style.top = "0";
+      mockSection.style.height = "100px";
+
+      const mockLink = document.createElement("a");
+      mockLink.setAttribute("data-section", SECTION_IDS.ABOUT);
+      mockLink.classList.add("nav-link", "text-white");
+
+      const mockSections = [mockSection] as unknown as NodeListOf<Element>;
+      const mockNavLinks = [mockLink] as unknown as NodeListOf<Element>;
+
+      vi.spyOn(window, "location", "get").mockReturnValue({
+        pathname: "/",
+      } as Location);
+      Object.defineProperty(window, "scrollY", { value: 150, writable: true });
+
+      const elements: NavigationElements = {
+        sections: mockSections,
+        navLinks: mockNavLinks,
+      };
+      const config: NavigationServiceConfig = {
+        elements,
+      };
+
+      const service = createNavigationService(config);
+      service.initialize();
+
+      expect(mockLink.classList.contains("text-brand-lime")).toBe(false);
+      expect(mockLink.classList.contains("text-white")).toBe(true);
+
+      service.destroy();
+    });
+
+    it("handles multiple sections in viewport on initial check", () => {
+      const mockSection1 = document.createElement("section");
+      mockSection1.id = SECTION_IDS.ABOUT;
+      mockSection1.style.position = "absolute";
+      mockSection1.style.top = "0";
+      mockSection1.style.height = "100px";
+
+      const mockSection2 = document.createElement("section");
+      mockSection2.id = SECTION_IDS.PROJECTS;
+      mockSection2.style.position = "absolute";
+      mockSection2.style.top = "50px";
+      mockSection2.style.height = "100px";
+
+      const mockLink1 = document.createElement("a");
+      mockLink1.setAttribute("data-section", SECTION_IDS.ABOUT);
+      mockLink1.classList.add("nav-link", "text-white");
+
+      const mockLink2 = document.createElement("a");
+      mockLink2.setAttribute("data-section", SECTION_IDS.PROJECTS);
+      mockLink2.classList.add("nav-link", "text-white");
+
+      const mockSections = [
+        mockSection1,
+        mockSection2,
+      ] as unknown as NodeListOf<Element>;
+      const mockNavLinks = [
+        mockLink1,
+        mockLink2,
+      ] as unknown as NodeListOf<Element>;
+
+      vi.spyOn(window, "location", "get").mockReturnValue({
+        pathname: "/",
+      } as Location);
+      Object.defineProperty(window, "scrollY", { value: 150, writable: true });
+
+      const elements: NavigationElements = {
+        sections: mockSections,
+        navLinks: mockNavLinks,
+      };
+      const config: NavigationServiceConfig = {
+        elements,
+      };
+
+      const service = createNavigationService(config);
+      service.initialize();
+
+      expect(mockLink1.classList.contains("text-brand-lime")).toBe(false);
+      expect(mockLink2.classList.contains("text-brand-lime")).toBe(true);
+
+      service.destroy();
+    });
+
+    it("handles section stopping to intersect", () => {
+      const mockSection = document.createElement("section");
+      mockSection.id = SECTION_IDS.ABOUT;
+      const mockLink = document.createElement("a");
+      mockLink.setAttribute("data-section", SECTION_IDS.ABOUT);
+      mockLink.classList.add("nav-link", "text-white");
+
+      const mockSections = [mockSection] as unknown as NodeListOf<Element>;
+      const mockNavLinks = [mockLink] as unknown as NodeListOf<Element>;
+
+      vi.spyOn(window, "location", "get").mockReturnValue({
+        pathname: "/",
+      } as Location);
+
+      const elements: NavigationElements = {
+        sections: mockSections,
+        navLinks: mockNavLinks,
+      };
+      const config: NavigationServiceConfig = {
+        elements,
+      };
+
+      let observerCallback:
+        | ((entries: IntersectionObserverEntry[]) => void)
+        | null = null;
+
+      vi.stubGlobal(
+        "IntersectionObserver",
+        vi.fn().mockImplementation((callback) => {
+          observerCallback = callback as (
+            entries: IntersectionObserverEntry[]
+          ) => void;
+          return {
+            observe: vi.fn(),
+            disconnect: vi.fn(),
+            unobserve: vi.fn(),
+          } as unknown as IntersectionObserver;
+        })
+      );
+
+      const service = createNavigationService(config);
+      service.initialize();
+
+      const intersectingEntry = {
+        target: mockSection,
+        isIntersecting: true,
+        intersectionRatio: 0.8,
+        boundingClientRect: mockSection.getBoundingClientRect(),
+        intersectionRect: mockSection.getBoundingClientRect(),
+        rootBounds: null,
+        time: Date.now(),
+      } as unknown as IntersectionObserverEntry;
+
+      observerCallback!([intersectingEntry]);
+
+      expect(mockLink.classList.contains("text-brand-lime")).toBe(true);
+
+      const notIntersectingEntry = {
+        target: mockSection,
+        isIntersecting: false,
+        intersectionRatio: 0,
+        boundingClientRect: mockSection.getBoundingClientRect(),
+        intersectionRect: mockSection.getBoundingClientRect(),
+        rootBounds: null,
+        time: Date.now(),
+      } as unknown as IntersectionObserverEntry;
+
+      observerCallback!([notIntersectingEntry]);
+
+      vi.unstubAllGlobals();
       service.destroy();
     });
   });

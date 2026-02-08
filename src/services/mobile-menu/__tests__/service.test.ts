@@ -540,4 +540,99 @@ describe("createMobileMenuService", () => {
 
     testService.destroy();
   });
+
+  it("handles open when no nav-link elements exist", () => {
+    const menuButton = document.createElement("button");
+    const mobileMenu = document.createElement("div");
+    const backdrop = document.createElement("div");
+    const menuIcon = document.createElement("span");
+    const closeIcon = document.createElement("span");
+    const talkButton = document.createElement("button");
+
+    mobileMenu.classList.add("hidden");
+    backdrop.classList.add("hidden");
+    menuIcon.classList.add("block");
+    closeIcon.classList.add("hidden");
+
+    const elements: MobileMenuElements = {
+      menuButton,
+      mobileMenu,
+      mobileMenuBackdrop: backdrop,
+      menuIcon,
+      closeIcon,
+      mobileTalkButton: talkButton,
+    };
+
+    vi.useFakeTimers();
+
+    const testService = createMobileMenuService(elements);
+    testService.initialize();
+    testService.open();
+
+    expect(backdrop.classList.contains("hidden")).toBe(false);
+    expect(mobileMenu.classList.contains("hidden")).toBe(false);
+
+    vi.useRealTimers();
+
+    testService.destroy();
+  });
+
+  it("opens menu without nav-link elements and does not throw on focus", () => {
+    const menuButton = document.createElement("button");
+    const mobileMenu = document.createElement("div");
+    const backdrop = document.createElement("div");
+    const menuIcon = document.createElement("span");
+    const closeIcon = document.createElement("span");
+
+    mobileMenu.classList.add("hidden");
+    backdrop.classList.add("hidden");
+
+    const elements: MobileMenuElements = {
+      menuButton,
+      mobileMenu,
+      mobileMenuBackdrop: backdrop,
+      menuIcon,
+      closeIcon,
+      mobileTalkButton: null,
+    };
+
+    const service = createMobileMenuService(elements);
+    expect(() => service.open()).not.toThrow();
+
+    service.destroy();
+  });
+
+  it("opens menu with nav-link element and calls focus", () => {
+    const menuButton = document.createElement("button");
+    const mobileMenu = document.createElement("div");
+    const backdrop = document.createElement("div");
+    const menuIcon = document.createElement("span");
+    const closeIcon = document.createElement("span");
+    const navLink = document.createElement("a");
+
+    navLink.classList.add("nav-link");
+    mobileMenu.appendChild(navLink);
+    mobileMenu.classList.add("hidden");
+    backdrop.classList.add("hidden");
+    menuIcon.classList.add("block");
+    closeIcon.classList.add("hidden");
+
+    const navLinkFocusSpy = vi.spyOn(navLink, "focus");
+
+    const elements: MobileMenuElements = {
+      menuButton,
+      mobileMenu,
+      mobileMenuBackdrop: backdrop,
+      menuIcon,
+      closeIcon,
+      mobileTalkButton: null,
+    };
+
+    const service = createMobileMenuService(elements);
+    service.open();
+
+    expect(navLinkFocusSpy).toHaveBeenCalled();
+
+    service.destroy();
+  });
 });

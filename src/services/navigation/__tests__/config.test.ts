@@ -150,4 +150,14 @@ describe("computeHref", () => {
     expect(computeHref(SECTION_IDS.PROJECTS, false)).toBe("/#projects");
     expect(computeHref(SECTION_IDS.CONTACT, false)).toBe("/#contact");
   });
+
+  it("returns hash for non-standard sections when isHomePage is true", () => {
+    expect(computeHref("custom-section", true)).toBe("#custom-section");
+    expect(computeHref("test-section", true)).toBe("#test-section");
+  });
+
+  it("returns root hash for non-standard sections when isHomePage is false", () => {
+    expect(computeHref("custom-section", false)).toBe("/#custom-section");
+    expect(computeHref("test-section", false)).toBe("/#test-section");
+  });
 });
