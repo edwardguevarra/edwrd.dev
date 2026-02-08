@@ -37,24 +37,24 @@ describe("getNavigationItems", () => {
     });
   });
 
-  it("returns items with path hrefs when not on homepage (isHomePage: false)", () => {
+  it("returns items with hash hrefs when not on homepage (isHomePage: false)", () => {
     const items = getNavigationItems(false);
 
     expect(items).toHaveLength(4);
     expect(items[0]).toMatchObject({
       label: "About",
       section: SECTION_IDS.ABOUT,
-      href: "/#about",
+      href: "#about",
     });
     expect(items[1]).toMatchObject({
       label: "Works",
       section: SECTION_IDS.PROJECTS,
-      href: "/#projects",
+      href: "#projects",
     });
     expect(items[2]).toMatchObject({
       label: "Contact",
       section: SECTION_IDS.CONTACT,
-      href: "/#contact",
+      href: "#contact",
     });
     expect(items[3]).toMatchObject({
       label: "Blog",
@@ -145,10 +145,10 @@ describe("computeHref", () => {
     expect(computeHref(SECTION_IDS.CONTACT, true)).toBe("#contact");
   });
 
-  it("returns root hash for other sections when isHomePage is false", () => {
-    expect(computeHref(SECTION_IDS.ABOUT, false)).toBe("/#about");
-    expect(computeHref(SECTION_IDS.PROJECTS, false)).toBe("/#projects");
-    expect(computeHref(SECTION_IDS.CONTACT, false)).toBe("/#contact");
+  it("returns hash for other sections when isHomePage is false", () => {
+    expect(computeHref(SECTION_IDS.ABOUT, false)).toBe("#about");
+    expect(computeHref(SECTION_IDS.PROJECTS, false)).toBe("#projects");
+    expect(computeHref(SECTION_IDS.CONTACT, false)).toBe("#contact");
   });
 
   it("returns hash for non-standard sections when isHomePage is true", () => {
@@ -156,8 +156,8 @@ describe("computeHref", () => {
     expect(computeHref("test-section", true)).toBe("#test-section");
   });
 
-  it("returns root hash for non-standard sections when isHomePage is false", () => {
-    expect(computeHref("custom-section", false)).toBe("/#custom-section");
-    expect(computeHref("test-section", false)).toBe("/#test-section");
+  it("returns hash for non-standard sections when isHomePage is false", () => {
+    expect(computeHref("custom-section", false)).toBe("#custom-section");
+    expect(computeHref("test-section", false)).toBe("#test-section");
   });
 });

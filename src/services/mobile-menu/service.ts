@@ -16,6 +16,35 @@ const FOCUSABLE_SELECTOR = [
   "[tabindex]:not([tabindex='-1'])",
 ].join(", ");
 
+const isFocusable = (element: Element): boolean => {
+  if (!element.matches(FOCUSABLE_SELECTOR)) {
+    return false;
+  }
+
+  const htmlElement = element as HTMLElement;
+  const interactiveElement = element as
+    | HTMLInputElement
+    | HTMLButtonElement
+    | HTMLSelectElement
+    | HTMLTextAreaElement
+    | HTMLAnchorElement;
+  if (
+    "disabled" in interactiveElement &&
+    (interactiveElement as { disabled?: boolean }).disabled
+  ) {
+    return false;
+  }
+
+  if (
+    htmlElement.hidden ||
+    htmlElement.getAttribute("aria-hidden") === "true"
+  ) {
+    return false;
+  }
+
+  return true;
+};
+
 export function createMobileMenuService(
   elements: MobileMenuElements
 ): MobileMenuService {
@@ -57,11 +86,26 @@ export function createMobileMenuService(
 
   let previouslyFocusedElement: HTMLElement | null = null;
   let closeTimeoutId: ReturnType<typeof setTimeout> | null = null;
+  let skipFocusRestore = false;
+
+  const handleNavLinkClick = () => {
+    skipFocusRestore = true;
+    close();
+  };
+
+  const handleMobileTalkButtonClick = () => {
+    skipFocusRestore = true;
+    close();
+  };
 
   const isMenuOpen = (): boolean => !mobileMenu.classList.contains("hidden");
 
-  const getFocusableElements = (): HTMLElement[] =>
-    Array.from(mobileMenu.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR));
+  const getFocusableElements = (): HTMLElement[] => {
+    const allElements = Array.from(
+      mobileMenu.querySelectorAll<HTMLElement>(FOCUSABLE_SELECTOR)
+    );
+    return allElements.filter(isFocusable);
+  };
 
   const trapFocus = (event: KeyboardEvent) => {
     const focusableElements = getFocusableElements();
@@ -71,9 +115,17 @@ export function createMobileMenuService(
       return;
     }
 
+    const activeElement = document.activeElement as HTMLElement | null;
+
+    if (!activeElement || !mobileMenu.contains(activeElement)) {
+      const firstElement = focusableElements[0];
+      event.preventDefault();
+      firstElement.focus();
+      return;
+    }
+
     const firstElement = focusableElements[0];
     const lastElement = focusableElements[focusableElements.length - 1];
-    const activeElement = document.activeElement as HTMLElement | null;
 
     if (event.shiftKey && activeElement === firstElement) {
       event.preventDefault();
@@ -94,10 +146,10 @@ export function createMobileMenuService(
 
       const mobileNavLinks = mobileMenu.querySelectorAll(".nav-link");
       mobileNavLinks.forEach((link) => {
-        link.addEventListener("click", close);
+        link.addEventListener("click", handleNavLinkClick);
       });
 
-      mobileTalkButton?.addEventListener("click", close);
+      mobileTalkButton?.addEventListener("click", handleMobileTalkButtonClick);
       document.addEventListener("keydown", handleKeyDown);
       logger.info("Event listeners attached");
     } catch (error) {
@@ -115,13 +167,66 @@ export function createMobileMenuService(
       return;
     }
 
+    const focusableElements = getFocusableElements();
+
     if (event.key === "Escape") {
+      event.preventDefault?.();
       close();
       return;
     }
 
     if (event.key === "Tab") {
       trapFocus(event);
+      return;
+    }
+
+    if (focusableElements.length === 0) {
+      return;
+    }
+
+    const activeElement = document.activeElement as HTMLElement | null;
+
+    if (event.key === "ArrowDown" || event.key === "ArrowUp") {
+      event.preventDefault?.();
+
+      const currentIndex = focusableElements.findIndex(
+        (element) => element === activeElement
+      );
+
+      let nextIndex: number;
+
+      if (event.key === "ArrowDown") {
+        nextIndex =
+          currentIndex === -1 || currentIndex === focusableElements.length - 1
+            ? 0
+            : currentIndex + 1;
+      } else {
+        nextIndex =
+          currentIndex === -1 || currentIndex === 0
+            ? focusableElements.length - 1
+            : currentIndex - 1;
+      }
+
+      focusableElements[nextIndex].focus();
+      return;
+    }
+
+    if (event.key === "Home") {
+      event.preventDefault?.();
+      focusableElements[0].focus();
+      return;
+    }
+
+    if (event.key === "End") {
+      event.preventDefault?.();
+      focusableElements[focusableElements.length - 1].focus();
+      return;
+    }
+
+    if (event.key === "Enter" && activeElement instanceof HTMLElement) {
+      if (activeElement.tagName === "A" || activeElement.tagName === "BUTTON") {
+        activeElement.click();
+      }
     }
   };
 
@@ -139,10 +244,12 @@ export function createMobileMenuService(
       closeTimeoutId = null;
     }
 
+    const activeElement = document.activeElement as HTMLElement | null;
+
     previouslyFocusedElement =
-      document.activeElement instanceof HTMLElement
-        ? document.activeElement
-        : null;
+      activeElement && mobileMenu.contains(activeElement)
+        ? null
+        : activeElement;
 
     mobileMenuBackdrop.classList.remove("hidden");
     mobileMenu.classList.remove("hidden");
@@ -158,14 +265,15 @@ export function createMobileMenuService(
       mobileMenu.classList.add("mobile-menu-open");
     });
 
-    document.body.style.overflow = "hidden";
-
     const [firstFocusableElement] = getFocusableElements();
     if (firstFocusableElement) {
       firstFocusableElement.focus();
     } else {
       mobileMenu.focus();
     }
+
+    document.body.style.overflow = "hidden";
+    skipFocusRestore = false;
   };
 
   const close = () => {
@@ -187,16 +295,21 @@ export function createMobileMenuService(
       closeIcon.classList.add("hidden");
       document.body.style.overflow = "";
 
-      const shouldRestorePreviousFocus =
-        previouslyFocusedElement !== null &&
-        previouslyFocusedElement !== document.body &&
-        document.contains(previouslyFocusedElement);
-      const focusTarget = shouldRestorePreviousFocus
-        ? previouslyFocusedElement
-        : menuButton;
-      focusTarget.focus();
+      if (!skipFocusRestore) {
+        const shouldRestorePreviousFocus =
+          previouslyFocusedElement !== null &&
+          previouslyFocusedElement !== document.body &&
+          document.contains(previouslyFocusedElement);
+        const focusTarget = shouldRestorePreviousFocus
+          ? previouslyFocusedElement
+          : menuButton;
+        if (focusTarget) {
+          focusTarget.focus();
+        }
+      }
       previouslyFocusedElement = null;
       closeTimeoutId = null;
+      skipFocusRestore = false;
     }, MOBILE_MENU_CLOSE_DELAY_MS);
   };
 
@@ -219,10 +332,13 @@ export function createMobileMenuService(
 
       const mobileNavLinks = mobileMenu.querySelectorAll(".nav-link");
       mobileNavLinks.forEach((link) => {
-        link.removeEventListener("click", close);
+        link.removeEventListener("click", handleNavLinkClick);
       });
 
-      mobileTalkButton?.removeEventListener("click", close);
+      mobileTalkButton?.removeEventListener(
+        "click",
+        handleMobileTalkButtonClick
+      );
       if (closeTimeoutId) {
         clearTimeout(closeTimeoutId);
         closeTimeoutId = null;
