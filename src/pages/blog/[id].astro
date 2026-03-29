@@ -31,10 +31,10 @@ const { Content } = await render(post);
   description={post.data.description}
   ogTitle={post.data.title}
   ogDescription={post.data.description}
-  ogImage={post.data.featuredImage.src}
+  ogImage={post.data.featuredImage}
   twitterTitle={post.data.title}
   twitterDescription={post.data.description}
-  twitterImage={post.data.featuredImage.src}
+  twitterImage={post.data.featuredImage}
   mainClass="bg-brand-accent min-h-screen"
 >
   <style slot="head">

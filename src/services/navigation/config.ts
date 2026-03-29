@@ -1,4 +1,4 @@
-import type { NavigationItem } from "../../../types/header.types";
+import type { NavigationItem } from "../../types/header.types";
 
 export const NAVIGATION_DEFAULT_ROOT_MARGIN = "-20% 0px -60% 0px";
 export const NAVIGATION_DEFAULT_THRESHOLD = 0;

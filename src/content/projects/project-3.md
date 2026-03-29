@@ -1,7 +1,7 @@
 ---
-title: "Project 3"
-description: "Description of the third project"
-image: "https://picsum.photos/seed/project3/425/300.jpg"
-link: "https://example.com/project3"
-alt: "Project 3"
+title: "Successmall"
+description: "A Philippine-based e-commerce marketplace platform for browsing and purchasing products with delivery management."
+image: "/images/successmall.png"
+link: "https://successmall.shopping"
+alt: "Successmall online marketplace"
 ---

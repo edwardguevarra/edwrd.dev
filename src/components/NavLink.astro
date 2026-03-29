@@ -17,7 +17,7 @@ const sizeClasses = isMobile
 const colorClasses = isActive ? "text-brand-lime" : "text-white";
 
 const classes = `${baseClasses} ${sizeClasses} ${colorClasses}`;
-const roleAttr = isMobile ? "menuitem" : "none";
+const roleAttr = isMobile ? "menuitem" : undefined;
 const ariaCurrent = isActive ? "page" : undefined;
 ---
 
@@ -25,7 +25,7 @@ const ariaCurrent = isActive ? "page" : undefined;
   href={href}
   data-section={section}
   class={classes}
-  role={roleAttr}
+  {...(roleAttr && { role: roleAttr })}
   {...ariaCurrent && { "aria-current": ariaCurrent }}
   {...prefetch && { "data-astro-prefetch": "true" }}
 >

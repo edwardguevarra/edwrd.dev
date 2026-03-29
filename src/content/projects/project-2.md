@@ -1,7 +1,7 @@
 ---
-title: "Project 2"
-description: "Description of the second project"
-image: "https://picsum.photos/seed/project2/425/300.jpg"
-link: "https://example.com/project2"
-alt: "Project 2"
+title: "Cafe Flor"
+description: "A website for a cafe and bar establishment showcasing their menu, ambiance, and dining experience."
+image: "/images/cafeflor.png"
+link: "https://cafeflorandbar.com"
+alt: "Cafe Flor and Bar website"
 ---
