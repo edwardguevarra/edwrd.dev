@@ -14,6 +14,7 @@ export default getViteConfig({
         "src/**/*.spec.ts",
         "src/**/*.index.ts",
         "**/types.ts",
+        "src/types/**",
         "src/content.config.ts",
         "src/pages/rss.xml.ts",
       ],

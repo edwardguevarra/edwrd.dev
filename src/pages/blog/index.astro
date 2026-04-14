@@ -153,7 +153,7 @@ const postsData = sortedPosts.map((post) => ({
 
   <Fragment slot="scripts">
     <script>
-      document.addEventListener("DOMContentLoaded", () => {
+      const initBlogSearch = () => {
         import("../../services/blog-search/index.js")
           .then(({ createBlogSearchService }) => {
             const searchInput = document.getElementById("blog-search");
@@ -187,7 +187,13 @@ const postsData = sortedPosts.map((post) => ({
               stack: error instanceof Error ? error.stack : undefined,
             });
           });
-      });
+      };
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initBlogSearch);
+      } else {
+        initBlogSearch();
+      }
     </script>
   </Fragment>
 </PageLayout>

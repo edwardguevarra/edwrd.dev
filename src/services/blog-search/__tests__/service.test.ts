@@ -298,6 +298,70 @@ describe("createBlogSearchService", () => {
     ).toThrow(DOMElementNotFoundError);
   });
 
+  it("throws when search input is missing", () => {
+    const { elements } = createSearchDom();
+    expect(() =>
+      createBlogSearchService({
+        elements: {
+          ...elements,
+          searchInput: null as unknown as HTMLInputElement,
+        },
+      })
+    ).toThrow(DOMElementNotFoundError);
+  });
+
+  it("throws when no-results element is missing", () => {
+    const { elements } = createSearchDom();
+    expect(() =>
+      createBlogSearchService({
+        elements: {
+          ...elements,
+          noResults: null as unknown as HTMLElement,
+        },
+      })
+    ).toThrow(DOMElementNotFoundError);
+  });
+
+  it("throws ConfigurationError when dataset is not an array", () => {
+    const { elements } = createSearchDom();
+    elements.searchInput.dataset.posts = JSON.stringify({ not: "an array" });
+
+    const service = createBlogSearchService({ elements });
+
+    expect(() => service.initialize()).toThrow(ServiceInitializationError);
+  });
+
+  it("initializes successfully with an empty dataset when data-posts is missing", () => {
+    const { elements } = createSearchDom();
+    delete elements.searchInput.dataset.posts;
+
+    const service = createBlogSearchService({ elements });
+
+    expect(() => service.initialize()).not.toThrow();
+    service.destroy();
+  });
+
+  it("warns and filters out invalid post entries in the dataset", () => {
+    const { elements, searchInput, firstCard } = createSearchDom();
+    elements.searchInput.dataset.posts = JSON.stringify([
+      { id: "post-1", title: "Astro Patterns", tags: ["astro"] },
+      { id: "post-broken", title: 123, tags: ["bad"] },
+      "not-an-object",
+    ]);
+
+    const service = createBlogSearchService({ elements });
+    service.initialize();
+
+    searchInput.value = "astro";
+    searchInput.dispatchEvent(new Event("input"));
+    vi.advanceTimersByTime(BLOG_SEARCH_DEFAULT_DEBOUNCE_MS);
+    vi.advanceTimersByTime(BLOG_SEARCH_HIDE_TRANSITION_MS);
+
+    expect(firstCard.style.display).toBe("block");
+
+    service.destroy();
+  });
+
   it("throws initialization error when posts dataset is invalid", () => {
     const { elements } = createSearchDom();
     elements.searchInput.dataset.posts = "{invalid-json";
@@ -306,5 +370,86 @@ describe("createBlogSearchService", () => {
 
     expect(() => service.initialize()).toThrow(ServiceInitializationError);
     service.destroy();
+  });
+
+  it("reuses an existing blog-search style element", () => {
+    const existingStyle = document.createElement("style");
+    existingStyle.id = STYLE_ELEMENT_ID;
+    existingStyle.textContent = "/* pre-existing */";
+    document.head.appendChild(existingStyle);
+
+    const { elements } = createSearchDom();
+    const service = createBlogSearchService({ elements });
+
+    service.initialize();
+
+    expect(document.querySelectorAll(`#${STYLE_ELEMENT_ID}`).length).toBe(1);
+    expect(document.getElementById(STYLE_ELEMENT_ID)).toBe(existingStyle);
+
+    service.destroy();
+
+    expect(document.getElementById(STYLE_ELEMENT_ID)).toBe(existingStyle);
+  });
+
+  it("ignores input events whose target is not an input element", () => {
+    const { elements, firstCard, secondCard } = createSearchDom();
+    const service = createBlogSearchService({ elements });
+
+    service.initialize();
+
+    const foreignEvent = new Event("input");
+    Object.defineProperty(foreignEvent, "target", {
+      value: document.createElement("div"),
+    });
+    elements.searchInput.dispatchEvent(foreignEvent);
+
+    vi.advanceTimersByTime(BLOG_SEARCH_DEFAULT_DEBOUNCE_MS);
+
+    expect(firstCard.style.display).toBe("");
+    expect(secondCard.style.display).toBe("");
+    expect(new URL(window.location.href).searchParams.get("q")).toBeNull();
+
+    service.destroy();
+  });
+
+  it("skips cards missing post id or lacking matching post data", () => {
+    const { elements, searchInput, firstCard, secondCard } = createSearchDom();
+
+    const orphanCard = document.createElement("a");
+    orphanCard.dataset.postId = "post-missing";
+    elements.postsGrid.appendChild(orphanCard);
+
+    const unidentifiedCard = document.createElement("a");
+    unidentifiedCard.setAttribute("data-post-id", "");
+    elements.postsGrid.appendChild(unidentifiedCard);
+
+    const service = createBlogSearchService({ elements });
+    service.initialize();
+
+    searchInput.value = "astro";
+    searchInput.dispatchEvent(new Event("input"));
+
+    vi.advanceTimersByTime(BLOG_SEARCH_DEFAULT_DEBOUNCE_MS);
+    vi.advanceTimersByTime(BLOG_SEARCH_HIDE_TRANSITION_MS);
+
+    expect(firstCard.style.display).toBe("block");
+    expect(secondCard.style.display).toBe("none");
+    expect(orphanCard.style.display).toBe("");
+    expect(unidentifiedCard.style.display).toBe("");
+
+    service.destroy();
+  });
+
+  it("logs and swallows cleanup errors during destroy", () => {
+    const { elements, searchInput } = createSearchDom();
+    const service = createBlogSearchService({ elements });
+
+    service.initialize();
+
+    vi.spyOn(searchInput, "removeEventListener").mockImplementation(() => {
+      throw new Error("cleanup boom");
+    });
+
+    expect(() => service.destroy()).not.toThrow();
   });
 });

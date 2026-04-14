@@ -84,8 +84,7 @@ const navItems = getNavigationItems(isHomePage);
 </header>
 
 <script>
-  // Wait for DOM to be ready
-  document.addEventListener("DOMContentLoaded", () => {
+  const initHeaderServices = () => {
     // Load navigation services dynamically
     Promise.all([
       import("../services/navigation/index.js"),
@@ -143,6 +142,8 @@ const navItems = getNavigationItems(isHomePage);
         });
         mobileMenuService.initialize();
 
+        document.body.dataset.navReady = "true";
+
         // Cleanup on page unload
         window.addEventListener("beforeunload", () => {
           navigationService.destroy();
@@ -155,5 +156,11 @@ const navItems = getNavigationItems(isHomePage);
           stack: error instanceof Error ? error.stack : undefined,
         });
       });
-  });
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initHeaderServices);
+  } else {
+    initHeaderServices();
+  }
 </script>

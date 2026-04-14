@@ -25,7 +25,7 @@ const ariaCurrent = isActive ? "page" : undefined;
   href={href}
   data-section={section}
   class={classes}
-  {...(roleAttr && { role: roleAttr })}
+  {...roleAttr && { role: roleAttr }}
   {...ariaCurrent && { "aria-current": ariaCurrent }}
   {...prefetch && { "data-astro-prefetch": "true" }}
 >

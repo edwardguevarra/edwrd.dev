@@ -1,5 +1,5 @@
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+  const initScrollAnimation = () => {
     import("../services/scroll-animation/index.js")
       .then(({ createScrollAnimationService }) => {
         // Query animated elements
@@ -26,5 +26,11 @@
           }
         );
       });
-  });
+  };
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initScrollAnimation);
+  } else {
+    initScrollAnimation();
+  }
 </script>

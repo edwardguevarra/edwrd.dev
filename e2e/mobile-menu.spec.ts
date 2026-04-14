@@ -2,8 +2,9 @@ import { test, expect } from "@playwright/test";
 
 test.describe("Mobile Menu", () => {
   test.beforeEach(async ({ page }) => {
-    await page.goto("/");
     await page.setViewportSize({ width: 375, height: 667 });
+    await page.goto("/");
+    await page.locator("body[data-nav-ready='true']").waitFor();
   });
 
   test("mobile menu opens when hamburger button is clicked", async ({
