@@ -24,17 +24,17 @@ const postsData = sortedPosts.map((post) => ({
   description="Practical programming tips, tutorials, and insights from real projects"
   mainClass="bg-brand-accent min-h-screen"
 >
-  <div class="container mx-auto px-4 py-12 lg:py-20">
-    <div class="mb-12 lg:mb-16">
+  <div class="container py-10 sm:py-12 lg:py-20">
+    <div class="mb-8 sm:mb-12 lg:mb-16">
       <h1
         data-animate
-        class="font-inter text-brand-dark mb-4 text-4xl leading-tight font-black md:text-5xl lg:text-6xl"
+        class="font-inter text-brand-dark mb-3 text-4xl leading-tight font-black sm:mb-4 sm:text-5xl lg:text-6xl"
       >
         Blog
       </h1>
       <p
         data-animate
-        class="text-brand-dark animate-delay-100 max-w-2xl text-lg md:text-xl"
+        class="text-brand-dark animate-delay-100 max-w-2xl text-base sm:text-lg md:text-xl"
       >
         Practical programming tips, tutorials, and insights from real projects.
         Whether you're just starting out or looking to sharpen your skills!
@@ -48,7 +48,7 @@ const postsData = sortedPosts.map((post) => ({
       </a>
     </div>
 
-    <div class="mb-8" data-animate>
+    <div class="mb-6 sm:mb-8" data-animate>
       <div class="relative max-w-2xl">
         <svg
           class="text-brand-dark/60 absolute top-1/2 left-4 h-5 w-5 -translate-y-1/2"
@@ -84,7 +84,7 @@ const postsData = sortedPosts.map((post) => ({
       sortedPosts.length > 0 ? (
         <div
           id="blog-posts-grid"
-          class="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3"
+          class="grid grid-cols-1 gap-6 sm:grid-cols-2 sm:gap-8 lg:grid-cols-3"
         >
           {sortedPosts.map((post: BlogEntry, index: number) => {
             const delayClasses = [

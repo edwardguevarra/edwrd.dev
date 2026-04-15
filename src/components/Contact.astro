@@ -35,22 +35,27 @@ const contactLinks = [
 ];
 ---
 
-<section id="contact" class="bg-brand-dark pt-16 pb-18">
+<section
+  id="contact"
+  class="bg-brand-dark relative overflow-hidden pt-12 pb-16 sm:pt-16 sm:pb-20 md:pb-24 xl:pb-20"
+>
   <div class="relative container pt-0 xl:pt-20">
     <div
       class="flex flex-col flex-wrap items-center justify-between xl:flex-row xl:items-start"
     >
       <div
         data-animate
-        class="text-brand-accent pb-8 text-center text-6xl font-black lg:pb-0 xl:text-left"
+        class="text-brand-accent pb-6 text-center text-5xl font-black sm:pb-8 sm:text-6xl lg:pb-0 xl:text-left"
       >
         <div>Contact Me,</div>
         <div>Let's Talk</div>
       </div>
-      <div class="flex flex-col gap-20 pt-8 xl:pt-0">
+      <div
+        class="flex w-full flex-col gap-10 pt-6 sm:gap-12 sm:pt-8 md:gap-16 xl:w-auto xl:gap-20 xl:pt-0"
+      >
         <div
           data-animate
-          class="animate-delay-100 max-w-xl text-center text-sm text-white xl:text-right"
+          class="animate-delay-100 mx-auto max-w-xl text-center text-sm text-white xl:mx-0 xl:text-right"
         >
           <div>
             Got a project in mind? Need a developer to bring your ideas to life
@@ -61,17 +66,20 @@ const contactLinks = [
             Let's connect! Shoot me a message and let's make it happen.
           </div>
         </div>
-        <div class="flex flex-col gap-6">
+        <div class="flex flex-col items-center gap-4 sm:gap-6 xl:items-end">
           {
             contactLinks.map((link) => (
-              <div data-animate class={`animate-delay-${link.delay}`}>
+              <div
+                data-animate
+                class={`w-full max-w-sm animate-delay-${link.delay} sm:w-auto sm:max-w-none`}
+              >
                 <OutlineButton
                   text={link.text}
                   href={link.href}
                   icon={link.icon}
                   target={link.target}
                   color="white"
-                  class="mr-auto ml-auto md:mr-0"
+                  class="w-full sm:w-auto"
                 />
               </div>
             ))
@@ -81,9 +89,16 @@ const contactLinks = [
     </div>
     <div
       data-animate
-      class="animate-delay-300 absolute -bottom-55 left-0 hidden md:block"
+      class="animate-delay-300 pointer-events-none absolute bottom-0 left-0 hidden w-56 md:-bottom-20 md:block lg:-bottom-32 lg:w-72 xl:-bottom-40 xl:w-80"
+      aria-hidden="true"
     >
-      <Image src={contactIcon} alt="" width={437} height={445} />
+      <Image
+        src={contactIcon}
+        alt=""
+        width={437}
+        height={445}
+        class="h-auto w-full"
+      />
     </div>
   </div>
 </section>
