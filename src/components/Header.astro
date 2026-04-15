@@ -13,7 +13,7 @@ const isHomePage = Astro.url.pathname === "/";
 const navItems = getNavigationItems(isHomePage);
 ---
 
-<header class="bg-brand-dark py-6 lg:py-12">
+<header class="bg-brand-dark py-5 sm:py-6 lg:py-10 xl:py-12">
   <div class="container">
     <!-- Mobile Header -->
     <div class="flex items-center justify-between lg:hidden">
@@ -39,7 +39,7 @@ const navItems = getNavigationItems(isHomePage);
     </div>
 
     <!-- Desktop Header -->
-    <div class="hidden items-center lg:grid lg:grid-cols-3">
+    <div class="hidden items-center lg:grid lg:grid-cols-3 lg:gap-4">
       <!-- Logo -->
       <a
         href="/"
@@ -50,7 +50,7 @@ const navItems = getNavigationItems(isHomePage);
 
       <!-- Navigation Links -->
       <nav
-        class="relative z-10 flex items-center justify-center gap-[100px]"
+        class="relative z-10 flex items-center justify-center gap-8 xl:gap-[100px]"
         role="navigation"
         aria-label="Main navigation"
       >

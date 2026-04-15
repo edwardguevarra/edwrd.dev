@@ -13,9 +13,12 @@ import PageLayout from "../layouts/PageLayout.astro";
   twitterDescription="The page you're looking for doesn't exist or has been moved."
 >
   <section
-    class="bg-brand-dark relative flex min-h-[calc(100vh-88px)] flex-1 flex-col items-center justify-center py-4 md:min-h-auto md:py-8"
+    class="bg-brand-dark relative flex min-h-[calc(100dvh-88px)] flex-1 flex-col items-center justify-center overflow-hidden py-8 sm:py-12 md:min-h-[600px]"
   >
-    <div class="absolute right-0 bottom-0 h-96 w-96 opacity-20">
+    <div
+      class="pointer-events-none absolute right-0 bottom-0 hidden h-96 w-96 opacity-20 sm:block"
+      aria-hidden="true"
+    >
       <div
         class="border-brand-accent absolute right-0 bottom-0 h-64 w-64 rounded-full border-2"
       >
@@ -30,25 +33,25 @@ import PageLayout from "../layouts/PageLayout.astro";
       </div>
     </div>
 
-    <div class="z-10 container">
+    <div class="relative z-10 container">
       <div class="mx-auto max-w-2xl text-center">
         <h1
           data-animate
-          class="text-brand-lime mb-4 text-8xl leading-none font-black tracking-tight sm:text-9xl lg:text-[160px]"
+          class="text-brand-lime mb-4 text-7xl leading-none font-black tracking-tight sm:text-8xl md:text-9xl lg:text-[160px]"
         >
           404
         </h1>
 
         <h2
           data-animate
-          class="animate-delay-100 text-brand-accent mb-6 text-3xl leading-tight font-bold sm:text-4xl lg:text-5xl"
+          class="animate-delay-100 text-brand-accent mb-4 text-2xl leading-tight font-bold sm:mb-6 sm:text-3xl md:text-4xl lg:text-5xl"
         >
           Page Not Found
         </h2>
 
         <p
           data-animate
-          class="animate-delay-200 mb-10 text-base leading-relaxed text-white md:text-lg"
+          class="animate-delay-200 mx-auto mb-8 max-w-md text-sm leading-relaxed text-white sm:mb-10 sm:text-base md:max-w-none md:text-lg"
         >
           Oops! The page you're looking for doesn't exist or has been moved.
           Don't worry, let's get you back on track.
@@ -56,19 +59,27 @@ import PageLayout from "../layouts/PageLayout.astro";
 
         <div
           data-animate
-          class="animate-delay-300 mb-12 flex flex-col items-center gap-4 sm:flex-row sm:justify-center"
+          class="animate-delay-300 mb-8 flex flex-col items-center gap-3 sm:mb-12 sm:flex-row sm:justify-center sm:gap-4"
         >
-          <a href="/">
-            <FilledButton text="Back to Home" color="lime" />
+          <a href="/" class="w-full max-w-xs sm:w-auto sm:max-w-none">
+            <FilledButton
+              text="Back to Home"
+              color="lime"
+              class="w-full sm:w-auto"
+            />
           </a>
-          <a href="/blog">
-            <OutlineButton text="View Blog" color="white" />
+          <a href="/blog" class="w-full max-w-xs sm:w-auto sm:max-w-none">
+            <OutlineButton
+              text="View Blog"
+              color="white"
+              class="w-full sm:w-auto"
+            />
           </a>
         </div>
 
         <div
           data-animate
-          class="animate-delay-400 flex flex-wrap justify-center gap-6 text-sm font-semibold"
+          class="animate-delay-400 flex flex-wrap items-center justify-center gap-x-4 gap-y-2 text-sm font-semibold sm:gap-6"
         >
           <a
             href="/#about"

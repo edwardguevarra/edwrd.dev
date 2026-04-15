@@ -8,7 +8,7 @@ import { getNavigationItems } from "../services/navigation/config";
 const navItems = getNavigationItems(false);
 ---
 
-<footer class="bg-brand-dark mt-auto border-t border-white/10">
+<footer class="bg-brand-dark mt-auto overflow-hidden border-t border-white/10">
   <div class="relative container">
     <!-- Circle Background -->
     <Image
@@ -16,30 +16,28 @@ const navItems = getNavigationItems(false);
       alt=""
       width={1146}
       height={492}
-      class="absolute right-0 bottom-0 left-0 z-0 m-auto"
+      class="pointer-events-none absolute right-0 bottom-0 left-0 z-0 m-auto max-w-none"
     />
 
     <!-- Branding -->
     <div
-      class="text-brand-accent relative z-10 hidden py-16 text-center text-8xl font-black md:block"
+      class="text-brand-accent relative z-10 hidden py-12 text-center text-5xl leading-none font-black sm:block sm:text-6xl md:py-16 md:text-7xl lg:text-8xl"
     >
       edwrd.dev
     </div>
 
     <!-- Footer Content -->
     <div
-      class="flex flex-col flex-wrap items-center justify-between gap-8 pt-20 pb-10 lg:flex-row lg:pt-40"
+      class="relative z-10 flex flex-col flex-wrap items-center justify-between gap-6 pt-12 pb-8 sm:gap-8 sm:pt-16 md:pt-20 lg:flex-row lg:pt-32 xl:pt-40"
     >
       <!-- Logo -->
-      <div
-        class="text-brand-lime relative z-10 text-center text-xl font-bold lg:text-left"
-      >
+      <div class="text-brand-lime text-center text-xl font-bold lg:text-left">
         edwrd
       </div>
 
       <!-- Navigation Links -->
       <nav
-        class="relative z-10 flex items-center justify-center gap-4 lg:gap-[100px]"
+        class="flex flex-wrap items-center justify-center gap-x-5 gap-y-3 sm:gap-x-8 lg:gap-x-12 xl:gap-x-[100px]"
       >
         {
           navItems.map((item) => (
@@ -60,13 +58,8 @@ const navItems = getNavigationItems(false);
       </nav>
 
       <!-- CTA Button -->
-      <div class="relative z-10 flex justify-center lg:justify-end">
-        <FilledButton
-          href="/#contact"
-          text="Let's Talk"
-          color="white"
-          class="ml-auto"
-        />
+      <div class="flex justify-center lg:justify-end">
+        <FilledButton href="/#contact" text="Let's Talk" color="white" />
       </div>
     </div>
   </div>

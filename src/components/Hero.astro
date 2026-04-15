@@ -6,28 +6,11 @@ import FilledButton from "./buttons/FilledButton.astro";
 ---
 
 <section
-  class="bg-brand-dark relative flex min-h-[calc(100dvh-88px)] flex-1 flex-col items-center justify-center py-4 md:min-h-auto md:py-8 lg:min-h-auto"
+  class="bg-brand-dark relative flex min-h-[calc(100dvh-88px)] flex-1 flex-col items-center justify-center overflow-hidden py-4 sm:py-6 md:min-h-[620px] md:overflow-visible md:py-8 lg:min-h-[640px]"
 >
-  <!-- Hero Image - Immediately discoverable for LCP optimization -->
-  <div
-    class="-bottom-20 z-50 h-[350px] w-[200px] contain-layout md:absolute md:-bottom-20 md:h-[350px] md:w-[200px]"
-  >
-    <Image
-      src={heroImage}
-      alt="Edward Guevarra"
-      width={200}
-      height={350}
-      priority
-      fetchpriority="high"
-      loading="eager"
-      decoding="sync"
-      class="aspect-200/350 h-full w-full object-cover"
-    />
-  </div>
-
   <!-- Circle Background -->
   <Image
-    class="absolute right-0 bottom-0 left-0 z-0 m-auto"
+    class="pointer-events-none absolute right-0 bottom-0 left-0 z-0 m-auto max-w-none"
     src={bgCircle}
     alt=""
     width={1146}
@@ -36,7 +19,10 @@ import FilledButton from "./buttons/FilledButton.astro";
   />
 
   <!-- Decorative arcs in bottom-right corner -->
-  <div class="absolute right-0 bottom-0 h-96 w-96 opacity-20">
+  <div
+    class="pointer-events-none absolute right-0 bottom-0 hidden h-96 w-96 opacity-20 sm:block"
+    aria-hidden="true"
+  >
     <div
       class="border-brand-dark absolute right-0 bottom-0 h-64 w-64 rounded-full border-2"
     >
@@ -51,67 +37,84 @@ import FilledButton from "./buttons/FilledButton.astro";
     </div>
   </div>
 
-  <!-- Centered Title -->
-  <div class="z-10 mb-8 text-center md:mb-6">
+  <!-- Centered Title - sits behind the hero image on tablet+ -->
+  <div class="relative z-10 order-2 mb-6 text-center sm:mb-8 md:order-none md:mb-6">
     <h1
       data-animate
-      class="text-brand-accent mb-1 text-6xl leading-12 font-black tracking-normal sm:text-8xl sm:leading-16"
+      class="text-brand-accent mb-1 text-5xl leading-none font-black tracking-normal sm:text-7xl md:text-8xl md:leading-[1.05]"
     >
       edwrd
     </h1>
     <h2
       data-animate
-      class="text-brand-accent animate-delay-100 mb-1 text-6xl leading-12 font-black tracking-normal sm:text-8xl sm:leading-16"
+      class="text-brand-accent animate-delay-100 mb-1 text-5xl leading-none font-black tracking-normal sm:text-7xl md:text-8xl md:leading-[1.05]"
     >
       dev
     </h2>
     <h3
       data-animate
-      class="text-brand-accent animate-delay-200 text-6xl leading-12 font-black tracking-normal sm:text-8xl sm:leading-16"
+      class="text-brand-accent animate-delay-200 text-5xl leading-none font-black tracking-normal sm:text-7xl md:text-8xl md:leading-[1.05]"
     >
       edwrd
     </h3>
   </div>
 
+  <!-- Hero Image - positioned in front of title on tablet+ for the overlapping effect -->
+  <div
+    class="relative z-30 order-1 mb-6 h-[280px] w-[160px] shrink-0 contain-layout sm:h-[320px] sm:w-[185px] md:absolute md:-bottom-16 md:left-1/2 md:order-none md:mb-0 md:h-[380px] md:w-[217px] md:-translate-x-1/2 lg:-bottom-20 lg:h-[440px] lg:w-[251px]"
+  >
+    <Image
+      src={heroImage}
+      alt="Edward Guevarra"
+      width={200}
+      height={350}
+      priority
+      fetchpriority="high"
+      loading="eager"
+      decoding="sync"
+      class="aspect-200/350 h-full w-full object-cover"
+    />
+  </div>
+
   <!-- Content Grid -->
-  <div class="z-10 container">
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 md:gap-6">
+  <div class="relative z-20 order-3 container md:order-none">
+    <div class="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
       <!-- Right Content Block - Statistics (shown first on mobile) -->
       <div
-        class="order-first flex flex-row items-center justify-center space-x-6 text-center md:order-last md:flex-col md:items-end md:justify-end md:space-y-4 md:space-x-0 md:text-right"
+        class="order-first flex flex-row flex-wrap items-center justify-center gap-x-6 gap-y-4 text-center md:order-last md:flex-col md:flex-nowrap md:items-end md:justify-end md:gap-y-4 md:text-right"
       >
         <div data-animate class="animate-delay-300 text-center md:text-right">
           <div
-            class="text-2xl leading-8 font-semibold tracking-normal text-white"
+            class="text-xl leading-7 font-semibold tracking-normal text-white sm:text-2xl sm:leading-8"
           >
             10+
           </div>
           <div
-            class="mt-1 text-sm leading-5 font-normal tracking-normal text-white"
+            class="mt-1 text-xs leading-4 font-normal tracking-normal text-white sm:text-sm sm:leading-5"
           >
             years of experience
           </div>
         </div>
         <div data-animate class="animate-delay-400 text-center md:text-right">
           <div
-            class="text-2xl leading-8 font-semibold tracking-normal text-white"
+            class="text-xl leading-7 font-semibold tracking-normal text-white sm:text-2xl sm:leading-8"
           >
             20+
           </div>
           <div
-            class="mt-1 text-sm leading-5 font-normal tracking-normal text-white"
+            class="mt-1 text-xs leading-4 font-normal tracking-normal text-white sm:text-sm sm:leading-5"
           >
             projects completed
           </div>
         </div>
         <div data-animate class="animate-delay-500 text-center md:text-right">
           <div
-            class="text-2xl leading-8 font-semibold tracking-normal text-white"
+            class="text-xl leading-7 font-semibold tracking-normal text-white sm:text-2xl sm:leading-8"
           >
             9999+
           </div>
           <div
-            class="mt-1 text-sm leading-5 font-normal tracking-normal text-white"
+            class="mt-1 text-xs leading-4 font-normal tracking-normal text-white sm:text-sm sm:leading-5"
           >
             errors debugged
           </div>
@@ -120,11 +123,11 @@ import FilledButton from "./buttons/FilledButton.astro";
 
       <!-- Left Content Block (shown second on mobile) -->
       <div
-        class="order-last flex flex-col justify-end space-y-6 text-center md:order-first md:text-left"
+        class="order-last flex flex-col justify-end gap-4 text-center sm:gap-6 md:order-first md:text-left"
       >
         <p
           data-animate
-          class="animate-delay-300 mx-auto max-w-[240px] text-sm leading-5 font-normal tracking-normal text-white md:mx-0 lg:max-w-[352px]"
+          class="animate-delay-300 mx-auto max-w-[260px] text-sm leading-5 font-normal tracking-normal text-white sm:max-w-[320px] md:mx-0 md:max-w-[280px] lg:max-w-[352px]"
         >
           Experienced senior dev who always wants to learn and build stuffs. Got
           a project in mind? Send me a message!

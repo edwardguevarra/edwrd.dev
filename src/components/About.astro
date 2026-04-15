@@ -36,7 +36,7 @@ const experiences = [
 ];
 ---
 
-<section id="about" class="bg-brand-accent py-6">
+<section id="about" class="bg-brand-accent py-8 sm:py-10 md:py-12">
   <!-- Marquee Text -->
   <Marquee />
 
@@ -48,25 +48,30 @@ const experiences = [
         <!-- Section Title -->
         <h2
           data-animate
-          class="text-brand-dark mb-8 text-center text-4xl font-black md:mb-12 md:text-5xl lg:text-right lg:text-6xl"
+          class="text-brand-dark mb-4 text-center text-4xl font-black sm:mb-6 sm:text-5xl md:mb-8 lg:text-right lg:text-6xl"
         >
           <div>About</div>
           <div>Me</div>
         </h2>
-        <div class="flex justify-center lg:block">
-          <div data-animate class="overflow-hidden">
+        <div
+          class="flex flex-col items-center gap-4 sm:flex-row sm:items-start sm:justify-center sm:gap-6 lg:block lg:gap-0"
+        >
+          <div
+            data-animate
+            class="aspect-[237/414] w-full max-w-[280px] overflow-hidden sm:w-1/2 sm:max-w-none lg:ml-auto lg:w-auto lg:max-w-[237px]"
+          >
             <Image
               src={aboutImage1}
               alt="Edward Guevarra"
               width={237}
               height={414}
               loading="eager"
-              class="ml-auto h-[414px] w-[237px] object-cover"
+              class="h-full w-full object-cover"
             />
           </div>
           <div
             data-animate
-            class="animate-delay-200 mt-0 overflow-hidden lg:-mt-50"
+            class="animate-delay-200 aspect-[237/414] w-full max-w-[280px] overflow-hidden sm:w-1/2 sm:max-w-none lg:-mt-50 lg:w-[237px] lg:max-w-none"
           >
             <Image
               src={aboutImage2}
@@ -74,20 +79,26 @@ const experiences = [
               width={237}
               height={414}
               loading="lazy"
-              class="h-[414px] w-[237px] object-cover"
+              class="h-full w-full object-cover"
             />
           </div>
         </div>
       </div>
 
       <!-- Combined Column - Biography, Experience Timeline, Hobbies, and Job Roles -->
-      <div class="flex flex-col gap-6 pt-0 md:gap-16 lg:pt-47">
+      <div class="flex w-full flex-col gap-8 pt-0 md:gap-12 lg:pt-47">
         <!-- Two Column Grid for Biography and Hobbies -->
-        <div class="grid grid-cols-1 gap-8 md:grid-cols-2">
+        <div class="grid grid-cols-1 gap-6 md:grid-cols-2 md:gap-8">
+          <h2
+            class="text-brand-dark order-1 block text-center text-4xl font-black sm:text-5xl md:order-none md:hidden lg:text-right lg:text-6xl"
+          >
+            Bio
+          </h2>
+
           <!-- Biography Column -->
           <div
             data-animate
-            class="text-brand-dark animate-delay-100 text-sm leading-relaxed md:text-base"
+            class="text-brand-dark animate-delay-100 order-2 text-sm leading-relaxed md:order-none md:text-base"
           >
             <p>
               Hey there! I'm Edward Guevarra, a senior full-stack developer
@@ -101,15 +112,9 @@ const experiences = [
             </p>
           </div>
 
-          <h2
-            class="text-brand-dark my-6 block text-center text-4xl font-black md:mb-12 md:hidden md:text-5xl lg:text-right lg:text-6xl"
-          >
-            Bio
-          </h2>
-
           <!-- Hobbies Column -->
-          <div data-animate class="animate-delay-200">
-            <div class="grid grid-cols-1 gap-6 md:flex md:flex-col md:gap-6">
+          <div data-animate class="animate-delay-200 order-3 md:order-none">
+            <div class="flex flex-col gap-3 sm:gap-4 md:gap-6">
               {
                 hobbies.map((hobby, index) => {
                   const delayClasses = [
@@ -134,13 +139,13 @@ const experiences = [
         </div>
 
         <h2
-          class="text-brand-dark my-6 block text-center text-4xl font-black md:hidden md:text-5xl lg:text-right lg:text-6xl"
+          class="text-brand-dark block text-center text-4xl font-black sm:text-5xl md:hidden lg:text-right lg:text-6xl"
         >
           Experiences
         </h2>
 
         <!-- Experience Timeline and Job Roles Paired -->
-        <div class="grid grid-cols-1 gap-6 md:block md:space-y-4">
+        <div class="flex flex-col gap-6 md:gap-4">
           {
             experiences.map((experience, index) => {
               const delayClasses = [
@@ -152,10 +157,10 @@ const experiences = [
               return (
                 <div
                   data-animate
-                  class={`flex flex-col items-center justify-between gap-4 md:flex-row ${delayClasses[index] || ""}`}
+                  class={`flex flex-col items-stretch justify-between gap-3 sm:items-center md:flex-row ${delayClasses[index] || ""}`}
                 >
                   <OutlineButton
-                    class="w-full md:w-auto"
+                    class="w-full sm:w-auto"
                     text={experience.period}
                     data-testid={`experience-button-${index}`}
                   />

@@ -8,36 +8,43 @@ const projects = await getCollection("projects");
 type ProjectEntry = CollectionEntry<"projects">;
 ---
 
-<section id="projects" class="bg-brand-accent pt-6 pb-20">
-  <div class="container mx-auto px-4">
-    <div class="flex flex-col items-center justify-between md:flex-row">
+<section id="projects" class="bg-brand-accent pt-8 pb-16 sm:pt-10 md:pb-20">
+  <div class="container">
+    <div
+      class="flex flex-col items-center justify-between gap-8 md:flex-row md:gap-6"
+    >
       <!-- Left column for Skill/Tools button and additional content -->
-      <div class="mb-4 w-full md:mb-0 md:w-1/2">
+      <div class="flex w-full flex-col items-center md:w-1/2 md:items-start">
         <div data-animate>
           <OutlineButton text="Skill / Tools" />
         </div>
-        <div data-animate class="animate-delay-200 mt-8">
+        <div
+          data-animate
+          class="animate-delay-200 mt-6 w-full max-w-md sm:mt-8"
+        >
           <Image
             src={toolsImage}
             alt="Tools"
             width={500}
             height={500}
-            class="w-full max-w-md"
+            class="h-auto w-full"
           />
         </div>
       </div>
 
       <!-- Right column for title -->
-      <div class="w-full pt-8 text-center md:w-1/2 md:pt-0 md:text-right">
+      <div class="w-full text-center md:w-1/2 md:text-right">
         <h2
           data-animate
-          class="font-inter text-brand-dark animate-delay-100 text-4xl leading-tight font-black tracking-normal md:text-5xl md:leading-snug lg:text-6xl lg:leading-[72px]"
+          class="font-inter text-brand-dark animate-delay-100 text-4xl leading-tight font-black tracking-normal sm:text-5xl sm:leading-snug lg:text-6xl lg:leading-[72px]"
         >
           My Projects/<br />Works
         </h2>
       </div>
     </div>
-    <div class="grid grid-cols-1 gap-6 py-6 md:grid-cols-3">
+    <div
+      class="grid grid-cols-1 gap-6 py-8 sm:grid-cols-2 sm:py-10 lg:grid-cols-3"
+    >
       {
         projects.map((project: ProjectEntry, index: number) => {
           const delayClasses = [
